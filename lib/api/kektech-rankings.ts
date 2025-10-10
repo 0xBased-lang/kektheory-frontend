@@ -1,9 +1,11 @@
-import { RANKING_API_URL } from '@/config/constants'
-
 /**
  * KEKTECH Rankings API Client
  *
- * This client interfaces with the production rankings API at https://api.kektech.xyz/rankings
+ * This client interfaces with the rankings API via our Next.js proxy route.
+ * Architecture: Browser → /api/rankings → https://api.kektech.xyz/rankings
+ *
+ * CORS Solution: Instead of calling api.kektech.xyz directly (which causes CORS errors),
+ * we use a Next.js API route that proxies the request server-side.
  *
  * VERIFIED API RESPONSE STRUCTURE (2025-10-10):
  * - Total NFTs: 2470 (live count)
@@ -37,10 +39,18 @@ export interface RankingsResponse {
 
 /**
  * Fetch Rankings API Configuration
+ *
+ * CORS Solution: We use our Next.js API proxy route at /api/rankings
+ * instead of calling the external API directly from the browser.
+ * This avoids CORS issues while maintaining the same functionality.
  */
 const RANKINGS_CONFIG = {
-  /** Base URL for rankings API */
-  url: `${RANKING_API_URL}/rankings`,
+  /**
+   * Base URL for rankings API
+   * Uses Next.js API route proxy to avoid CORS issues
+   * Route: /app/api/rankings/route.ts
+   */
+  url: '/api/rankings',
 
   /** Request timeout in milliseconds */
   timeout: 10000, // 10 seconds
