@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { NFTCard } from './NFTCard'
+import { EnhancedNFTCard } from './EnhancedNFTCard'
 import { fetchRankingsWithFallback, type RankingNFT } from '@/lib/api/kektech-rankings'
 
 /**
@@ -109,11 +109,11 @@ export function NFTGallery() {
     )
   }
 
-  // NFT Grid
+  // NFT Grid with Enhanced Cards
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {nfts.map((nft) => (
-        <NFTCard key={nft.tokenId} nft={nft} />
+        <EnhancedNFTCard key={nft.tokenId} nft={nft} />
       ))}
     </div>
   )

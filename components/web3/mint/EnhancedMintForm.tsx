@@ -1,0 +1,272 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useMint } from '@/lib/hooks/useMint'
+import { EXPLORER_URL } from '@/config/constants'
+
+/**
+ * EnhancedMintForm Component with Advanced Animations
+ *
+ * Features:
+ * - Animated progress bars
+ * - Confetti on success
+ * - Glowing effects
+ * - Step-by-step progress
+ * - Smooth transitions
+ */
+export function EnhancedMintForm() {
+  const {
+    mintAmount,
+    setMintAmount,
+    isConnected,
+    isWritePending,
+    isConfirming,
+    isConfirmed,
+    hash,
+    error,
+    mint,
+    maxMintPerTx,
+  } = useMint()
+
+  const [localError, setLocalError] = useState<string | null>(null)
+  const [progress, setProgress] = useState(0)
+  const [showConfetti, setShowConfetti] = useState(false)
+
+  // Animate progress bar
+  useEffect(() => {
+    if (isWritePending) setProgress(33)
+    else if (isConfirming) setProgress(66)
+    else if (isConfirmed) setProgress(100)
+    else setProgress(0)
+  }, [isWritePending, isConfirming, isConfirmed])
+
+  // Show confetti on success
+  useEffect(() => {
+    if (isConfirmed) {
+      setShowConfetti(true)
+      setTimeout(() => setShowConfetti(false), 5000)
+    }
+  }, [isConfirmed])
+
+  const handleMint = async () => {
+    setLocalError(null)
+    try {
+      await mint()
+    } catch (err) {
+      setLocalError(err instanceof Error ? err.message : 'Mint failed')
+    }
+  }
+
+  const handleAmountChange = (value: number) => {
+    if (value >= 1 && value <= maxMintPerTx) {
+      setMintAmount(value)
+      setLocalError(null)
+    }
+  }
+
+  // Connect wallet prompt
+  if (!isConnected) {
+    return (
+      <div className="relative overflow-hidden rounded-2xl border-2 border-kek-green/30 bg-gradient-to-br from-gray-900 to-gray-800 p-10 text-center shadow-2xl">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,0,0.1),transparent_70%)]" />
+        <div className="relative">
+          <div className="mb-4 text-6xl">🔌</div>
+          <h3 className="mb-3 text-2xl font-bold text-white">Connect Your Wallet</h3>
+          <p className="mb-6 text-gray-300">
+            Please connect your wallet to start minting exclusive KEKTECH NFTs
+          </p>
+          <div className="inline-flex items-center space-x-2 rounded-lg border border-kek-green/20 bg-kek-green/10 px-4 py-2">
+            <span className="text-sm text-kek-green">Click &quot;Connect Wallet&quot; above</span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Success state with confetti
+  if (isConfirmed && hash) {
+    return (
+      <div className="relative overflow-hidden rounded-2xl border-2 border-kek-green bg-gradient-to-br from-gray-900 to-gray-800 p-10 text-center shadow-2xl shadow-kek-green/50">
+        {/* Confetti Effect */}
+        {showConfetti && (
+          <div className="absolute inset-0 overflow-hidden">
+            {[...Array(50)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute h-3 w-3 animate-float"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `-10%`,
+                  backgroundColor: ['#00ff00', '#00ffff', '#ff00ff'][Math.floor(Math.random() * 3)],
+                  transform: `rotate(${Math.random() * 360}deg)`,
+                  animation: `float ${2 + Math.random()}s ease-out forwards`,
+                  animationDelay: `${Math.random() * 0.5}s`,
+                }}
+              />
+            ))}
+          </div>
+        )}
+
+        <div className="relative">
+          <div className="mb-6 animate-pulse-glow text-8xl">🎉</div>
+          <h3 className="mb-3 bg-gradient-to-r from-kek-green via-kek-cyan to-kek-purple bg-clip-text text-3xl font-black text-transparent">
+            Mint Successful!
+          </h3>
+          <p className="mb-6 text-xl text-gray-300">
+            Successfully minted <span className="font-bold text-kek-green">{mintAmount}</span> KEKTECH NFT{mintAmount > 1 ? 's' : ''}!
+          </p>
+
+          <div className="mb-6 rounded-xl border border-kek-green/20 bg-black/40 p-4 backdrop-blur-sm">
+            <div className="text-sm text-gray-400">Transaction Hash</div>
+            <div className="mt-1 truncate font-mono text-xs text-kek-cyan">{hash}</div>
+          </div>
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <a
+              href={`${EXPLORER_URL}/tx/${hash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-lg bg-gradient-to-r from-kek-green to-kek-cyan px-6 py-3 font-semibold text-black shadow-lg shadow-kek-green/50 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-kek-green/70"
+            >
+              View Transaction ↗
+            </a>
+            <button
+              onClick={() => window.location.reload()}
+              className="rounded-lg border-2 border-kek-purple bg-transparent px-6 py-3 font-semibold text-kek-purple transition-all hover:bg-kek-purple/10"
+            >
+              Mint More
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="relative overflow-hidden rounded-2xl border-2 border-kek-green/30 bg-gradient-to-br from-gray-900 to-gray-800 p-8 shadow-2xl">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
+
+      <div className="relative">
+        <h2 className="mb-6 bg-gradient-to-r from-kek-green to-kek-cyan bg-clip-text text-3xl font-black text-transparent">
+          Mint KEKTECH NFTs
+        </h2>
+
+        {/* Progress Steps */}
+        {(isWritePending || isConfirming || isConfirmed) && (
+          <div className="mb-8">
+            <div className="mb-3 flex justify-between text-sm">
+              <span className={progress >= 33 ? 'text-kek-green' : 'text-gray-500'}>
+                1. Approve
+              </span>
+              <span className={progress >= 66 ? 'text-kek-cyan' : 'text-gray-500'}>
+                2. Confirming
+              </span>
+              <span className={progress >= 100 ? 'text-kek-purple' : 'text-gray-500'}>
+                3. Complete
+              </span>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="relative h-3 overflow-hidden rounded-full bg-gray-700">
+              <div
+                className="h-full bg-gradient-to-r from-kek-green via-kek-cyan to-kek-purple transition-all duration-500 ease-out"
+                style={{ width: `${progress}%` }}
+              >
+                <div className="h-full w-full animate-pulse bg-white/20" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Amount Selector */}
+        <div className="mb-6">
+          <label className="mb-3 block text-sm font-semibold text-gray-300">
+            Amount (Max {maxMintPerTx} per transaction)
+          </label>
+          <div className="flex items-center justify-center gap-4">
+            <button
+              onClick={() => handleAmountChange(mintAmount - 1)}
+              disabled={mintAmount <= 1 || isWritePending || isConfirming}
+              className="flex h-12 w-12 items-center justify-center rounded-lg border-2 border-kek-green/30 bg-kek-green/10 text-2xl font-bold text-kek-green transition-all hover:border-kek-green hover:bg-kek-green/20 hover:scale-110 disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              −
+            </button>
+            <div className="flex h-16 w-24 items-center justify-center rounded-lg border-2 border-kek-cyan/50 bg-black/40">
+              <span className="text-4xl font-black text-kek-cyan">{mintAmount}</span>
+            </div>
+            <button
+              onClick={() => handleAmountChange(mintAmount + 1)}
+              disabled={mintAmount >= maxMintPerTx || isWritePending || isConfirming}
+              className="flex h-12 w-12 items-center justify-center rounded-lg border-2 border-kek-green/30 bg-kek-green/10 text-2xl font-bold text-kek-green transition-all hover:border-kek-green hover:bg-kek-green/20 hover:scale-110 disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              +
+            </button>
+          </div>
+        </div>
+
+        {/* Price Display */}
+        <div className="mb-6 rounded-xl border border-kek-purple/30 bg-black/40 p-5 backdrop-blur-sm">
+          <div className="flex justify-between text-sm text-gray-400">
+            <span>Price per NFT:</span>
+            <span className="font-semibold text-white">0.001 ETH</span>
+          </div>
+          <div className="mt-3 flex justify-between">
+            <span className="text-lg font-bold text-white">Total Cost:</span>
+            <span className="text-2xl font-black text-kek-green">
+              {(0.001 * mintAmount).toFixed(3)} ETH
+            </span>
+          </div>
+        </div>
+
+        {/* Error Display */}
+        {(error || localError) && (
+          <div className="mb-6 animate-pulse rounded-xl border-2 border-red-500/50 bg-red-500/10 p-4 backdrop-blur-sm">
+            <p className="text-sm font-semibold text-red-400">
+              ⚠️ {localError || error?.message || 'An error occurred'}
+            </p>
+          </div>
+        )}
+
+        {/* Mint Button */}
+        <button
+          onClick={handleMint}
+          disabled={isWritePending || isConfirming}
+          className="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-kek-green to-kek-cyan p-[2px] shadow-lg shadow-kek-green/50 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-kek-green/70 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
+        >
+          <div className="relative rounded-[10px] bg-gray-900 px-8 py-4 transition-all group-hover:bg-transparent">
+            <span className="text-lg font-black text-white group-hover:text-black">
+              {isWritePending
+                ? '⏳ Waiting for approval...'
+                : isConfirming
+                  ? '⚡ Confirming transaction...'
+                  : `🚀 Mint ${mintAmount} NFT${mintAmount > 1 ? 's' : ''}`}
+            </span>
+          </div>
+        </button>
+
+        {/* Transaction Hash */}
+        {hash && !isConfirmed && (
+          <div className="mt-4 rounded-xl border border-kek-cyan/30 bg-kek-cyan/10 p-4 backdrop-blur-sm">
+            <p className="mb-2 text-sm font-semibold text-kek-cyan">
+              ✅ Transaction submitted!
+            </p>
+            <a
+              href={`${EXPLORER_URL}/tx/${hash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-kek-cyan/80 hover:text-kek-cyan hover:underline"
+            >
+              View on Explorer ↗
+            </a>
+          </div>
+        )}
+
+        {/* Info */}
+        <p className="mt-6 text-center text-xs text-gray-500">
+          Your NFT will be minted on the <span className="font-semibold text-kek-green">$BASED Chain (32323)</span>
+        </p>
+      </div>
+    </div>
+  )
+}

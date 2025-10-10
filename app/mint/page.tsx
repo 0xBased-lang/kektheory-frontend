@@ -1,6 +1,6 @@
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
-import { MintForm } from '@/components/web3/mint/MintForm'
+import { EnhancedMintForm } from '@/components/web3/mint/EnhancedMintForm'
 
 /**
  * Mint Page
@@ -25,8 +25,8 @@ export default function MintPage() {
               </p>
             </div>
 
-            {/* Mint Form */}
-            <MintForm />
+            {/* Enhanced Mint Form with Animations */}
+            <EnhancedMintForm />
 
             {/* Additional Info */}
             <div className="mt-8 grid gap-4 md:grid-cols-3">

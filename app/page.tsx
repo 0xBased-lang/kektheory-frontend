@@ -1,8 +1,8 @@
-import Link from 'next/link'
 import Image from 'next/image'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { TraitDistribution } from '@/components/traits/TraitDistribution'
+import { EnhancedHero } from '@/components/homepage/EnhancedHero'
 
 /**
  * Homepage
@@ -15,54 +15,8 @@ export default function Home() {
       <Header />
 
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-kek-dark to-gray-950 dark:from-kek-dark dark:to-gray-950">
-          <div className="container mx-auto px-4 py-20 sm:px-6 sm:py-32 lg:px-8">
-            <div className="mx-auto max-w-3xl text-center">
-              {/* Badge */}
-              <div className="mb-6 inline-flex items-center rounded-full bg-kek-green/20 px-4 py-1.5 text-sm font-semibold text-kek-green dark:bg-kek-green/10 dark:text-kek-green">
-                <span className="mr-2">🚀</span>
-                Live on $BASED Chain (32323)
-              </div>
-
-              {/* Heading */}
-              <h1 className="mb-6 text-4xl font-extrabold tracking-tight text-white dark:text-white sm:text-5xl md:text-6xl">
-                Welcome to{' '}
-                <span className="bg-gradient-to-r from-kek-green via-kek-cyan to-kek-purple bg-clip-text text-transparent">
-                  KEKTECH
-                </span>
-              </h1>
-
-              {/* Description */}
-              <p className="mb-8 text-lg text-gray-300 dark:text-gray-300 sm:text-xl">
-                The ultimate NFT collection on the $BASED Chain. Connect your wallet to start
-                minting unique digital collectibles.
-              </p>
-
-              {/* CTA Buttons */}
-              <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <Link
-                  href="/mint"
-                  className="w-full rounded-lg bg-gradient-to-r from-kek-green to-kek-cyan px-8 py-3 text-center text-base font-medium text-black transition-all hover:shadow-lg hover:shadow-kek-green/50 sm:w-auto"
-                >
-                  Start Minting
-                </Link>
-                <Link
-                  href="/gallery"
-                  className="w-full rounded-lg border border-kek-purple bg-transparent px-8 py-3 text-center text-base font-medium text-kek-purple transition-all hover:bg-kek-purple/10 hover:shadow-lg hover:shadow-kek-purple/30 sm:w-auto"
-                >
-                  View Gallery
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Background Decoration */}
-          <div className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute -left-4 top-1/2 h-96 w-96 -translate-y-1/2 rounded-full bg-kek-green/20 blur-3xl" />
-            <div className="absolute -right-4 top-1/4 h-96 w-96 -translate-y-1/2 rounded-full bg-kek-purple/20 blur-3xl" />
-          </div>
-        </section>
+        {/* Enhanced Hero Section with 3D Effects and Particles */}
+        <EnhancedHero />
 
         {/* Features Section */}
         <section className="bg-white py-16 dark:bg-gray-950 sm:py-24">
