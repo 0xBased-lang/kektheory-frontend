@@ -11,7 +11,7 @@ import { ConnectButton } from '@/components/web3/ConnectButton'
  */
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-950/80">
+    <header className="sticky top-0 z-50 w-full border-b border-kek-green/20 bg-black/95 backdrop-blur-md dark:border-kek-green/20 dark:bg-black/95">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Animated Logo */}
         <Link href="/" className="flex items-center space-x-3">
@@ -35,19 +35,19 @@ export function Header() {
         <nav className="hidden items-center space-x-6 md:flex">
           <Link
             href="/"
-            className="text-sm font-medium text-gray-700 transition-colors hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+            className="text-sm font-medium text-gray-300 transition-colors hover:text-kek-green dark:text-gray-300 dark:hover:text-kek-green"
           >
             Home
           </Link>
           <Link
             href="/mint"
-            className="text-sm font-medium text-gray-700 transition-colors hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+            className="text-sm font-medium text-gray-300 transition-colors hover:text-kek-cyan dark:text-gray-300 dark:hover:text-kek-cyan"
           >
             Mint
           </Link>
           <Link
             href="/gallery"
-            className="text-sm font-medium text-gray-700 transition-colors hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+            className="text-sm font-medium text-gray-300 transition-colors hover:text-kek-purple dark:text-gray-300 dark:hover:text-kek-purple"
           >
             Gallery
           </Link>

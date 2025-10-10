@@ -78,34 +78,34 @@ export default function Home() {
 
             <div className="grid gap-8 md:grid-cols-3">
               {/* Feature 1 */}
-              <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
+              <div className="group rounded-lg border border-kek-green/30 bg-gray-900 p-6 transition-all hover:border-kek-green hover:shadow-lg hover:shadow-kek-green/20 dark:border-kek-green/30 dark:bg-gray-900">
                 <div className="mb-4 text-4xl">⚡</div>
-                <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
+                <h3 className="mb-2 text-xl font-semibold text-white dark:text-white">
                   Fast Minting
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400">
+                <p className="text-gray-300 dark:text-gray-300">
                   Lightning-fast transactions on the $BASED Chain with low gas fees
                 </p>
               </div>
 
               {/* Feature 2 */}
-              <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
+              <div className="group rounded-lg border border-kek-cyan/30 bg-gray-900 p-6 transition-all hover:border-kek-cyan hover:shadow-lg hover:shadow-kek-cyan/20 dark:border-kek-cyan/30 dark:bg-gray-900">
                 <div className="mb-4 text-4xl">🎨</div>
-                <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
+                <h3 className="mb-2 text-xl font-semibold text-white dark:text-white">
                   Unique Art
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400">
+                <p className="text-gray-300 dark:text-gray-300">
                   Each NFT is unique with provably rare traits and attributes
                 </p>
               </div>
 
               {/* Feature 3 */}
-              <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
+              <div className="group rounded-lg border border-kek-purple/30 bg-gray-900 p-6 transition-all hover:border-kek-purple hover:shadow-lg hover:shadow-kek-purple/20 dark:border-kek-purple/30 dark:bg-gray-900">
                 <div className="mb-4 text-4xl">🌐</div>
-                <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
+                <h3 className="mb-2 text-xl font-semibold text-white dark:text-white">
                   Community
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400">
+                <p className="text-gray-300 dark:text-gray-300">
                   Join a vibrant community of collectors and enthusiasts
                 </p>
               </div>
@@ -153,15 +153,16 @@ export default function Home() {
               </div>
 
               {/* Making-of GIF */}
-              <div className="relative overflow-hidden rounded-lg border border-kek-green/20">
+              <div className="group relative overflow-hidden rounded-lg border-2 border-kek-green/30 shadow-lg shadow-kek-green/10 transition-all hover:border-kek-green hover:shadow-2xl hover:shadow-kek-green/30">
                 <Image
                   src="/images/makingof.gif"
                   alt="KEKTECH Making Of"
                   width={600}
                   height={600}
-                  className="h-auto w-full"
+                  className="h-auto w-full transition-transform duration-300 group-hover:scale-105"
                   unoptimized
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-kek-green/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               </div>
             </div>
           </div>
@@ -172,15 +173,16 @@ export default function Home() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid items-center gap-12 lg:grid-cols-2">
               {/* Tech GIF */}
-              <div className="order-2 relative overflow-hidden rounded-lg border border-kek-cyan/20 lg:order-1">
+              <div className="group order-2 relative overflow-hidden rounded-lg border-2 border-kek-cyan/30 shadow-lg shadow-kek-cyan/10 transition-all hover:border-kek-cyan hover:shadow-2xl hover:shadow-kek-cyan/30 lg:order-1">
                 <Image
                   src="/images/tech.gif"
                   alt="KEKTECH Technology"
                   width={600}
                   height={600}
-                  className="h-auto w-full"
+                  className="h-auto w-full transition-transform duration-300 group-hover:scale-105"
                   unoptimized
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-kek-cyan/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               </div>
 
               {/* Content */}
