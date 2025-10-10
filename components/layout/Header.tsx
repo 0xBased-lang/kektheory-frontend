@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { ConnectButton } from '@/components/web3/ConnectButton'
 
 /**
@@ -12,12 +13,22 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-950/80">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2">
-          <span className="text-2xl font-bold text-gray-900 dark:text-white">KEKTECH</span>
-          <span className="rounded bg-blue-600 px-2 py-0.5 text-xs font-semibold text-white">
-            $BASED
-          </span>
+        {/* Animated Logo */}
+        <Link href="/" className="flex items-center space-x-3">
+          <Image
+            src="/images/kektech.gif"
+            alt="KEKTECH"
+            width={48}
+            height={48}
+            className="h-12 w-12"
+            unoptimized
+          />
+          <div className="flex items-center space-x-2">
+            <span className="text-2xl font-bold text-white dark:text-white">KEKTECH</span>
+            <span className="rounded bg-gradient-to-r from-kek-green to-kek-cyan px-2 py-0.5 text-xs font-semibold text-black">
+              $BASED
+            </span>
+          </div>
         </Link>
 
         {/* Navigation */}

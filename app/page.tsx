@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { TraitDistribution } from '@/components/traits/TraitDistribution'
@@ -107,6 +108,110 @@ export default function Home() {
                 <p className="text-gray-600 dark:text-gray-400">
                   Join a vibrant community of collectors and enthusiasts
                 </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* About Section with Making-of GIF */}
+        <section className="bg-gradient-to-b from-gray-950 to-gray-900 py-16 dark:from-gray-950 dark:to-gray-900 sm:py-24">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid items-center gap-12 lg:grid-cols-2">
+              {/* Content */}
+              <div>
+                <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl">
+                  About KEKTECH
+                </h2>
+                <p className="mb-6 text-lg text-gray-300">
+                  KEKTECH is a unique collection of 4,200 hand-crafted NFTs on the $BASED Chain.
+                  Each piece is a one-of-a-kind digital artwork featuring distinctive traits,
+                  Easter eggs, and rare combinations.
+                </p>
+                <p className="mb-6 text-lg text-gray-300">
+                  Our collection celebrates crypto culture, meme heritage, and cutting-edge technology.
+                  From legendary traits like the Golden Ticket to personalized Easter eggs,
+                  every KEKTECH NFT tells a story.
+                </p>
+                <ul className="space-y-3 text-gray-300">
+                  <li className="flex items-center">
+                    <span className="mr-2 text-kek-green">✓</span>
+                    Hand-crafted artwork with unique traits
+                  </li>
+                  <li className="flex items-center">
+                    <span className="mr-2 text-kek-green">✓</span>
+                    Hidden Easter eggs and rare combinations
+                  </li>
+                  <li className="flex items-center">
+                    <span className="mr-2 text-kek-green">✓</span>
+                    Built on the $BASED Chain for speed and efficiency
+                  </li>
+                  <li className="flex items-center">
+                    <span className="mr-2 text-kek-green">✓</span>
+                    Vibrant community of collectors and enthusiasts
+                  </li>
+                </ul>
+              </div>
+
+              {/* Making-of GIF */}
+              <div className="relative overflow-hidden rounded-lg border border-kek-green/20">
+                <Image
+                  src="/images/makingof.gif"
+                  alt="KEKTECH Making Of"
+                  width={600}
+                  height={600}
+                  className="h-auto w-full"
+                  unoptimized
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Technology Section with Tech GIF */}
+        <section className="bg-gray-900 py-16 dark:bg-gray-900 sm:py-24">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid items-center gap-12 lg:grid-cols-2">
+              {/* Tech GIF */}
+              <div className="order-2 relative overflow-hidden rounded-lg border border-kek-cyan/20 lg:order-1">
+                <Image
+                  src="/images/tech.gif"
+                  alt="KEKTECH Technology"
+                  width={600}
+                  height={600}
+                  className="h-auto w-full"
+                  unoptimized
+                />
+              </div>
+
+              {/* Content */}
+              <div className="order-1 lg:order-2">
+                <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl">
+                  Powered by $BASED
+                </h2>
+                <p className="mb-6 text-lg text-gray-300">
+                  KEKTECH leverages the power of the $BASED Chain (32323) for lightning-fast
+                  transactions, minimal gas fees, and maximum security.
+                </p>
+                <div className="space-y-4">
+                  <div className="rounded-lg border border-kek-green/20 bg-gray-800 p-4">
+                    <h3 className="mb-2 font-semibold text-kek-green">⚡ Lightning Fast</h3>
+                    <p className="text-sm text-gray-400">
+                      Sub-second block times ensure your mints are instant
+                    </p>
+                  </div>
+                  <div className="rounded-lg border border-kek-cyan/20 bg-gray-800 p-4">
+                    <h3 className="mb-2 font-semibold text-kek-cyan">💎 Low Fees</h3>
+                    <p className="text-sm text-gray-400">
+                      Affordable gas prices make collecting accessible to everyone
+                    </p>
+                  </div>
+                  <div className="rounded-lg border border-kek-purple/20 bg-gray-800 p-4">
+                    <h3 className="mb-2 font-semibold text-kek-purple">🔒 Secure</h3>
+                    <p className="text-sm text-gray-400">
+                      Battle-tested blockchain technology keeps your NFTs safe
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
