@@ -14,25 +14,25 @@ export default function Home() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-950">
+        <section className="relative overflow-hidden bg-gradient-to-b from-kek-dark to-gray-950 dark:from-kek-dark dark:to-gray-950">
           <div className="container mx-auto px-4 py-20 sm:px-6 sm:py-32 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
               {/* Badge */}
-              <div className="mb-6 inline-flex items-center rounded-full bg-blue-100 px-4 py-1.5 text-sm font-semibold text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+              <div className="mb-6 inline-flex items-center rounded-full bg-kek-green/20 px-4 py-1.5 text-sm font-semibold text-kek-green dark:bg-kek-green/10 dark:text-kek-green">
                 <span className="mr-2">🚀</span>
                 Live on $BASED Chain (32323)
               </div>
 
               {/* Heading */}
-              <h1 className="mb-6 text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
+              <h1 className="mb-6 text-4xl font-extrabold tracking-tight text-white dark:text-white sm:text-5xl md:text-6xl">
                 Welcome to{' '}
-                <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-kek-green via-kek-cyan to-kek-purple bg-clip-text text-transparent">
                   KEKTECH
                 </span>
               </h1>
 
               {/* Description */}
-              <p className="mb-8 text-lg text-gray-600 dark:text-gray-400 sm:text-xl">
+              <p className="mb-8 text-lg text-gray-300 dark:text-gray-300 sm:text-xl">
                 The ultimate NFT collection on the $BASED Chain. Connect your wallet to start
                 minting unique digital collectibles.
               </p>
@@ -41,13 +41,13 @@ export default function Home() {
               <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <Link
                   href="/mint"
-                  className="w-full rounded-lg bg-blue-600 px-8 py-3 text-center text-base font-medium text-white transition-colors hover:bg-blue-700 sm:w-auto"
+                  className="w-full rounded-lg bg-gradient-to-r from-kek-green to-kek-cyan px-8 py-3 text-center text-base font-medium text-black transition-all hover:shadow-lg hover:shadow-kek-green/50 sm:w-auto"
                 >
                   Start Minting
                 </Link>
                 <Link
                   href="/gallery"
-                  className="w-full rounded-lg border border-gray-300 bg-white px-8 py-3 text-center text-base font-medium text-gray-900 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800 sm:w-auto"
+                  className="w-full rounded-lg border border-kek-purple bg-transparent px-8 py-3 text-center text-base font-medium text-kek-purple transition-all hover:bg-kek-purple/10 hover:shadow-lg hover:shadow-kek-purple/30 sm:w-auto"
                 >
                   View Gallery
                 </Link>
@@ -57,8 +57,8 @@ export default function Home() {
 
           {/* Background Decoration */}
           <div className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute -left-4 top-1/2 h-96 w-96 -translate-y-1/2 rounded-full bg-blue-400/20 blur-3xl" />
-            <div className="absolute -right-4 top-1/4 h-96 w-96 -translate-y-1/2 rounded-full bg-cyan-400/20 blur-3xl" />
+            <div className="absolute -left-4 top-1/2 h-96 w-96 -translate-y-1/2 rounded-full bg-kek-green/20 blur-3xl" />
+            <div className="absolute -right-4 top-1/4 h-96 w-96 -translate-y-1/2 rounded-full bg-kek-purple/20 blur-3xl" />
           </div>
         </section>
 
@@ -112,25 +112,25 @@ export default function Home() {
         </section>
 
         {/* Stats Section */}
-        <section className="bg-gray-50 py-16 dark:bg-gray-900 sm:py-24">
+        <section className="bg-gray-900 py-16 dark:bg-gray-900 sm:py-24">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid gap-8 text-center md:grid-cols-3">
               {/* Stat 1 */}
               <div>
-                <div className="mb-2 text-4xl font-bold text-gray-900 dark:text-white">10,000</div>
-                <div className="text-gray-600 dark:text-gray-400">Total Supply</div>
+                <div className="mb-2 text-4xl font-bold text-kek-green dark:text-kek-green">4,200</div>
+                <div className="text-gray-400 dark:text-gray-400">Total Supply</div>
               </div>
 
               {/* Stat 2 */}
               <div>
-                <div className="mb-2 text-4xl font-bold text-gray-900 dark:text-white">32323</div>
-                <div className="text-gray-600 dark:text-gray-400">Chain ID</div>
+                <div className="mb-2 text-4xl font-bold text-kek-cyan dark:text-kek-cyan">32323</div>
+                <div className="text-gray-400 dark:text-gray-400">Chain ID</div>
               </div>
 
               {/* Stat 3 */}
               <div>
-                <div className="mb-2 text-4xl font-bold text-gray-900 dark:text-white">5</div>
-                <div className="text-gray-600 dark:text-gray-400">Max Per Transaction</div>
+                <div className="mb-2 text-4xl font-bold text-kek-purple dark:text-kek-purple">50</div>
+                <div className="text-gray-400 dark:text-gray-400">Max Per Transaction</div>
               </div>
             </div>
           </div>
