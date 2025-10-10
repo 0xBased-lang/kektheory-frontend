@@ -29,7 +29,7 @@ export function NFTGallery() {
         // Fetch from rankings API with automatic fallback to mock data
         const data = await fetchRankingsWithFallback()
 
-        console.log(`✅ Gallery: Loaded ${data.nfts.length} NFTs`)
+        // Successfully loaded NFTs - console.log removed for production
         setNfts(data.nfts)
       } catch (err) {
         // This should rarely happen since fetchRankingsWithFallback has built-in fallback

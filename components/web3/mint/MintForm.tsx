@@ -60,7 +60,7 @@ export function MintForm() {
           Please connect your wallet to start minting KEKTECH NFTs
         </p>
         <p className="text-sm text-gray-500 dark:text-gray-500">
-          Click the "Connect Wallet" button in the header
+          Click the &quot;Connect Wallet&quot; button in the header
         </p>
       </div>
     )

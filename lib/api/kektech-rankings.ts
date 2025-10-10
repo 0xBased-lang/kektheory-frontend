@@ -113,8 +113,7 @@ export async function fetchRankings(): Promise<RankingsResponse> {
         }
       }
 
-      // Success! Return data
-      console.log(`✅ Rankings API: Loaded ${data.nfts.length} NFTs (attempt ${attempt})`)
+      // Success! Return data (production-safe logging removed)
       return data
 
     } catch (error) {
@@ -129,7 +128,7 @@ export async function fetchRankings(): Promise<RankingsResponse> {
       // If not last attempt, wait before retry (exponential backoff)
       if (attempt < RANKINGS_CONFIG.retries) {
         const delay = RANKINGS_CONFIG.retryDelay * Math.pow(2, attempt - 1)
-        console.log(`   Retrying in ${delay}ms...`)
+        // Retrying with exponential backoff (logging removed for production)
         await new Promise(resolve => setTimeout(resolve, delay))
       }
     }
@@ -225,7 +224,7 @@ export async function fetchRankingsWithFallback(count = 12): Promise<RankingsRes
   } catch (error) {
     // Log error and fall back to mock data
     console.error('❌ Rankings API failed, using mock data:', error)
-    console.log(`📦 Generating ${count} mock NFTs for development`)
+    console.warn(`📦 Generating ${count} mock NFTs for development`)
     return getMockRankings(count)
   }
 }
