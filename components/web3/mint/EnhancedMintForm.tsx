@@ -209,12 +209,12 @@ export function EnhancedMintForm() {
         <div className="mb-6 rounded-xl border border-kek-purple/30 bg-black/40 p-5 backdrop-blur-sm">
           <div className="flex justify-between text-sm text-gray-400">
             <span>Price per NFT:</span>
-            <span className="font-semibold text-white">0.001 ETH</span>
+            <span className="font-semibold text-white">18,369 $BASED</span>
           </div>
           <div className="mt-3 flex justify-between">
             <span className="text-lg font-bold text-white">Total Cost:</span>
             <span className="text-2xl font-black text-kek-green">
-              {(0.001 * mintAmount).toFixed(3)} ETH
+              {(18369 * mintAmount).toLocaleString()} $BASED
             </span>
           </div>
         </div>

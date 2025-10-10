@@ -30,21 +30,21 @@ export default function MintPage() {
 
             {/* Additional Info */}
             <div className="mt-8 grid gap-4 md:grid-cols-3">
-              <div className="rounded-lg border border-gray-200 bg-white p-4 text-center dark:border-gray-800 dark:bg-gray-900">
-                <div className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
-                  10,000
+              <div className="rounded-lg border border-kek-green/30 bg-gray-900 p-4 text-center dark:border-kek-green/30 dark:bg-gray-900">
+                <div className="mb-2 text-2xl font-bold text-kek-green dark:text-kek-green">
+                  4,200
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Total Supply</div>
+                <div className="text-sm text-gray-400 dark:text-gray-400">Total Supply</div>
               </div>
-              <div className="rounded-lg border border-gray-200 bg-white p-4 text-center dark:border-gray-800 dark:bg-gray-900">
-                <div className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
-                  0.001 ETH
+              <div className="rounded-lg border border-kek-cyan/30 bg-gray-900 p-4 text-center dark:border-kek-cyan/30 dark:bg-gray-900">
+                <div className="mb-2 text-2xl font-bold text-kek-cyan dark:text-kek-cyan">
+                  18,369 $BASED
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Mint Price</div>
+                <div className="text-sm text-gray-400 dark:text-gray-400">Mint Price</div>
               </div>
-              <div className="rounded-lg border border-gray-200 bg-white p-4 text-center dark:border-gray-800 dark:bg-gray-900">
-                <div className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">5</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
+              <div className="rounded-lg border border-kek-purple/30 bg-gray-900 p-4 text-center dark:border-kek-purple/30 dark:bg-gray-900">
+                <div className="mb-2 text-2xl font-bold text-kek-purple dark:text-kek-purple">50</div>
+                <div className="text-sm text-gray-400 dark:text-gray-400">
                   Max Per Transaction
                 </div>
               </div>
