@@ -2,20 +2,21 @@
 
 import { useState, useEffect } from 'react'
 import { NFTCard } from './NFTCard'
-import { fetchNFTs, getMockNFTs, type NFTMetadata } from '@/lib/api/nft'
+import { fetchRankingsWithFallback, type RankingNFT } from '@/lib/api/kektech-rankings'
 
 /**
  * NFTGallery Component
  *
  * Displays a grid of NFTs with:
- * - Loading state
- * - Empty state
- * - Error state
- * - Responsive grid layout
- * - Mock data fallback
+ * - Real-time data from rankings API (2470+ NFTs)
+ * - Loading state with skeleton cards
+ * - Empty state with mint CTA
+ * - Error state with retry button
+ * - Responsive grid layout (1-4 columns)
+ * - Automatic fallback to mock data if API unavailable
  */
 export function NFTGallery() {
-  const [nfts, setNfts] = useState<NFTMetadata[]>([])
+  const [nfts, setNfts] = useState<RankingNFT[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -25,17 +26,14 @@ export function NFTGallery() {
         setIsLoading(true)
         setError(null)
 
-        // Try to fetch from API
-        try {
-          const data = await fetchNFTs(1, 12)
-          setNfts(data.nfts)
-        } catch (apiError) {
-          // If API fails, use mock data
-          console.warn('API unavailable, using mock data:', apiError)
-          const mockData = getMockNFTs(12)
-          setNfts(mockData)
-        }
+        // Fetch from rankings API with automatic fallback to mock data
+        const data = await fetchRankingsWithFallback()
+
+        console.log(`✅ Gallery: Loaded ${data.nfts.length} NFTs`)
+        setNfts(data.nfts)
       } catch (err) {
+        // This should rarely happen since fetchRankingsWithFallback has built-in fallback
+        console.error('❌ Gallery: Failed to load NFTs:', err)
         setError(err instanceof Error ? err.message : 'Failed to load NFTs')
       } finally {
         setIsLoading(false)
