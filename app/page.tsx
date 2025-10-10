@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { TraitDistribution } from '@/components/traits/TraitDistribution'
 
 /**
  * Homepage
@@ -133,6 +134,13 @@ export default function Home() {
                 <div className="text-gray-400 dark:text-gray-400">Max Per Transaction</div>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Trait Distribution Section */}
+        <section className="bg-gradient-to-b from-gray-950 to-kek-dark py-16 dark:from-gray-950 dark:to-kek-dark sm:py-24">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <TraitDistribution />
           </div>
         </section>
       </main>
