@@ -112,10 +112,10 @@ export default function Home() {
                 Our Vision
               </h3>
               <p className="font-fredoka text-lg leading-relaxed text-gray-300">
-                At 𝕂Ǝ𝕂TECH, we aim to create more than just another NFT collection. We envision a dynamic ecosystem where art, community, and technology converge to create lasting value. At our core, spreading fresh, dank Pepe art throughout the crypto space drives everything we do. We're building a platform where holders can customize their digital identities, earn rewards, and participate in the evolution of the collection itself.
+                At 𝕂Ǝ𝕂TECH, we aim to create more than just another NFT collection. We envision a dynamic ecosystem where art, community, and technology converge to create lasting value. At our core, spreading fresh, dank Pepe art throughout the crypto space drives everything we do. We&apos;re building a platform where holders can customize their digital identities, earn rewards, and participate in the evolution of the collection itself.
               </p>
               <p className="font-fredoka text-lg leading-relaxed text-gray-300">
-                Our mission extends beyond digital assets—we're committed to producing high-quality Pepe art that celebrates the culture and contributes to the broader crypto art space. This is our homage to the communities that inspired us and our contribution to the ever-evolving PEPENING 🐸🚀 movement.
+                Our mission extends beyond digital assets—we&apos;re committed to producing high-quality Pepe art that celebrates the culture and contributes to the broader crypto art space. This is our homage to the communities that inspired us and our contribution to the ever-evolving PEPENING 🐸🚀 movement.
               </p>
             </div>
           </div>
@@ -229,7 +229,7 @@ export default function Home() {
                 Community Journey
               </h3>
               <p className="mb-6 font-fredoka text-lg leading-relaxed text-gray-300">
-                We're committed to engaging with our community at every step. We value your feedback and will adapt our vision to create the best experience for our holders. Above all, we're dedicated to our highest utility: spreading dank Pepe art throughout the space, bringing creative joy to the broader crypto community. 🐸🎨🔥 We strongly believe in collaborations and will pursue partnerships with other $Based NFT communities to create opportunities that strengthen the entire ecosystem.
+                We&apos;re committed to engaging with our community at every step. We value your feedback and will adapt our vision to create the best experience for our holders. Above all, we&apos;re dedicated to our highest utility: spreading dank Pepe art throughout the space, bringing creative joy to the broader crypto community. 🐸🎨🔥 We strongly believe in collaborations and will pursue partnerships with other $Based NFT communities to create opportunities that strengthen the entire ecosystem.
               </p>
               {/* Making-of GIF */}
               <div className="group relative overflow-hidden rounded-lg border-2 border-[#3fb8bd]/30 shadow-lg shadow-[#3fb8bd]/10 transition-all hover:border-[#3fb8bd] hover:shadow-2xl hover:shadow-[#3fb8bd]/30">
