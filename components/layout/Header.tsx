@@ -35,21 +35,33 @@ export function Header() {
         <nav className="hidden items-center space-x-6 md:flex">
           <Link
             href="/"
-            className="text-sm font-medium text-gray-300 transition-colors hover:text-kek-green dark:text-gray-300 dark:hover:text-kek-green"
+            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-kek-green dark:text-gray-300 dark:hover:text-kek-green"
           >
             Home
           </Link>
           <Link
-            href="/mint"
-            className="text-sm font-medium text-gray-300 transition-colors hover:text-kek-cyan dark:text-gray-300 dark:hover:text-kek-cyan"
+            href="/#about"
+            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-kek-green dark:text-gray-300 dark:hover:text-kek-green"
           >
-            Mint
+            About us
+          </Link>
+          <Link
+            href="/#roadmap"
+            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-kek-green dark:text-gray-300 dark:hover:text-kek-green"
+          >
+            Roadmap
           </Link>
           <Link
             href="/gallery"
-            className="text-sm font-medium text-gray-300 transition-colors hover:text-kek-purple dark:text-gray-300 dark:hover:text-kek-purple"
+            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-kek-green dark:text-gray-300 dark:hover:text-kek-green"
           >
             Gallery
+          </Link>
+          <Link
+            href="/#traits"
+            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-kek-green dark:text-gray-300 dark:hover:text-kek-green"
+          >
+            Traits
           </Link>
         </nav>
 
