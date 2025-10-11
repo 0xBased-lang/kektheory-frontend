@@ -3,6 +3,7 @@ import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { TraitDistribution } from '@/components/traits/TraitDistribution'
 import { EnhancedHero } from '@/components/homepage/EnhancedHero'
+import { FeaturedNFTs } from '@/components/sections/FeaturedNFTs'
 
 /**
  * Homepage
@@ -17,6 +18,9 @@ export default function Home() {
       <main className="flex-1">
         {/* Enhanced Hero Section with 3D Effects and Particles */}
         <EnhancedHero />
+
+        {/* Featured NFTs Section */}
+        <FeaturedNFTs />
 
         {/* Features Section */}
         <section className="bg-white py-16 dark:bg-gray-950 sm:py-24">
