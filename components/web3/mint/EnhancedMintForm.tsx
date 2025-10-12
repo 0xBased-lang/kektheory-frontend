@@ -168,29 +168,6 @@ export function EnhancedMintForm() {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
 
       <div className="relative">
-        {/* NFT Preview Image */}
-        <div className="mb-6 flex justify-center">
-          <div className="relative w-48 h-48 rounded-xl overflow-hidden border-2 border-kek-green/50 shadow-lg shadow-kek-green/20">
-            <Image
-              src="/images/686.png"
-              alt="KEKTECH NFT Example"
-              width={400}
-              height={400}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-
-        {/* Dynamic Total Supply */}
-        <div className="mb-6 text-center">
-          <div className="inline-block px-6 py-3 rounded-xl border border-kek-cyan/30 bg-kek-cyan/10">
-            <div className="text-sm text-gray-400 mb-1">Total Supply</div>
-            <div className="text-2xl font-bold text-kek-cyan">
-              {totalMinted.toLocaleString()} / 4,200
-            </div>
-          </div>
-        </div>
-
         {/* Progress Steps */}
         {(isWritePending || isConfirming || isConfirmed) && (
           <div className="mb-8">
@@ -218,29 +195,45 @@ export function EnhancedMintForm() {
           </div>
         )}
 
-        {/* Amount Selector */}
-        <div className="mb-6">
-          <label className="mb-3 block text-sm font-semibold text-gray-300">
-            Amount (Max {maxMintPerTx} per transaction)
-          </label>
-          <div className="flex items-center justify-center gap-4">
-            <button
-              onClick={() => handleAmountChange(mintAmount - 1)}
-              disabled={mintAmount <= 1 || isWritePending || isConfirming}
-              className="flex h-12 w-12 items-center justify-center rounded-lg border-2 border-kek-green/30 bg-kek-green/10 text-2xl font-bold text-kek-green transition-all hover:border-kek-green hover:bg-kek-green/20 hover:scale-110 disabled:cursor-not-allowed disabled:opacity-30"
-            >
-              −
-            </button>
-            <div className="flex h-16 w-24 items-center justify-center rounded-lg border-2 border-kek-cyan/50 bg-black/40">
-              <span className="text-4xl font-black text-kek-cyan">{mintAmount}</span>
+        {/* Main Mint Layout - Image left, Amount selector right */}
+        <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Left: NFT Preview Image */}
+          <div className="flex items-center justify-center">
+            <div className="relative w-full max-w-xs aspect-square rounded-xl overflow-hidden border-2 border-kek-green/50 shadow-lg shadow-kek-green/20">
+              <Image
+                src="/images/686.png"
+                alt="𝕂Ǝ𝕂丅ᵉ匚🅷 NFT"
+                width={400}
+                height={400}
+                className="w-full h-full object-cover"
+              />
             </div>
-            <button
-              onClick={() => handleAmountChange(mintAmount + 1)}
-              disabled={mintAmount >= maxMintPerTx || isWritePending || isConfirming}
-              className="flex h-12 w-12 items-center justify-center rounded-lg border-2 border-kek-green/30 bg-kek-green/10 text-2xl font-bold text-kek-green transition-all hover:border-kek-green hover:bg-kek-green/20 hover:scale-110 disabled:cursor-not-allowed disabled:opacity-30"
-            >
-              +
-            </button>
+          </div>
+
+          {/* Right: Amount Selector */}
+          <div className="flex flex-col items-center justify-center">
+            <label className="mb-4 block text-sm font-semibold text-gray-300 text-center">
+              Amount (Max {maxMintPerTx})
+            </label>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => handleAmountChange(mintAmount - 1)}
+                disabled={mintAmount <= 1 || isWritePending || isConfirming}
+                className="flex h-14 w-14 items-center justify-center rounded-lg border-2 border-kek-green/30 bg-kek-green/10 text-3xl font-bold text-kek-green transition-all hover:border-kek-green hover:bg-kek-green/20 hover:scale-110 disabled:cursor-not-allowed disabled:opacity-30"
+              >
+                −
+              </button>
+              <div className="flex h-20 w-28 items-center justify-center rounded-lg border-2 border-kek-cyan/50 bg-black/40">
+                <span className="text-5xl font-black text-kek-cyan">{mintAmount}</span>
+              </div>
+              <button
+                onClick={() => handleAmountChange(mintAmount + 1)}
+                disabled={mintAmount >= maxMintPerTx || isWritePending || isConfirming}
+                className="flex h-14 w-14 items-center justify-center rounded-lg border-2 border-kek-green/30 bg-kek-green/10 text-3xl font-bold text-kek-green transition-all hover:border-kek-green hover:bg-kek-green/20 hover:scale-110 disabled:cursor-not-allowed disabled:opacity-30"
+              >
+                +
+              </button>
+            </div>
           </div>
         </div>
 
@@ -305,6 +298,16 @@ export function EnhancedMintForm() {
         <p className="mt-6 text-center text-xs text-gray-500">
           Your NFT will be minted on the <span className="font-semibold text-kek-green">$BASED Chain (32323)</span>
         </p>
+      </div>
+
+      {/* Dynamic Total Supply - Below main widget */}
+      <div className="mt-4 text-center">
+        <div className="inline-block px-6 py-3 rounded-xl border border-kek-cyan/30 bg-kek-cyan/10">
+          <div className="text-sm text-gray-400 mb-1">Total Supply</div>
+          <div className="text-2xl font-bold text-kek-cyan">
+            {totalMinted.toLocaleString()} / 4,200
+          </div>
+        </div>
       </div>
     </div>
   )

@@ -18,10 +18,10 @@ export default function MintPage() {
             {/* Page Header */}
             <div className="mb-8 text-center">
               <h1 className="mb-4 text-4xl font-bold text-white font-fredoka">
-                Mint KEKTECH NFTs
+                Mint 𝕂Ǝ𝕂丅ᵉ匚🅷 NFTs
               </h1>
               <p className="text-lg text-gray-400">
-                Join the KEKTECH community on the $BASED Chain 🐸🚀
+                Join the 𝕂Ǝ𝕂丅ᵉ匚🅷 community on the $BASED Chain 🐸🚀
               </p>
             </div>
 
