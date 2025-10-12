@@ -205,8 +205,8 @@ export default function Homepage() {
             </div>
 
             {/* Phase 3 */}
-            <div className="bg-gradient-to-br from-[#ff00ff]/10 to-transparent rounded-2xl border border-[#ff00ff]/20 p-8">
-              <h3 className="text-2xl font-bold text-[#ff00ff] mb-4 font-fredoka">Phase 3: Limited Edition Mint</h3>
+            <div className="bg-gradient-to-br from-[#3fb8bd]/10 to-transparent rounded-2xl border border-[#3fb8bd]/20 p-8">
+              <h3 className="text-2xl font-bold text-[#3fb8bd] mb-4 font-fredoka">Phase 3: Limited Edition Mint</h3>
               <ul className="space-y-3 text-gray-300">
                 <li>→ Limited edition free mint of 420 handpicked NFTs</li>
                 <li>→ Main collection NFT holders with Easter Egg traits qualify for the 420 limited edition free mint</li>
