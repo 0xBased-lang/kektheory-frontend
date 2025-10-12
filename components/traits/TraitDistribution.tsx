@@ -1,7 +1,5 @@
 'use client'
 
-import { useState } from 'react'
-
 /**
  * Trait distribution data for KEKTECH NFT Collection
  * Source: Official collection data with 4200 total supply
@@ -147,8 +145,6 @@ const traitDistributions = {
   },
 }
 
-type TraitCategory = keyof typeof traitDistributions
-
 /**
  * Get rarity level based on percentage
  * Colors match the old kektech.xyz website
@@ -174,66 +170,36 @@ function formatTraitName(name: string): string {
 /**
  * TraitDistribution Component
  *
- * Interactive trait distribution viewer with:
- * - Category tabs
- * - Rarity indicators
- * - KEKTECH brand styling
- * - Responsive design
+ * Simplified trait distribution viewer showing all traits in one table
  */
 export function TraitDistribution() {
-  const [activeCategory, setActiveCategory] = useState<TraitCategory>('background')
+  // Combine all traits from all categories into one array
+  const allTraits: Array<{ category: string; name: string; data: { count: number; percentage: string } }> = []
 
-  const categories: { key: TraitCategory; label: string }[] = [
-    { key: 'background', label: 'Background' },
-    { key: 'body', label: 'Body' },
-    { key: 'tattoo', label: 'Tattoo' },
-    { key: 'style', label: 'Style' },
-    { key: 'clothes', label: 'Clothes' },
-    { key: 'tools', label: 'Tools' },
-    { key: 'eyes', label: 'Eyes' },
-    { key: 'glasses', label: 'Glasses' },
-    { key: 'hat', label: 'Hat' },
-    { key: 'special', label: 'Special' },
-    { key: 'easter-eggs', label: 'Easter Eggs' },
-  ]
+  Object.entries(traitDistributions).forEach(([category, traits]) => {
+    Object.entries(traits).forEach(([name, data]) => {
+      allTraits.push({
+        category: formatTraitName(category),
+        name,
+        data
+      })
+    })
+  })
 
-  const traits = Object.entries(traitDistributions[activeCategory])
+  // Sort by rarity (percentage ascending)
+  allTraits.sort((a, b) => parseFloat(a.data.percentage) - parseFloat(b.data.percentage))
 
   return (
     <div className="mx-auto max-w-7xl">
-      {/* Header */}
-      <div className="mb-8 text-center">
-        <h2 className="mb-4 text-3xl font-bold text-white md:text-4xl">
-          Trait Distribution
-        </h2>
-        <p className="text-gray-400">
-          Explore the rarity of traits across the KEKTECH collection
-        </p>
-      </div>
-
-      {/* Category Tabs */}
-      <div className="mb-8 flex flex-wrap justify-center gap-2">
-        {categories.map(({ key, label }) => (
-          <button
-            key={key}
-            onClick={() => setActiveCategory(key)}
-            className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
-              activeCategory === key
-                ? 'bg-gradient-to-r from-kek-green to-kek-cyan text-black shadow-md shadow-kek-green/30'
-                : 'border border-kek-green/20 bg-gray-900 text-gray-400 hover:border-kek-green/50 hover:text-white'
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-
       {/* Traits Table */}
       <div className="overflow-hidden rounded-lg border border-kek-green/20 bg-gray-900">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="border-b border-kek-green/20 bg-gray-800">
               <tr>
+                <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider text-kek-green">
+                  Category
+                </th>
                 <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider text-kek-green">
                   Trait
                 </th>
@@ -249,21 +215,24 @@ export function TraitDistribution() {
               </tr>
             </thead>
             <tbody className="divide-y divide-kek-green/10">
-              {traits.map(([name, data]) => {
-                const rarity = getRarity(data.percentage)
+              {allTraits.map((trait, index) => {
+                const rarity = getRarity(trait.data.percentage)
                 return (
                   <tr
-                    key={name}
+                    key={`${trait.category}-${trait.name}-${index}`}
                     className="transition-colors hover:bg-kek-green/5"
                   >
+                    <td className="px-6 py-4 text-sm font-medium text-gray-400">
+                      {trait.category}
+                    </td>
                     <td className="px-6 py-4 text-sm font-medium text-white">
-                      {formatTraitName(name)}
+                      {formatTraitName(trait.name)}
                     </td>
                     <td className="px-6 py-4 text-center text-sm text-gray-300">
-                      {data.count}
+                      {trait.data.count}
                     </td>
                     <td className="px-6 py-4 text-center text-sm font-semibold text-kek-cyan">
-                      {data.percentage}
+                      {trait.data.percentage}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <span
@@ -282,8 +251,7 @@ export function TraitDistribution() {
 
       {/* Stats Summary */}
       <div className="mt-6 text-center text-sm text-gray-500">
-        Showing {traits.length} traits in {formatTraitName(activeCategory)}{' '}
-        category
+        Showing {allTraits.length} total traits across all categories
       </div>
     </div>
   )
