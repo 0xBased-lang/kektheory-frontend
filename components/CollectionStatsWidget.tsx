@@ -71,9 +71,9 @@ export function CollectionStatsWidget() {
         </div>
 
         {/* Progress */}
-        <div className="text-center p-6 rounded-xl bg-gradient-to-br from-[#ff00ff]/10 to-transparent border border-[#ff00ff]/20">
+        <div className="text-center p-6 rounded-xl bg-gradient-to-br from-[#a855f7]/10 to-transparent border border-[#a855f7]/20">
           <div className="text-sm font-medium text-gray-400 mb-2">Progress</div>
-          <div className="text-4xl font-bold text-[#ff00ff] font-fredoka">{progress}%</div>
+          <div className="text-4xl font-bold text-[#a855f7] font-fredoka">{progress}%</div>
           <div className="text-xs text-gray-500 mt-1">complete</div>
         </div>
       </div>

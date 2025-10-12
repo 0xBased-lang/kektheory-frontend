@@ -57,7 +57,7 @@ export function NFTCard({ nft }: NFTCardProps) {
         {/* Rarity Score */}
         <div className="mb-3 flex items-center justify-between text-sm">
           <span className="text-gray-400 dark:text-gray-400">Rarity Score:</span>
-          <span className="font-semibold text-[#ff00ff] dark:text-[#ff00ff]">
+          <span className="font-semibold text-[#a855f7] dark:text-[#a855f7]">
             {nft.rarityScore.toFixed(2)}
           </span>
         </div>
