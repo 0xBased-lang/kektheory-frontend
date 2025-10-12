@@ -40,13 +40,13 @@ export function CompactStatsWidget() {
   const remaining = totalSupply - totalMinted
   const progress = ((totalMinted / totalSupply) * 100).toFixed(1)
 
-  // Tier distribution based on total minted with improved colors
+  // Tier distribution based on total minted - colors match trait rarity badges
   const tiers = [
-    { name: 'Mythic', minted: Math.floor(totalMinted * (13 / 4200)), total: 13, color: '#ff00ff', bgColor: 'bg-[#ff00ff]/10' },
-    { name: 'Legendary', minted: Math.floor(totalMinted * (42 / 4200)), total: 42, color: '#ffd700', bgColor: 'bg-[#ffd700]/10' },
-    { name: 'Epic', minted: Math.floor(totalMinted * (195 / 4200)), total: 195, color: '#9d4edd', bgColor: 'bg-[#9d4edd]/10' },
-    { name: 'Rare', minted: Math.floor(totalMinted * (670 / 4200)), total: 670, color: '#3fb8bd', bgColor: 'bg-[#3fb8bd]/10' },
-    { name: 'Common', minted: Math.floor(totalMinted * (3280 / 4200)), total: 3280, color: '#9ca3af', bgColor: 'bg-gray-500/10' }
+    { name: 'Mythic', minted: Math.floor(totalMinted * (13 / 4200)), total: 13, color: '#a855f7', bgColor: 'bg-purple-500/10' },
+    { name: 'Legendary', minted: Math.floor(totalMinted * (42 / 4200)), total: 42, color: '#eab308', bgColor: 'bg-yellow-500/10' },
+    { name: 'Epic', minted: Math.floor(totalMinted * (195 / 4200)), total: 195, color: '#22c55e', bgColor: 'bg-green-500/10' },
+    { name: 'Rare', minted: Math.floor(totalMinted * (670 / 4200)), total: 670, color: '#3b82f6', bgColor: 'bg-blue-500/10' },
+    { name: 'Common', minted: Math.floor(totalMinted * (3280 / 4200)), total: 3280, color: '#06b6d4', bgColor: 'bg-cyan-500/10' }
   ]
 
   return (
