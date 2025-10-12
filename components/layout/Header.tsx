@@ -21,9 +21,9 @@ export function Header() {
           <Image
             src="/images/kektech.gif?v=4"
             alt="𝕂Ǝ𝕂丅ᵉ匚🅷 Home"
-            width={200}
-            height={100}
-            className="h-auto w-40 sm:w-48 md:w-56 lg:w-60"
+            width={180}
+            height={90}
+            className="h-auto w-36 sm:w-44 md:w-52 lg:w-56"
             unoptimized
             priority
           />
