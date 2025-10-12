@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useMint } from '@/lib/hooks/useMint'
 import { EXPLORER_URL } from '@/config/constants'
+import { getTotalSupply, CONTRACTS } from '@/lib/blockchain/kektv'
 import Image from 'next/image'
 
 /**
@@ -32,6 +33,7 @@ export function EnhancedMintForm() {
   const [localError, setLocalError] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
   const [showConfetti, setShowConfetti] = useState(false)
+  const [totalMinted, setTotalMinted] = useState<number>(0)
 
   // Animate progress bar
   useEffect(() => {
@@ -48,6 +50,23 @@ export function EnhancedMintForm() {
       setTimeout(() => setShowConfetti(false), 5000)
     }
   }, [isConfirmed])
+
+  // Fetch total minted from blockchain
+  useEffect(() => {
+    const fetchTotalMinted = async () => {
+      try {
+        const total = await getTotalSupply(CONTRACTS.KEKTECH)
+        setTotalMinted(total)
+      } catch (error) {
+        console.error('Error fetching total supply:', error)
+      }
+    }
+
+    fetchTotalMinted()
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchTotalMinted, 30000)
+    return () => clearInterval(interval)
+  }, [])
 
   const handleMint = async () => {
     setLocalError(null)
@@ -153,7 +172,7 @@ export function EnhancedMintForm() {
         <div className="mb-6 flex justify-center">
           <div className="relative w-48 h-48 rounded-xl overflow-hidden border-2 border-kek-green/50 shadow-lg shadow-kek-green/20">
             <Image
-              src="/images/171.png"
+              src="/images/686.png"
               alt="KEKTECH NFT Example"
               width={400}
               height={400}
@@ -162,9 +181,15 @@ export function EnhancedMintForm() {
           </div>
         </div>
 
-        <h2 className="mb-6 bg-gradient-to-r from-kek-green to-kek-cyan bg-clip-text text-3xl font-black text-transparent text-center">
-          Mint KEKTECH NFTs
-        </h2>
+        {/* Dynamic Total Supply */}
+        <div className="mb-6 text-center">
+          <div className="inline-block px-6 py-3 rounded-xl border border-kek-cyan/30 bg-kek-cyan/10">
+            <div className="text-sm text-gray-400 mb-1">Total Supply</div>
+            <div className="text-2xl font-bold text-kek-cyan">
+              {totalMinted.toLocaleString()} / 4,200
+            </div>
+          </div>
+        </div>
 
         {/* Progress Steps */}
         {(isWritePending || isConfirming || isConfirmed) && (
