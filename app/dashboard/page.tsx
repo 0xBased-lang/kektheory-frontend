@@ -9,7 +9,12 @@ import { NFTDashboard } from '@/components/wallet/NFTDashboard'
  * Dashboard Page
  *
  * Personal dashboard showing wallet NFTs, portfolio stats, and rewards
+ * Force dynamic rendering to prevent static generation issues with Web3 hooks
  */
+
+// Force dynamic rendering (required for client-side Web3 hooks)
+export const dynamic = 'force-dynamic'
+
 export default function DashboardPage() {
   const { address, isConnected } = useAccount()
 

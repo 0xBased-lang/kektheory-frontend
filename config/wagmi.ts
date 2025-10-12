@@ -11,8 +11,8 @@ import { walletConnect, injected, coinbaseWallet } from 'wagmi/connectors'
  * - Multi-wallet support: MetaMask, WalletConnect, Coinbase Wallet
  */
 
-// Get Reown Project ID from environment variable
-const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID!
+// Get Reown Project ID from environment variable (trim to remove any whitespace/newlines)
+const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID?.trim()!
 
 // Verify Project ID is set
 if (!projectId) {
