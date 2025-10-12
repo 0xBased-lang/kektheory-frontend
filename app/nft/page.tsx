@@ -14,6 +14,8 @@ interface NFTMetadata {
   attributes?: Array<{
     trait_type: string
     value: string | number
+    rarity?: number
+    count?: number
   }>
 }
 
@@ -218,12 +220,24 @@ function NFTDetailPageContent() {
                       {nftDetails.metadata.attributes.map((attr, index) => (
                         <div
                           key={index}
-                          className="rounded-lg border border-[#4ecca7]/20 bg-black/40 p-3"
+                          className="rounded-lg border border-[#4ecca7]/20 bg-black/40 p-4"
                         >
-                          <div className="text-xs text-gray-400">{attr.trait_type}</div>
+                          <div className="mb-2 flex items-center justify-between">
+                            <div className="text-xs uppercase text-gray-400">{attr.trait_type}</div>
+                            {attr.rarity && (
+                              <div className="text-xs font-bold text-[#3fb8bd]">
+                                {attr.rarity.toFixed(2)}%
+                              </div>
+                            )}
+                          </div>
                           <div className="font-fredoka font-semibold text-[#4ecca7]">
                             {attr.value}
                           </div>
+                          {attr.count && (
+                            <div className="mt-1 text-xs text-gray-500">
+                              {attr.count} / 4200
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>

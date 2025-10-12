@@ -101,11 +101,8 @@ export function TierRankingWidget() {
         })
       } catch (error) {
         console.error('Error fetching ranking stats:', error)
-        // Fallback data
-        setStats({
-          totalNFTs: 0,
-          tiers: [],
-        })
+        // Set to null on error to hide the widget
+        setStats(null)
       } finally {
         setLoading(false)
       }
@@ -122,12 +119,9 @@ export function TierRankingWidget() {
     )
   }
 
+  // Hide widget if data failed to load
   if (!stats || stats.tiers.length === 0) {
-    return (
-      <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-6 text-center">
-        <p className="text-red-400">Failed to load collection stats</p>
-      </div>
-    )
+    return null
   }
 
   return (
