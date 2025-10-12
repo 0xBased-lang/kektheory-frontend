@@ -2,44 +2,13 @@
 
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
-import { useState, useEffect } from 'react'
 
 /**
  * Rewards Page
  * Details about the KEKTECH token economy and reward system
  */
 export default function RewardsPage() {
-  const [walletConnected, setWalletConnected] = useState(false)
-  const [userRewards, setUserRewards] = useState({
-    dailyRewards: 0,
-    totalEarned: 0,
-    rarityMultiplier: 1.0,
-    stackingMultiplier: 1.0
-  })
-
-  useEffect(() => {
-    // Check wallet connection
-    const checkWallet = async () => {
-      if (typeof window !== 'undefined' && window.ethereum) {
-        try {
-          const accounts = await window.ethereum.request({ method: 'eth_accounts' }) as string[]
-          if (accounts.length > 0) {
-            setWalletConnected(true)
-            // Mock rewards data - replace with actual blockchain queries
-            setUserRewards({
-              dailyRewards: 150,
-              totalEarned: 4500,
-              rarityMultiplier: 2.5,
-              stackingMultiplier: 1.8
-            })
-          }
-        } catch (error) {
-          console.error('Wallet check error:', error)
-        }
-      }
-    }
-    checkWallet()
-  }, [])
+  // Removed wallet connection check since rewards claiming is not yet available
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -57,48 +26,20 @@ export default function RewardsPage() {
             </p>
           </div>
 
-          {/* Rewards Dashboard */}
-          {walletConnected ? (
-            <div className="mb-16">
-              <h2 className="font-fredoka mb-6 text-2xl font-bold text-white">Your Rewards Dashboard</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="bg-gradient-to-br from-[#3fb8bd]/10 to-transparent rounded-2xl border border-[#3fb8bd]/20 p-6">
-                  <h3 className="text-sm text-gray-400 mb-2">Daily Rewards</h3>
-                  <div className="text-3xl font-bold text-[#3fb8bd]">{userRewards.dailyRewards}</div>
-                  <div className="text-xs text-gray-500 mt-1">Tokens/day</div>
-                </div>
-
-                <div className="bg-gradient-to-br from-[#4ecca7]/10 to-transparent rounded-2xl border border-[#4ecca7]/20 p-6">
-                  <h3 className="text-sm text-gray-400 mb-2">Total Earned</h3>
-                  <div className="text-3xl font-bold text-[#4ecca7]">{userRewards.totalEarned.toLocaleString()}</div>
-                  <div className="text-xs text-gray-500 mt-1">All-time tokens</div>
-                </div>
-
-                <div className="bg-gradient-to-br from-[#ff00ff]/10 to-transparent rounded-2xl border border-[#ff00ff]/20 p-6">
-                  <h3 className="text-sm text-gray-400 mb-2">Rarity Multiplier</h3>
-                  <div className="text-3xl font-bold text-[#ff00ff]">{userRewards.rarityMultiplier}x</div>
-                  <div className="text-xs text-gray-500 mt-1">Based on rarity</div>
-                </div>
-
-                <div className="bg-gradient-to-br from-[#3fb8bd]/10 to-transparent rounded-2xl border border-[#3fb8bd]/20 p-6">
-                  <h3 className="text-sm text-gray-400 mb-2">Stacking Multiplier</h3>
-                  <div className="text-3xl font-bold text-[#3fb8bd]">{userRewards.stackingMultiplier}x</div>
-                  <div className="text-xs text-gray-500 mt-1">Hold multiple NFTs</div>
-                </div>
-              </div>
-
-              <button className="mt-6 px-8 py-3 rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black font-bold hover:scale-105 transition font-fredoka">
-                Claim Rewards
-              </button>
+          {/* Coming Soon Notice */}
+          <div className="mb-16 bg-gradient-to-br from-[#3fb8bd]/10 via-[#4ecca7]/5 to-transparent rounded-2xl border-2 border-[#3fb8bd]/30 p-12 text-center">
+            <div className="text-6xl mb-6">🎁</div>
+            <h2 className="font-fredoka mb-4 text-3xl font-bold text-white">$TECH Token Airdrops Sent!</h2>
+            <p className="text-xl text-gray-300 mb-6 max-w-2xl mx-auto">
+              We&apos;ve successfully distributed $TECH token airdrops to all eligible 𝕂Ǝ𝕂TECH NFT holders! 🎉
+            </p>
+            <div className="inline-block px-6 py-3 rounded-xl bg-[#ffd700]/20 border border-[#ffd700]/50 mb-6">
+              <span className="text-2xl font-bold text-[#ffd700]">Claiming System: Coming Soon</span>
             </div>
-          ) : (
-            <div className="mb-16 bg-gradient-to-br from-gray-900 to-transparent rounded-2xl border border-gray-800 p-12 text-center">
-              <p className="text-xl text-gray-400 mb-6">Connect your wallet to view your rewards</p>
-              <button className="px-8 py-3 rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black font-bold hover:scale-105 transition font-fredoka">
-                Connect Wallet
-              </button>
-            </div>
-          )}
+            <p className="text-gray-400 max-w-xl mx-auto">
+              The rewards claiming interface is currently under development. Check back soon to claim your tokens and start earning daily rewards! 🚀
+            </p>
+          </div>
 
           {/* How Rewards Work */}
           <div className="mb-16">

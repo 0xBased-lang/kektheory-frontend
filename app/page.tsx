@@ -437,6 +437,54 @@ export default function DashboardHomepage() {
         </div>
       </section>
 
+      {/* Traits Distribution Section */}
+      <section id="traits" className="py-20 border-t border-gray-800">
+        <div className="container mx-auto px-6">
+          <h2 className="text-4xl font-bold text-white text-center mb-4 font-fredoka">𝕂Ǝ𝕂丅ᵉ匚🅷 Traits</h2>
+          <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
+            Discover the diverse traits that make each 𝕂Ǝ𝕂TECH NFT unique across 11 distinct categories
+          </p>
+
+          {/* Trait Categories Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-12">
+            {[
+              { name: "Background", icon: "🎨", count: 11, color: "#3fb8bd" },
+              { name: "Body", icon: "👤", count: 7, color: "#4ecca7" },
+              { name: "Tattoo", icon: "✒️", count: 12, color: "#ff00ff" },
+              { name: "Style", icon: "💎", count: 10, color: "#ffd700" },
+              { name: "Clothes", icon: "👔", count: 15, color: "#9d4edd" },
+              { name: "Tools", icon: "🛠️", count: 18, color: "#3fb8bd" },
+              { name: "Eyes", icon: "👀", count: 14, color: "#4ecca7" },
+              { name: "Glasses", icon: "🕶️", count: 13, color: "#ff00ff" },
+              { name: "Hat", icon: "🎩", count: 17, color: "#ffd700" },
+              { name: "Special", icon: "⭐", count: 8, color: "#9d4edd" },
+              { name: "Easter Eggs", icon: "🥚", count: 25, color: "#3fb8bd" }
+            ].map((category) => (
+              <div
+                key={category.name}
+                className="bg-gradient-to-br from-gray-900/80 to-transparent rounded-xl border border-gray-700 p-6 text-center hover:border-[#3fb8bd]/50 transition"
+              >
+                <div className="text-4xl mb-3">{category.icon}</div>
+                <h3 className="text-lg font-bold text-white mb-2">{category.name}</h3>
+                <div className="text-sm text-gray-400">{category.count} variations</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Coming Soon Note */}
+          <div className="max-w-4xl mx-auto text-center bg-gradient-to-br from-[#3fb8bd]/10 via-[#4ecca7]/5 to-transparent rounded-2xl border border-[#3fb8bd]/30 p-8">
+            <div className="text-4xl mb-4">📊</div>
+            <h3 className="text-2xl font-bold text-white mb-3">Detailed Trait Statistics</h3>
+            <p className="text-gray-300 mb-4">
+              A comprehensive breakdown of all trait rarities, percentages, and distributions is coming soon to help you understand the uniqueness of your 𝕂Ǝ𝕂TECH NFT!
+            </p>
+            <div className="inline-block px-4 py-2 rounded-lg bg-[#3fb8bd]/20 text-[#3fb8bd] text-sm">
+              Full Trait Explorer: Coming Soon 🚀
+            </div>
+          </div>
+        </div>
+      </section>
+
       </main>
 
       <Footer />
