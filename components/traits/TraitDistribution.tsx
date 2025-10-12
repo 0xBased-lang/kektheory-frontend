@@ -151,14 +151,15 @@ type TraitCategory = keyof typeof traitDistributions
 
 /**
  * Get rarity level based on percentage
+ * Colors match the old kektech.xyz website
  */
-function getRarity(percentage: string): { label: string; color: string } {
+function getRarity(percentage: string): { label: string; color: string; bgColor: string } {
   const value = parseFloat(percentage)
-  if (value < 1) return { label: 'Mythic', color: 'text-kek-purple' }
-  if (value < 5) return { label: 'Legendary', color: 'text-kek-cyan' }
-  if (value < 15) return { label: 'Epic', color: 'text-kek-green' }
-  if (value < 30) return { label: 'Rare', color: 'text-blue-400' }
-  return { label: 'Common', color: 'text-gray-400' }
+  if (value < 1) return { label: 'Mythic', color: 'text-purple-400', bgColor: 'bg-purple-500' }
+  if (value < 5) return { label: 'Legendary', color: 'text-yellow-400', bgColor: 'bg-yellow-500' }
+  if (value < 15) return { label: 'Epic', color: 'text-green-400', bgColor: 'bg-green-500' }
+  if (value < 30) return { label: 'Rare', color: 'text-blue-400', bgColor: 'bg-blue-500' }
+  return { label: 'Common', color: 'text-cyan-400', bgColor: 'bg-cyan-500' }
 }
 
 /**
@@ -266,7 +267,7 @@ export function TraitDistribution() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <span
-                        className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${rarity.color}`}
+                        className={`inline-block rounded-md px-3 py-1 text-xs font-bold ${rarity.bgColor} text-black`}
                       >
                         {rarity.label}
                       </span>

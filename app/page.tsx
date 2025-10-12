@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { TraitDistribution } from '@/components/traits/TraitDistribution'
 
 /**
  * KEKTECH Homepage
@@ -284,16 +285,9 @@ export default function Homepage() {
             ))}
           </div>
 
-          {/* Coming Soon Note */}
-          <div className="max-w-4xl mx-auto text-center bg-gradient-to-br from-[#3fb8bd]/10 via-[#4ecca7]/5 to-transparent rounded-2xl border border-[#3fb8bd]/30 p-8">
-            <div className="text-4xl mb-4">📊</div>
-            <h3 className="text-2xl font-bold text-[#3fb8bd] mb-3">Detailed Trait Statistics</h3>
-            <p className="text-gray-300 mb-4">
-              A comprehensive breakdown of all trait rarities, percentages, and distributions is coming soon to help you understand the uniqueness of your 𝕂Ǝ𝕂TECH NFT!
-            </p>
-            <div className="inline-block px-4 py-2 rounded-lg bg-[#3fb8bd]/20 text-[#3fb8bd] text-sm">
-              Full Trait Explorer: Coming Soon 🚀
-            </div>
+          {/* Trait Distribution Table */}
+          <div className="max-w-7xl mx-auto">
+            <TraitDistribution />
           </div>
         </div>
       </section>
