@@ -21,9 +21,10 @@ export function Header() {
           <Image
             src="/images/kektech-cropped.gif?v=1"
             alt="𝕂Ǝ𝕂丅ᵉ匚🅷 Home"
-            width={200}
-            height={80}
-            className="h-auto w-40 sm:w-48 md:w-56 lg:w-64 max-h-16"
+            width={400}
+            height={100}
+            className="h-auto w-44 sm:w-52 md:w-60 lg:w-64"
+            style={{ objectFit: 'contain' }}
             unoptimized
             priority
           />
