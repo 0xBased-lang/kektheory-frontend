@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useMint } from '@/lib/hooks/useMint'
 import { EXPLORER_URL } from '@/config/constants'
+import Image from 'next/image'
 
 /**
  * EnhancedMintForm Component with Advanced Animations
@@ -148,7 +149,20 @@ export function EnhancedMintForm() {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
 
       <div className="relative">
-        <h2 className="mb-6 bg-gradient-to-r from-kek-green to-kek-cyan bg-clip-text text-3xl font-black text-transparent">
+        {/* NFT Preview Image */}
+        <div className="mb-6 flex justify-center">
+          <div className="relative w-48 h-48 rounded-xl overflow-hidden border-2 border-kek-green/50 shadow-lg shadow-kek-green/20">
+            <Image
+              src="/images/171.png"
+              alt="KEKTECH NFT Example"
+              width={400}
+              height={400}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+
+        <h2 className="mb-6 bg-gradient-to-r from-kek-green to-kek-cyan bg-clip-text text-3xl font-black text-transparent text-center">
           Mint KEKTECH NFTs
         </h2>
 

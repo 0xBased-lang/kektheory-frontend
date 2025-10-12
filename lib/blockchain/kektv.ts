@@ -181,6 +181,11 @@ function encodeFunctionData(signature: string, params: unknown[]): string {
     return functionSelector + paddedAddress
   }
 
+  // For totalSupply(), just return the function selector (no params)
+  if (signature === 'totalSupply()') {
+    return functionSelector
+  }
+
   return functionSelector
 }
 
@@ -276,30 +281,41 @@ export async function getTierDistribution(): Promise<TierDistribution[]> {
  */
 export async function getTotalSupply(contractAddress: string): Promise<number> {
   try {
-    if (typeof window === 'undefined' || !window.ethereum) {
-      // Return simulated count for SSR or when no wallet
-      return 1247 // Example: 1247 NFTs minted so far
-    }
-
-    // Use eth_call to query totalSupply
+    // Use eth_call to query totalSupply - works without wallet connection
     const data = encodeFunctionData('totalSupply()', [])
 
-    const result = await window.ethereum.request({
-      method: 'eth_call',
-      params: [
-        {
-          to: contractAddress,
-          data: data
-        },
-        'latest'
-      ]
+    // Create provider directly - no wallet needed for read operations
+    const rpcUrl = BASED_CHAIN_CONFIG.rpcUrl
+
+    const response = await fetch(rpcUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'eth_call',
+        params: [
+          {
+            to: contractAddress,
+            data: data
+          },
+          'latest'
+        ]
+      })
     })
 
-    // Decode result (it's a uint256)
-    return parseInt(result as string, 16)
+    const json = await response.json()
+
+    if (json.result) {
+      // Decode result (it's a uint256)
+      return parseInt(json.result as string, 16)
+    }
+
+    // Fallback to 0 if no result
+    return 0
   } catch (error) {
     console.error('Error fetching total supply:', error)
-    return 1247 // Return simulated count on error
+    return 0 // Return 0 on error to show accurate data
   }
 }
 
