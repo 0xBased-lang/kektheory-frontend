@@ -8,7 +8,7 @@ export const BASED_CHAIN_CONFIG = {
   chainId: 32323,
   chainIdHex: '0x7e43',
   name: 'BASED',
-  rpcUrl: 'https://rpc.bf1337.org',
+  rpcUrl: 'https://mainnet.basedaibridge.com/rpc',
   explorerUrl: 'https://explorer.bf1337.org',
   nativeCurrency: {
     name: 'BASED',
