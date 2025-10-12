@@ -1,5 +1,7 @@
 'use client'
 
+import { useState } from 'react'
+
 /**
  * Trait distribution data for KEKTECH NFT Collection
  * Source: Official collection data with 4200 total supply
@@ -145,6 +147,8 @@ const traitDistributions = {
   },
 }
 
+type TraitCategory = keyof typeof traitDistributions
+
 /**
  * Get rarity level based on percentage
  * Colors match the old kektech.xyz website
@@ -170,69 +174,82 @@ function formatTraitName(name: string): string {
 /**
  * TraitDistribution Component
  *
- * Simplified trait distribution viewer showing all traits in one table
+ * Organized trait distribution viewer with category tabs
  */
 export function TraitDistribution() {
-  // Combine all traits from all categories into one array
-  const allTraits: Array<{ category: string; name: string; data: { count: number; percentage: string } }> = []
+  const [activeCategory, setActiveCategory] = useState<TraitCategory>('background')
 
-  Object.entries(traitDistributions).forEach(([category, traits]) => {
-    Object.entries(traits).forEach(([name, data]) => {
-      allTraits.push({
-        category: formatTraitName(category),
-        name,
-        data
-      })
-    })
-  })
+  const categories: { key: TraitCategory; label: string }[] = [
+    { key: 'background', label: 'Background' },
+    { key: 'body', label: 'Body' },
+    { key: 'tattoo', label: 'Tattoo' },
+    { key: 'style', label: 'Style' },
+    { key: 'clothes', label: 'Clothes' },
+    { key: 'tools', label: 'Tools' },
+    { key: 'eyes', label: 'Eyes' },
+    { key: 'glasses', label: 'Glasses' },
+    { key: 'hat', label: 'Hat' },
+    { key: 'special', label: 'Special' },
+    { key: 'easter-eggs', label: 'Easter Eggs' },
+  ]
 
-  // Sort by rarity (percentage ascending)
-  allTraits.sort((a, b) => parseFloat(a.data.percentage) - parseFloat(b.data.percentage))
+  const traits = Object.entries(traitDistributions[activeCategory])
 
   return (
     <div className="mx-auto max-w-7xl">
+      {/* Category Tabs */}
+      <div className="mb-8 flex flex-wrap justify-center gap-2">
+        {categories.map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => setActiveCategory(key)}
+            className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+              activeCategory === key
+                ? 'bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black shadow-md shadow-[#3fb8bd]/30'
+                : 'border border-[#3fb8bd]/20 bg-gray-900 text-gray-400 hover:border-[#3fb8bd]/50 hover:text-white'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
       {/* Traits Table */}
-      <div className="overflow-hidden rounded-lg border border-kek-green/20 bg-gray-900">
+      <div className="overflow-hidden rounded-lg border border-[#3fb8bd]/20 bg-gray-900">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="border-b border-kek-green/20 bg-gray-800">
+            <thead className="border-b border-[#3fb8bd]/20 bg-gray-800">
               <tr>
-                <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider text-kek-green">
-                  Category
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider text-kek-green">
+                <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider text-[#3fb8bd]">
                   Trait
                 </th>
-                <th className="px-6 py-3 text-center text-sm font-semibold uppercase tracking-wider text-kek-green">
+                <th className="px-6 py-3 text-center text-sm font-semibold uppercase tracking-wider text-[#3fb8bd]">
                   Count
                 </th>
-                <th className="px-6 py-3 text-center text-sm font-semibold uppercase tracking-wider text-kek-green">
+                <th className="px-6 py-3 text-center text-sm font-semibold uppercase tracking-wider text-[#3fb8bd]">
                   %
                 </th>
-                <th className="px-6 py-3 text-right text-sm font-semibold uppercase tracking-wider text-kek-green">
+                <th className="px-6 py-3 text-right text-sm font-semibold uppercase tracking-wider text-[#3fb8bd]">
                   Rarity
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-kek-green/10">
-              {allTraits.map((trait, index) => {
-                const rarity = getRarity(trait.data.percentage)
+            <tbody className="divide-y divide-[#3fb8bd]/10">
+              {traits.map(([name, data]) => {
+                const rarity = getRarity(data.percentage)
                 return (
                   <tr
-                    key={`${trait.category}-${trait.name}-${index}`}
-                    className="transition-colors hover:bg-kek-green/5"
+                    key={name}
+                    className="transition-colors hover:bg-[#3fb8bd]/5"
                   >
-                    <td className="px-6 py-4 text-sm font-medium text-gray-400">
-                      {trait.category}
-                    </td>
                     <td className="px-6 py-4 text-sm font-medium text-white">
-                      {formatTraitName(trait.name)}
+                      {formatTraitName(name)}
                     </td>
                     <td className="px-6 py-4 text-center text-sm text-gray-300">
-                      {trait.data.count}
+                      {data.count}
                     </td>
-                    <td className="px-6 py-4 text-center text-sm font-semibold text-kek-cyan">
-                      {trait.data.percentage}
+                    <td className="px-6 py-4 text-center text-sm font-semibold text-[#3fb8bd]">
+                      {data.percentage}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <span
@@ -251,7 +268,7 @@ export function TraitDistribution() {
 
       {/* Stats Summary */}
       <div className="mt-6 text-center text-sm text-gray-500">
-        Showing {allTraits.length} total traits across all categories
+        Showing {traits.length} traits in {formatTraitName(activeCategory)} category
       </div>
     </div>
   )

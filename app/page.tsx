@@ -254,7 +254,10 @@ export default function Homepage() {
       {/* Traits Section */}
       <section id="traits" className="py-20 border-t border-gray-800">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-[#3fb8bd] text-center mb-12 font-fredoka">𝕂Ǝ𝕂丅ᵉ匚🅷 Traits</h2>
+          <h2 className="text-4xl font-bold text-[#3fb8bd] text-center mb-4 font-fredoka">𝕂Ǝ𝕂丅ᵉ匚🅷 Traits</h2>
+          <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
+            Explore the rarity of traits across the KEKTECH collection. Browse by category to discover what makes each artifact unique.
+          </p>
 
           {/* Trait Distribution Table */}
           <div className="max-w-7xl mx-auto">
