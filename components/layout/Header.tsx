@@ -12,7 +12,7 @@ import { ConnectButton } from '@/components/web3/ConnectButton'
 export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[#3fb8bd]/20 bg-black backdrop-blur-md dark:border-[#3fb8bd]/20 dark:bg-black">
-      <div className="container mx-auto flex h-24 items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto flex h-32 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo - Clickable Home Link - LARGER SIZE */}
         <Link href="/" className="flex items-center bg-black p-2 hover:opacity-80 transition">
           <Image
