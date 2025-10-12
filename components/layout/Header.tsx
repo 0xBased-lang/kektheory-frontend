@@ -17,13 +17,13 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-[#3fb8bd]/20 bg-[#000000] backdrop-blur-sm">
       <div className="container mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo - Left Side */}
-        <Link href="/" className="flex items-center hover:opacity-80 transition py-2">
+        <Link href="/" className="flex items-center hover:opacity-80 transition py-1">
           <Image
-            src="/images/kektech-cropped.gif?v=1"
+            src="/images/kektech-cropped.gif?v=2"
             alt="𝕂Ǝ𝕂丅ᵉ匚🅷 Home"
             width={400}
             height={100}
-            className="h-auto w-44 sm:w-52 md:w-60 lg:w-64"
+            className="h-auto w-44 sm:w-52 md:w-60 lg:w-64 -mt-1"
             style={{ objectFit: 'contain' }}
             unoptimized
             priority
