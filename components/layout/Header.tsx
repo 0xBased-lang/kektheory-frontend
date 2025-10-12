@@ -14,16 +14,16 @@ export function Header() {
   const pathname = usePathname()
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-[#3fb8bd]/20 bg-black backdrop-blur-md dark:border-[#3fb8bd]/20 dark:bg-black">
+    <header className="sticky top-0 z-50 w-full border-b border-[#3fb8bd]/20 bg-[#000000] backdrop-blur-sm">
       <div className="container mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo - Left Side */}
-        <Link href="/" className="flex items-center hover:opacity-80 transition">
+        <Link href="/" className="flex items-center hover:opacity-80 transition py-3">
           <Image
             src="/images/kektech.gif?v=4"
             alt="𝕂Ǝ𝕂丅ᵉ匚🅷 Home"
-            width={180}
-            height={90}
-            className="h-auto w-36 sm:w-44 md:w-52 lg:w-56"
+            width={160}
+            height={80}
+            className="h-auto w-32 sm:w-40 md:w-44 lg:w-48 max-h-14"
             unoptimized
             priority
           />
