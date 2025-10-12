@@ -1,7 +1,7 @@
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { NFTGallery } from '@/components/nft/NFTGallery'
-import { TierRankingWidget } from '@/components/stats/TierRankingWidget'
+import { TierWidget } from '@/components/TierWidget'
 
 /**
  * Gallery Page
@@ -25,9 +25,9 @@ export default function GalleryPage() {
             </p>
           </div>
 
-          {/* Collection Stats Widget */}
-          <div className="mb-12">
-            <TierRankingWidget />
+          {/* Tier Distribution Widget */}
+          <div className="mb-12 max-w-2xl mx-auto">
+            <TierWidget />
           </div>
 
           {/* NFT Gallery */}

@@ -189,13 +189,118 @@ function encodeFunctionData(signature: string, params: unknown[]): string {
  * In production, use a proper library like ethers.js
  */
 function keccak256(text: string): string {
-  // For now, return pre-computed hash for balanceOf
+  // For now, return pre-computed hash for balanceOf and totalSupply
   // In production, use: import { keccak256 as keccak } from 'ethers'
   const precomputed: { [key: string]: string } = {
-    'balanceOf(address)': '0x70a08231'
+    'balanceOf(address)': '0x70a08231',
+    'totalSupply()': '0x18160ddd'
   }
 
   return precomputed[text] || '0x00000000'
+}
+
+/**
+ * Tier distribution interface
+ */
+export interface TierDistribution {
+  tier: 'Mythic' | 'Legendary' | 'Epic' | 'Rare' | 'Common'
+  minted: number
+  total: number
+  color: string
+}
+
+/**
+ * Get tier distribution for KEKTECH NFTs
+ * Shows how many NFTs are minted in each rarity tier
+ */
+export async function getTierDistribution(): Promise<TierDistribution[]> {
+  try {
+    // TODO: In production, query blockchain or API for actual minted counts
+    // For now, use simulated data that will be dynamically updated
+
+    // Get total minted from contract (totalSupply)
+    const totalMinted = await getTotalSupply(CONTRACTS.KEKTECH)
+
+    // Distribute minted NFTs across tiers based on rarity weights
+    // This is a simplified calculation - actual implementation would
+    // query metadata or trait data from blockchain
+    const distribution: TierDistribution[] = [
+      {
+        tier: 'Mythic',
+        minted: Math.floor(totalMinted * (13 / 4200)),
+        total: 13,
+        color: '#ff00ff'
+      },
+      {
+        tier: 'Legendary',
+        minted: Math.floor(totalMinted * (42 / 4200)),
+        total: 42,
+        color: '#ffd700'
+      },
+      {
+        tier: 'Epic',
+        minted: Math.floor(totalMinted * (195 / 4200)),
+        total: 195,
+        color: '#9d4edd'
+      },
+      {
+        tier: 'Rare',
+        minted: Math.floor(totalMinted * (670 / 4200)),
+        total: 670,
+        color: '#3fb8bd'
+      },
+      {
+        tier: 'Common',
+        minted: Math.floor(totalMinted * (3280 / 4200)),
+        total: 3280,
+        color: '#6c757d'
+      }
+    ]
+
+    return distribution
+  } catch (error) {
+    console.error('Error fetching tier distribution:', error)
+    // Return empty tiers on error
+    return [
+      { tier: 'Mythic', minted: 0, total: 13, color: '#ff00ff' },
+      { tier: 'Legendary', minted: 0, total: 42, color: '#ffd700' },
+      { tier: 'Epic', minted: 0, total: 195, color: '#9d4edd' },
+      { tier: 'Rare', minted: 0, total: 670, color: '#3fb8bd' },
+      { tier: 'Common', minted: 0, total: 3280, color: '#6c757d' }
+    ]
+  }
+}
+
+/**
+ * Get total supply of NFTs from contract
+ */
+export async function getTotalSupply(contractAddress: string): Promise<number> {
+  try {
+    if (typeof window === 'undefined' || !window.ethereum) {
+      // Return simulated count for SSR or when no wallet
+      return 1247 // Example: 1247 NFTs minted so far
+    }
+
+    // Use eth_call to query totalSupply
+    const data = encodeFunctionData('totalSupply()', [])
+
+    const result = await window.ethereum.request({
+      method: 'eth_call',
+      params: [
+        {
+          to: contractAddress,
+          data: data
+        },
+        'latest'
+      ]
+    })
+
+    // Decode result (it's a uint256)
+    return parseInt(result as string, 16)
+  } catch (error) {
+    console.error('Error fetching total supply:', error)
+    return 1247 // Return simulated count on error
+  }
 }
 
 // Type declaration for ethereum provider is handled globally
