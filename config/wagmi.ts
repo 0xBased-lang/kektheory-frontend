@@ -7,7 +7,7 @@ import { walletConnect, injected, coinbaseWallet } from 'wagmi/connectors'
  *
  * CRITICAL: This configures Web3 wallet connectivity
  * - Chain ID 32323 ($BASED)
- * - Reown Project ID: ee738e17f6b483db152c5e439167f805
+ * - Reown Project ID: dc5e6470d109f31f1d271b149fed3d98
  * - Multi-wallet support: MetaMask, WalletConnect, Coinbase Wallet
  */
 
