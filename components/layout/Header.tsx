@@ -19,7 +19,7 @@ export function Header() {
         {/* Logo - Clickable Home Link */}
         <Link href="/" className="flex items-center bg-black p-2 hover:opacity-80 transition">
           <Image
-            src="/images/kektech.gif"
+            src="/images/kektech.gif?v=2"
             alt="𝕂Ǝ𝕂丅ᵉ匚🅷 Collection - Home"
             width={160}
             height={80}
