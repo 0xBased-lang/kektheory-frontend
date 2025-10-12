@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { ConnectButton } from '@/components/web3/ConnectButton'
 
@@ -15,7 +16,20 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[#3fb8bd]/20 bg-black backdrop-blur-md dark:border-[#3fb8bd]/20 dark:bg-black">
       <div className="container mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Navigation Links - Restructured */}
+        {/* Logo - Left Side */}
+        <Link href="/" className="flex items-center hover:opacity-80 transition">
+          <Image
+            src="/images/kektech.gif?v=3"
+            alt="𝕂Ǝ𝕂丅ᵉ匚🅷 Home"
+            width={120}
+            height={60}
+            className="h-auto w-24 sm:w-28 md:w-32"
+            unoptimized
+            priority
+          />
+        </Link>
+
+        {/* Navigation Links - Center/Right */}
         <nav className="hidden items-center space-x-4 md:flex lg:space-x-6">
           <Link
             href="/marketplace"
