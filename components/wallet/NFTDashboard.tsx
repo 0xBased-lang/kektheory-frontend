@@ -16,7 +16,7 @@ interface NFTDashboardProps {
  * Displays wallet NFTs with portfolio overview and collection breakdown
  */
 export function NFTDashboard({ address }: NFTDashboardProps) {
-  const { nfts, loading, error } = useWalletNFTs(address)
+  const { nfts, loading, error, retry } = useWalletNFTs(address)
 
   // Separate KEKTECH NFTs from other NFTs
   const { kektechNFTs, otherNFTs } = useMemo(() => {
@@ -44,8 +44,17 @@ export function NFTDashboard({ address }: NFTDashboardProps) {
     return (
       <div className="bg-red-900/20 border border-red-900 rounded-xl p-8 text-center max-w-2xl mx-auto">
         <div className="text-4xl mb-4">⚠️</div>
-        <h3 className="text-lg font-bold text-red-100 mb-2">Failed to Load NFTs</h3>
-        <p className="text-red-300">{error}</p>
+        <h3 className="text-lg font-bold text-red-100 mb-3">Failed to Load NFTs</h3>
+        <p className="text-red-300 mb-6">{error}</p>
+        <button
+          onClick={retry}
+          className="px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold transition font-fredoka"
+        >
+          🔄 Retry
+        </button>
+        <p className="text-xs text-gray-400 mt-4">
+          Address: {address?.slice(0, 6)}...{address?.slice(-4)}
+        </p>
       </div>
     )
   }
@@ -111,10 +120,18 @@ export function NFTDashboard({ address }: NFTDashboardProps) {
                       alt={nft.metadata?.name || `NFT #${nft.id}`}
                       fill
                       className="object-cover"
+                      unoptimized
+                      onError={(e) => {
+                        // Fallback to placeholder on image error
+                        e.currentTarget.style.display = 'none'
+                        const placeholder = e.currentTarget.nextElementSibling as HTMLElement
+                        if (placeholder) placeholder.style.display = 'flex'
+                      }}
                     />
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-4xl">🐸</div>
-                  )}
+                  ) : null}
+                  <div className="flex items-center justify-center h-full text-4xl" style={{ display: nft.image_url || nft.metadata?.image_url ? 'none' : 'flex' }}>
+                    🐸
+                  </div>
                 </div>
                 <div className="p-3">
                   <h3 className="font-bold text-white text-sm truncate">
@@ -147,10 +164,18 @@ export function NFTDashboard({ address }: NFTDashboardProps) {
                       alt={nft.metadata?.name || `NFT #${nft.id}`}
                       fill
                       className="object-cover"
+                      unoptimized
+                      onError={(e) => {
+                        // Fallback to placeholder on image error
+                        e.currentTarget.style.display = 'none'
+                        const placeholder = e.currentTarget.nextElementSibling as HTMLElement
+                        if (placeholder) placeholder.style.display = 'flex'
+                      }}
                     />
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-4xl">🎨</div>
-                  )}
+                  ) : null}
+                  <div className="flex items-center justify-center h-full text-4xl" style={{ display: nft.image_url || nft.metadata?.image_url ? 'none' : 'flex' }}>
+                    🎨
+                  </div>
                 </div>
                 <div className="p-3">
                   <h3 className="font-bold text-white text-sm truncate">

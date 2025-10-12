@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 /**
  * NFT Item from BasedAI Explorer API
@@ -32,49 +32,97 @@ export interface NFTItem {
  * useWalletNFTs Hook
  *
  * Fetches all NFTs owned by a wallet address from BasedAI Explorer API
+ * with retry logic and enhanced error handling
  *
  * @param address - Wallet address to fetch NFTs for
- * @returns Object containing NFTs, loading state, and error state
+ * @returns Object containing NFTs, loading state, error state, and retry function
  */
 export function useWalletNFTs(address: string | undefined) {
   const [nfts, setNfts] = useState<NFTItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const fetchNFTs = useCallback(async (isRetry = false) => {
     if (!address) {
       setNfts([])
       setLoading(false)
       return
     }
 
-    async function fetchNFTs() {
-      setLoading(true)
+    setLoading(true)
+    if (!isRetry) {
       setError(null)
+    }
 
+    const maxRetries = 3
+    let lastError: Error | null = null
+
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
-        // Fetch NFTs from BasedAI Explorer API
+        // Add timeout to prevent hanging requests
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 10000) // 10s timeout
+
         const response = await fetch(
-          `https://explorer.bf1337.org/api/v2/addresses/${address}/nft`
+          `https://explorer.bf1337.org/api/v2/addresses/${address}/nft`,
+          {
+            signal: controller.signal,
+            headers: {
+              'Accept': 'application/json',
+            },
+          }
         )
 
+        clearTimeout(timeoutId)
+
         if (!response.ok) {
-          throw new Error(`Failed to fetch NFTs: ${response.statusText}`)
+          throw new Error(
+            `API Error: ${response.status} ${response.statusText}`
+          )
         }
 
         const data = await response.json()
-        setNfts(data.items || [])
-      } catch (err) {
-        console.error('Error fetching NFTs:', err)
-        setError(err instanceof Error ? err.message : 'Failed to fetch NFTs')
-        setNfts([])
-      } finally {
+
+        // Validate response structure
+        if (!data || typeof data !== 'object') {
+          throw new Error('Invalid API response format')
+        }
+
+        const items = data.items || []
+        setNfts(items)
+        setError(null)
         setLoading(false)
+        return // Success - exit retry loop
+      } catch (err) {
+        lastError = err instanceof Error ? err : new Error('Unknown error occurred')
+        console.error(`NFT fetch attempt ${attempt + 1}/${maxRetries + 1} failed:`, lastError)
+
+        // If this isn't the last attempt, wait before retrying
+        if (attempt < maxRetries) {
+          const delay = Math.min(1000 * Math.pow(2, attempt), 5000) // Exponential backoff, max 5s
+          await new Promise(resolve => setTimeout(resolve, delay))
+        }
       }
     }
 
-    fetchNFTs()
+    // All retries failed
+    const errorMessage = lastError?.name === 'AbortError'
+      ? 'Request timeout - Please check your connection and try again'
+      : lastError?.message || 'Failed to fetch NFTs after multiple attempts'
+
+    setError(errorMessage)
+    setNfts([])
+    setLoading(false)
   }, [address])
 
-  return { nfts, loading, error }
+  // Manual retry function
+  const retry = useCallback(() => {
+    fetchNFTs(true)
+  }, [fetchNFTs])
+
+  useEffect(() => {
+    fetchNFTs()
+  }, [fetchNFTs])
+
+  return { nfts, loading, error, retry }
 }
