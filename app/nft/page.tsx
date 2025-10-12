@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -27,12 +27,11 @@ interface NFTDetails {
 }
 
 /**
- * NFT Detail Page
+ * NFT Detail Page Content
  *
  * Displays individual NFT details with metadata
- * Route: /nft?id={tokenId}
  */
-export default function NFTDetailPage() {
+function NFTDetailPageContent() {
   const searchParams = useSearchParams()
   const tokenId = searchParams.get('id')
   const [nftDetails, setNftDetails] = useState<NFTDetails | null>(null)
@@ -65,8 +64,8 @@ export default function NFTDetailPage() {
               metadata = await response.json()
               break
             }
-          } catch (err) {
-            console.log(`Failed to fetch from ${endpoint}:`, err)
+          } catch {
+            // Silent fail - try next endpoint
           }
         }
 
@@ -238,5 +237,34 @@ export default function NFTDetailPage() {
 
       <Footer />
     </div>
+  )
+}
+
+
+/**
+ * NFT Detail Page
+ *
+ * Wrapped in Suspense for useSearchParams
+ */
+export default function NFTDetailPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen flex-col">
+        <Header />
+        <main className="flex-1 bg-gradient-to-b from-black to-gray-950 py-16">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex min-h-[400px] items-center justify-center">
+              <div className="text-center">
+                <div className="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-[#3fb8bd] border-t-transparent" />
+                <p className="font-fredoka text-lg text-gray-300">Loading...</p>
+              </div>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    }>
+      <NFTDetailPageContent />
+    </Suspense>
   )
 }

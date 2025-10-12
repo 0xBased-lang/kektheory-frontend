@@ -14,6 +14,11 @@ interface RankingStats {
   tiers: TierData[]
 }
 
+interface RankingNFT {
+  tier?: string
+  [key: string]: unknown
+}
+
 /**
  * TierRankingWidget Component
  *
@@ -32,7 +37,7 @@ export function TierRankingWidget() {
         const response = await fetch('https://api.kektech.xyz/rankings')
         if (!response.ok) throw new Error('Failed to fetch rankings')
 
-        const data = await response.json()
+        const data = (await response.json()) as RankingNFT[]
 
         // Count NFTs by tier
         const tierCounts = {
@@ -43,7 +48,7 @@ export function TierRankingWidget() {
           Common: 0,
         }
 
-        data.forEach((nft: any) => {
+        data.forEach((nft) => {
           if (nft.tier) {
             tierCounts[nft.tier as keyof typeof tierCounts]++
           }
