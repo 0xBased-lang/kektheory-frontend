@@ -21,7 +21,7 @@ export default function GalleryPage() {
               𝕂Ǝ𝕂丅ᵉ匚🅷 Gallery
             </h1>
             <p className="font-fredoka text-lg text-gray-300">
-              Explore all minted KEKTECH NFTs on the $BASED Chain
+              Explore all minted 𝕂Ǝ𝕂TECH NFTs on the $BASED Chain
             </p>
           </div>
 

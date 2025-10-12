@@ -50,10 +50,10 @@ export default function RewardsPage() {
           {/* Page Header */}
           <div className="mb-12 text-center">
             <h1 className="font-fredoka mb-4 text-4xl font-bold text-white sm:text-5xl">
-              🎁 KEKTECH Rewards
+              🎁 𝕂Ǝ𝕂丅ᵉ匚🅷 Rewards
             </h1>
             <p className="font-fredoka text-lg text-gray-300">
-              Earn daily rewards by holding KEKTECH NFTs. Rarity matters!
+              Earn daily rewards by holding 𝕂Ǝ𝕂TECH NFTs. Rarity matters!
             </p>
           </div>
 
@@ -110,7 +110,7 @@ export default function RewardsPage() {
                 <div className="text-4xl mb-4">💰</div>
                 <h3 className="font-fredoka text-xl font-bold text-[#3fb8bd] mb-3">Daily Token Rewards</h3>
                 <p className="text-gray-300">
-                  All KEKTECH NFT holders receive daily token emissions automatically. The base rate applies to all holders, making passive income accessible to everyone.
+                  All 𝕂Ǝ𝕂TECH NFT holders receive daily token emissions automatically. The base rate applies to all holders, making passive income accessible to everyone.
                 </p>
               </div>
 
@@ -150,7 +150,7 @@ export default function RewardsPage() {
                 <div className="text-4xl mb-4">📚</div>
                 <h3 className="font-fredoka text-xl font-bold text-[#ff00ff] mb-3">Stacking Multiplier</h3>
                 <p className="text-gray-300">
-                  Hold multiple KEKTECH NFTs to unlock stacking bonuses! The more NFTs you hold, the higher your multiplier gets.
+                  Hold multiple 𝕂Ǝ𝕂TECH NFTs to unlock stacking bonuses! The more NFTs you hold, the higher your multiplier gets.
                 </p>
                 <div className="mt-4 space-y-2 text-sm">
                   <div className="flex justify-between">
@@ -181,9 +181,9 @@ export default function RewardsPage() {
             <div className="max-w-4xl mx-auto">
               <div className="bg-gradient-to-br from-gray-900 to-transparent rounded-2xl border border-gray-800 p-8 space-y-6">
                 <div>
-                  <h3 className="font-fredoka text-xl font-bold text-[#3fb8bd] mb-3">What Are KEKTECH Tokens?</h3>
+                  <h3 className="font-fredoka text-xl font-bold text-[#3fb8bd] mb-3">What Are 𝕂Ǝ𝕂TECH Tokens?</h3>
                   <p className="text-gray-300">
-                    KEKTECH tokens power the ecosystem and enable future upgrades. Tokens will be used for NFT customization, trait upgrades, and participation in special events.
+                    𝕂Ǝ𝕂TECH tokens power the ecosystem and enable future upgrades. Tokens will be used for NFT customization, trait upgrades, and participation in special events.
                   </p>
                 </div>
 
@@ -208,14 +208,14 @@ export default function RewardsPage() {
           <div className="text-center">
             <h2 className="font-fredoka mb-6 text-3xl font-bold text-white">Start Earning Today</h2>
             <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-              The more KEKTECH NFTs you hold, and the rarer they are, the more rewards you&apos;ll earn every day. Join our community and start building your token portfolio!
+              The more 𝕂Ǝ𝕂TECH NFTs you hold, and the rarer they are, the more rewards you&apos;ll earn every day. Join our community and start building your token portfolio!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="/mint"
                 className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black font-bold hover:scale-105 transition font-fredoka text-lg"
               >
-                Mint KEKTECH NFTs
+                Mint 𝕂Ǝ𝕂TECH NFTs
               </a>
               <a
                 href="/gallery"

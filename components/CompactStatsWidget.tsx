@@ -40,49 +40,53 @@ export function CompactStatsWidget() {
   const remaining = totalSupply - totalMinted
   const progress = ((totalMinted / totalSupply) * 100).toFixed(1)
 
-  // Tier distribution based on total minted
+  // Tier distribution based on total minted with improved colors
   const tiers = [
-    { name: 'Mythic', minted: Math.floor(totalMinted * (13 / 4200)), total: 13, color: '#ff00ff' },
-    { name: 'Legendary', minted: Math.floor(totalMinted * (42 / 4200)), total: 42, color: '#ffd700' },
-    { name: 'Epic', minted: Math.floor(totalMinted * (195 / 4200)), total: 195, color: '#9d4edd' },
-    { name: 'Rare', minted: Math.floor(totalMinted * (670 / 4200)), total: 670, color: '#3fb8bd' },
-    { name: 'Common', minted: Math.floor(totalMinted * (3280 / 4200)), total: 3280, color: '#6c757d' }
+    { name: 'Mythic', minted: Math.floor(totalMinted * (13 / 4200)), total: 13, color: '#ff00ff', bgColor: 'bg-[#ff00ff]/10' },
+    { name: 'Legendary', minted: Math.floor(totalMinted * (42 / 4200)), total: 42, color: '#ffd700', bgColor: 'bg-[#ffd700]/10' },
+    { name: 'Epic', minted: Math.floor(totalMinted * (195 / 4200)), total: 195, color: '#9d4edd', bgColor: 'bg-[#9d4edd]/10' },
+    { name: 'Rare', minted: Math.floor(totalMinted * (670 / 4200)), total: 670, color: '#3fb8bd', bgColor: 'bg-[#3fb8bd]/10' },
+    { name: 'Common', minted: Math.floor(totalMinted * (3280 / 4200)), total: 3280, color: '#9ca3af', bgColor: 'bg-gray-500/10' }
   ]
 
   return (
-    <div className="bg-gradient-to-r from-gray-900/80 via-gray-900/60 to-gray-900/80 rounded-xl border border-[#3fb8bd]/20 px-6 py-4 backdrop-blur-sm">
-      <div className="flex items-center justify-between gap-6 flex-wrap">
-        {/* Collection Stats - Left Side */}
-        <div className="flex items-center gap-6">
-          <div className="text-center">
-            <div className="text-xs text-gray-400 mb-1">Minted</div>
-            <div className="text-xl font-bold text-[#3fb8bd]">{totalMinted.toLocaleString()}</div>
-          </div>
-          <div className="h-8 w-px bg-gray-700" />
-          <div className="text-center">
-            <div className="text-xs text-gray-400 mb-1">Remaining</div>
-            <div className="text-xl font-bold text-[#4ecca7]">{remaining.toLocaleString()}</div>
-          </div>
-          <div className="h-8 w-px bg-gray-700" />
-          <div className="text-center">
-            <div className="text-xs text-gray-400 mb-1">Progress</div>
-            <div className="text-xl font-bold text-[#ff00ff]">{progress}%</div>
-          </div>
+    <div className="bg-gradient-to-r from-gray-900/90 via-gray-900/80 to-gray-900/90 rounded-2xl border-2 border-[#3fb8bd]/30 px-8 py-6 backdrop-blur-md shadow-lg shadow-[#3fb8bd]/10">
+      {/* Collection Stats - Top Section */}
+      <div className="flex items-center justify-center gap-8 mb-6 pb-6 border-b border-gray-700/50">
+        <div className="text-center">
+          <div className="text-sm text-gray-400 mb-2 font-medium">Minted</div>
+          <div className="text-3xl font-bold text-[#3fb8bd]">{totalMinted.toLocaleString()}</div>
         </div>
+        <div className="h-12 w-px bg-gray-700" />
+        <div className="text-center">
+          <div className="text-sm text-gray-400 mb-2 font-medium">Remaining</div>
+          <div className="text-3xl font-bold text-[#4ecca7]">{remaining.toLocaleString()}</div>
+        </div>
+        <div className="h-12 w-px bg-gray-700" />
+        <div className="text-center">
+          <div className="text-sm text-gray-400 mb-2 font-medium">Progress</div>
+          <div className="text-3xl font-bold text-[#ff00ff]">{progress}%</div>
+        </div>
+      </div>
 
-        {/* Tier Distribution - Right Side */}
-        <div className="flex items-center gap-4 flex-1 justify-end">
-          {tiers.map((tier) => (
-            <div key={tier.name} className="text-center">
-              <div className="text-xs font-medium mb-1" style={{ color: tier.color }}>
-                {tier.name.charAt(0)}
-              </div>
-              <div className="text-sm font-bold text-white">
+      {/* Tier Distribution - Bottom Section with Full Names */}
+      <div className="flex items-center justify-center gap-4 flex-wrap">
+        <div className="text-sm text-gray-400 font-medium mr-2">Tier Distribution:</div>
+        {tiers.map((tier) => (
+          <div
+            key={tier.name}
+            className={`${tier.bgColor} rounded-lg px-4 py-2 border border-gray-700/50`}
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold" style={{ color: tier.color }}>
+                {tier.name}
+              </span>
+              <span className="text-sm font-medium text-white">
                 {tier.minted}/{tier.total}
-              </div>
+              </span>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   )

@@ -136,7 +136,7 @@ export default function DashboardHomepage() {
                 <h3 className="text-xl font-bold text-[#3fb8bd] mb-4">Your NFT Holdings</h3>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-300">KEKTECH NFTs</span>
+                    <span className="text-gray-300">𝕂Ǝ𝕂TECH NFTs</span>
                     <span className="text-2xl font-bold text-white">{nftHoldings.kektech}</span>
                   </div>
                   <div className="flex justify-between items-center">
@@ -157,7 +157,7 @@ export default function DashboardHomepage() {
                 <h3 className="text-xl font-bold text-[#4ecca7] mb-4">Rewards & Airdrops</h3>
                 <div className="space-y-4">
                   <div className="text-gray-300">
-                    Hold KEKTECH NFTs to earn KEKTV vouchers and exclusive rewards
+                    Hold 𝕂Ǝ𝕂TECH NFTs to earn KEKTV vouchers and exclusive rewards
                   </div>
                   <div className="text-3xl font-bold text-white">
                     {nftHoldings.kektv} <span className="text-sm text-gray-400">KEKTV earned</span>
@@ -173,7 +173,7 @@ export default function DashboardHomepage() {
                 <h3 className="text-xl font-bold text-[#ff00ff] mb-4">Recent Activity</h3>
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between text-gray-300">
-                    <span>Minted KEKTECH #1337</span>
+                    <span>Minted 𝕂Ǝ𝕂TECH #1337</span>
                     <span>2h ago</span>
                   </div>
                   <div className="flex justify-between text-gray-300">
@@ -207,7 +207,7 @@ export default function DashboardHomepage() {
           <div className="mb-8">
             <h2 className="text-3xl font-bold text-white mb-4">KEKTV Marketplace</h2>
             <p className="text-gray-400">
-              Trade KEKTV vouchers - exclusive rewards for KEKTECH holders
+              Trade KEKTV vouchers - exclusive rewards for 𝕂Ǝ𝕂TECH holders
             </p>
           </div>
 
@@ -272,7 +272,7 @@ export default function DashboardHomepage() {
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-white text-center mb-4 font-fredoka">Featured Artifacts</h2>
           <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
-            Explore some of our hand-drawn KEKTECH artifacts - each one unique, each one special 🐸✨
+            Explore some of our hand-drawn 𝕂Ǝ𝕂TECH artifacts - each one unique, each one special 🐸✨
           </p>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-7xl mx-auto">
@@ -358,7 +358,7 @@ export default function DashboardHomepage() {
               />
             </div>
             <p className="text-center text-gray-400 mt-4 text-sm">
-              Watch our artistic process: hand-drawing each unique KEKTECH artifact
+              Watch our artistic process: hand-drawing each unique 𝕂Ǝ𝕂TECH artifact
             </p>
           </div>
         </div>
