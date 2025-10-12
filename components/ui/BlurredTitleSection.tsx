@@ -1,5 +1,3 @@
-import Image from 'next/image'
-
 /**
  * Blurred Title Section Component
  *
@@ -26,24 +24,23 @@ export function BlurredTitleSection({
       {/* Background Layer - Blurred Image */}
       <div className="absolute inset-0 z-0">
         {/* Image container with blur */}
-        <div className="relative h-full w-full">
-          <Image
-            src={imageSrc}
-            alt="Background"
-            fill
-            className="object-cover opacity-30"
-            style={{
-              filter: 'blur(40px) brightness(0.6)',
-            }}
-            priority
-          />
+        <div
+          className="relative h-full w-full"
+          style={{
+            backgroundImage: `url(${imageSrc})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'blur(40px) brightness(0.6)',
+            opacity: 0.3,
+            transform: 'scale(1.1)', // Prevent blur edge artifacts
+          }}
+        />
 
-          {/* Gradient overlay for better text contrast */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
+        {/* Gradient overlay for better text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
 
-          {/* Vignette effect for optical elegance */}
-          <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/70" />
-        </div>
+        {/* Vignette effect for optical elegance */}
+        <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/70" />
       </div>
 
       {/* Content Layer - Title and Subtitle */}
