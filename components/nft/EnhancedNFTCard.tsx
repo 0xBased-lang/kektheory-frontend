@@ -57,7 +57,7 @@ export function EnhancedNFTCard({ nft }: EnhancedNFTCardProps) {
 
         <div className="flex items-center justify-between text-sm">
           <span className="text-gray-400">Rarity</span>
-          <span className="font-semibold text-[#ff00ff]">{nft.rarityScore.toFixed(2)}</span>
+          <span className="font-semibold text-[#a855f7]">{nft.rarityScore.toFixed(2)}</span>
         </div>
       </div>
     </Link>

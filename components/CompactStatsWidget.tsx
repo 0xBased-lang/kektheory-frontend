@@ -65,7 +65,7 @@ export function CompactStatsWidget() {
         <div className="h-12 w-px bg-gray-700" />
         <div className="text-center">
           <div className="text-sm text-gray-400 mb-2 font-medium">Progress</div>
-          <div className="text-3xl font-bold text-[#ff00ff]">{progress}%</div>
+          <div className="text-3xl font-bold text-[#a855f7]">{progress}%</div>
         </div>
       </div>
 
