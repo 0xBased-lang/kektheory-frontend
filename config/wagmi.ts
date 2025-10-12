@@ -20,11 +20,16 @@ if (!projectId) {
 }
 
 // Metadata for WalletConnect
+// Use the actual deployment URL for proper domain validation
+const appUrl = typeof window !== 'undefined'
+  ? window.location.origin
+  : process.env.NEXT_PUBLIC_APP_URL || 'https://kektech-nextjs.vercel.app'
+
 const metadata = {
   name: 'KEKTECH NFT Collection',
   description: 'Mint KEKTECH NFTs on BasedAI Network',
-  url: 'https://www.kektech.xyz',
-  icons: ['https://www.kektech.xyz/images/logo.png'],
+  url: appUrl,
+  icons: [`${appUrl}/images/logo.png`],
 }
 
 // Create Wagmi configuration

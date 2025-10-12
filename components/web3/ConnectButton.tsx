@@ -28,14 +28,27 @@ export function ConnectButton() {
     return (
       <div className="relative">
         <button
-          onClick={() => {
-            // Prioritize injected connector (MetaMask) if available
-            const injectedConnector = connectors.find(
-              (c) => c.type === 'injected' || c.id === 'injected'
-            )
-            const connector = injectedConnector || connectors[0]
-            if (connector) {
-              connect({ connector })
+          onClick={async () => {
+            try {
+              console.log('Connect button clicked')
+              console.log('Available connectors:', connectors)
+
+              // Prioritize injected connector (MetaMask) if available
+              const injectedConnector = connectors.find(
+                (c) => c.type === 'injected' || c.id === 'injected'
+              )
+              const connector = injectedConnector || connectors[0]
+
+              if (connector) {
+                console.log('Using connector:', connector.name, connector.type)
+                await connect({ connector })
+              } else {
+                console.error('No connectors available')
+                alert('No wallet connectors available. Please install MetaMask or another Web3 wallet.')
+              }
+            } catch (error) {
+              console.error('Connection error:', error)
+              alert(`Failed to connect wallet: ${error instanceof Error ? error.message : 'Unknown error'}`)
             }
           }}
           disabled={isPending}
