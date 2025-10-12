@@ -1,261 +1,341 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { Header } from '@/components/layout/Header'
-import { Footer } from '@/components/layout/Footer'
-import { TraitDistribution } from '@/components/traits/TraitDistribution'
-import { EnhancedHero } from '@/components/homepage/EnhancedHero'
-import { FeaturedNFTs } from '@/components/sections/FeaturedNFTs'
+import Link from 'next/link'
 
 /**
- * Homepage
- *
- * Landing page with hero section and wallet connection CTA
+ * Dashboard-style Homepage
+ * Clean, modern design inspired by professional DeFi dashboards
  */
-export default function Home() {
+export default function DashboardHomepage() {
+  const [walletConnected, setWalletConnected] = useState(false)
+  const [userAddress, setUserAddress] = useState('')
+  const [nftHoldings, setNftHoldings] = useState({
+    kektech: 0,
+    kektv: 0
+  })
+  interface KektvListing {
+    id: number
+    name: string
+    price: string
+    image: string
+  }
+
+  const [kektvListings, setKektvListings] = useState<KektvListing[]>([])
+
+  // Mock data for now - will be replaced with actual blockchain data
+  useEffect(() => {
+    // Simulate wallet connection check
+    const checkWalletConnection = async () => {
+      if (typeof window !== 'undefined' && window.ethereum) {
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' })
+          if (accounts.length > 0) {
+            setWalletConnected(true)
+            setUserAddress(accounts[0])
+            // Mock NFT holdings - replace with actual blockchain queries
+            setNftHoldings({
+              kektech: Math.floor(Math.random() * 10),
+              kektv: Math.floor(Math.random() * 20)
+            })
+          }
+        } catch (error) {
+          console.error('Wallet check error:', error)
+        }
+      }
+    }
+    checkWalletConnection()
+
+    // Mock KEKTV listings data
+    setKektvListings([
+      { id: 1, name: 'KEKTV #001', price: '0.5', image: '/images/kektv1.gif' },
+      { id: 2, name: 'KEKTV #002', price: '0.8', image: '/images/kektv2.gif' },
+      { id: 3, name: 'KEKTV #003', price: '1.2', image: '/images/kektv3.gif' },
+    ])
+  }, [])
+
+  const connectWallet = async () => {
+    if (typeof window !== 'undefined' && window.ethereum) {
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+        setWalletConnected(true)
+        setUserAddress(accounts[0])
+        // Mock NFT holdings
+        setNftHoldings({
+          kektech: Math.floor(Math.random() * 10),
+          kektv: Math.floor(Math.random() * 20)
+        })
+      } catch (error) {
+        console.error('Wallet connection error:', error)
+      }
+    }
+  }
+
   return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
+    <main className="min-h-screen bg-black">
+      {/* Clean Header with Wallet Connection */}
+      <header className="sticky top-0 z-50 bg-black/95 backdrop-blur-sm border-b border-[#3fb8bd]/20">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <div className="flex items-center gap-8">
+              <Image
+                src="/images/kektech.gif"
+                alt="KEKTECH"
+                width={120}
+                height={60}
+                className="h-12 w-auto"
+                unoptimized
+                priority
+              />
 
-      <main className="flex-1">
-        {/* Enhanced Hero Section with 3D Effects and Particles */}
-        <EnhancedHero />
-
-        {/* Featured NFTs Section */}
-        <FeaturedNFTs />
-
-        {/* Features Section */}
-        <section className="bg-white py-16 dark:bg-gray-950 sm:py-24">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-3xl text-center">
-              <h2 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">
-                Why KEKTECH?
-              </h2>
-              <p className="mb-12 text-lg text-gray-600 dark:text-gray-400">
-                Join our growing community and own a piece of digital history
-              </p>
+              {/* Navigation */}
+              <nav className="hidden md:flex gap-6">
+                <Link href="#dashboard" className="text-gray-300 hover:text-[#3fb8bd] transition">
+                  Dashboard
+                </Link>
+                <Link href="#marketplace" className="text-gray-300 hover:text-[#3fb8bd] transition">
+                  Marketplace
+                </Link>
+                <Link href="/gallery" className="text-gray-300 hover:text-[#3fb8bd] transition">
+                  Gallery
+                </Link>
+                <Link href="/mint" className="text-gray-300 hover:text-[#3fb8bd] transition">
+                  Mint
+                </Link>
+              </nav>
             </div>
 
-            <div className="grid gap-8 md:grid-cols-3">
-              {/* Feature 1 */}
-              <div className="group rounded-lg border border-kek-green/30 bg-gray-900 p-6 transition-all hover:border-kek-green hover:shadow-lg hover:shadow-kek-green/20 dark:border-kek-green/30 dark:bg-gray-900">
-                <div className="mb-4 text-4xl">⚡</div>
-                <h3 className="mb-2 text-xl font-semibold text-white dark:text-white">
-                  Fast Minting
-                </h3>
-                <p className="text-gray-300 dark:text-gray-300">
-                  Lightning-fast transactions on the $BASED Chain with low gas fees
-                </p>
+            {/* Wallet Connection */}
+            <div className="flex items-center gap-4">
+              {walletConnected ? (
+                <div className="flex items-center gap-3">
+                  <div className="text-sm">
+                    <span className="text-gray-400">Connected:</span>
+                    <span className="ml-2 text-[#3fb8bd] font-mono">
+                      {userAddress.slice(0, 6)}...{userAddress.slice(-4)}
+                    </span>
+                  </div>
+                  <button className="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition">
+                    Disconnect
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={connectWallet}
+                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black font-bold hover:scale-105 transition"
+                >
+                  Connect Wallet
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section - Clean and Minimal */}
+      <section className="relative py-20 overflow-hidden">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
+              Welcome to <span className="text-[#3fb8bd]">𝕂Ǝ𝕂丅ᵉ匚🅷</span>
+            </h1>
+            <p className="text-xl text-gray-300 mb-12">
+              The premier NFT ecosystem on BASED Chain. Collect, trade, and showcase unique digital artifacts.
+            </p>
+
+            {/* Quick Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+              <div className="bg-gradient-to-br from-[#3fb8bd]/10 to-transparent rounded-2xl border border-[#3fb8bd]/20 p-6">
+                <div className="text-3xl font-bold text-[#3fb8bd]">4,200</div>
+                <div className="text-gray-400">Total Supply</div>
+              </div>
+              <div className="bg-gradient-to-br from-[#4ecca7]/10 to-transparent rounded-2xl border border-[#4ecca7]/20 p-6">
+                <div className="text-3xl font-bold text-[#4ecca7]">32323</div>
+                <div className="text-gray-400">BASED Chain</div>
+              </div>
+              <div className="bg-gradient-to-br from-[#ff00ff]/10 to-transparent rounded-2xl border border-[#ff00ff]/20 p-6">
+                <div className="text-3xl font-bold text-[#ff00ff]">2</div>
+                <div className="text-gray-400">Collections</div>
+              </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/mint"
+                className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black font-bold hover:scale-105 transition"
+              >
+                Start Minting
+              </Link>
+              <Link
+                href="#marketplace"
+                className="px-8 py-4 rounded-xl border-2 border-[#3fb8bd] text-[#3fb8bd] font-bold hover:bg-[#3fb8bd]/10 transition"
+              >
+                Browse Marketplace
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Dashboard Section */}
+      <section id="dashboard" className="py-20 border-t border-gray-800">
+        <div className="container mx-auto px-6">
+          <h2 className="text-3xl font-bold text-white mb-8">Your Dashboard</h2>
+
+          {walletConnected ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* NFT Holdings Card */}
+              <div className="bg-gradient-to-br from-[#3fb8bd]/5 to-transparent rounded-2xl border border-[#3fb8bd]/20 p-6">
+                <h3 className="text-xl font-bold text-[#3fb8bd] mb-4">Your NFT Holdings</h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-300">KEKTECH NFTs</span>
+                    <span className="text-2xl font-bold text-white">{nftHoldings.kektech}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-300">KEKTV Vouchers</span>
+                    <span className="text-2xl font-bold text-white">{nftHoldings.kektv}</span>
+                  </div>
+                  <Link
+                    href="/gallery"
+                    className="block mt-4 text-center py-2 rounded-lg bg-[#3fb8bd]/20 text-[#3fb8bd] hover:bg-[#3fb8bd]/30 transition"
+                  >
+                    View Collection
+                  </Link>
+                </div>
               </div>
 
-              {/* Feature 2 */}
-              <div className="group rounded-lg border border-kek-cyan/30 bg-gray-900 p-6 transition-all hover:border-kek-cyan hover:shadow-lg hover:shadow-kek-cyan/20 dark:border-kek-cyan/30 dark:bg-gray-900">
-                <div className="mb-4 text-4xl">🎨</div>
-                <h3 className="mb-2 text-xl font-semibold text-white dark:text-white">
-                  Unique Art
-                </h3>
-                <p className="text-gray-300 dark:text-gray-300">
-                  Each NFT is unique with provably rare traits and attributes
-                </p>
+              {/* Rewards Card */}
+              <div className="bg-gradient-to-br from-[#4ecca7]/5 to-transparent rounded-2xl border border-[#4ecca7]/20 p-6">
+                <h3 className="text-xl font-bold text-[#4ecca7] mb-4">Rewards & Airdrops</h3>
+                <div className="space-y-4">
+                  <div className="text-gray-300">
+                    Hold KEKTECH NFTs to earn KEKTV vouchers and exclusive rewards
+                  </div>
+                  <div className="text-3xl font-bold text-white">
+                    {nftHoldings.kektv} <span className="text-sm text-gray-400">KEKTV earned</span>
+                  </div>
+                  <button className="w-full py-2 rounded-lg bg-[#4ecca7]/20 text-[#4ecca7] hover:bg-[#4ecca7]/30 transition">
+                    Claim Rewards
+                  </button>
+                </div>
               </div>
 
-              {/* Feature 3 */}
-              <div className="group rounded-lg border border-kek-purple/30 bg-gray-900 p-6 transition-all hover:border-kek-purple hover:shadow-lg hover:shadow-kek-purple/20 dark:border-kek-purple/30 dark:bg-gray-900">
-                <div className="mb-4 text-4xl">🌐</div>
-                <h3 className="mb-2 text-xl font-semibold text-white dark:text-white">
-                  Community
-                </h3>
-                <p className="text-gray-300 dark:text-gray-300">
-                  Join a vibrant community of collectors and enthusiasts
-                </p>
+              {/* Activity Card */}
+              <div className="bg-gradient-to-br from-[#ff00ff]/5 to-transparent rounded-2xl border border-[#ff00ff]/20 p-6">
+                <h3 className="text-xl font-bold text-[#ff00ff] mb-4">Recent Activity</h3>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between text-gray-300">
+                    <span>Minted KEKTECH #1337</span>
+                    <span>2h ago</span>
+                  </div>
+                  <div className="flex justify-between text-gray-300">
+                    <span>Received KEKTV Airdrop</span>
+                    <span>1d ago</span>
+                  </div>
+                  <div className="flex justify-between text-gray-300">
+                    <span>Listed KEKTV #42</span>
+                    <span>3d ago</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-gradient-to-br from-gray-900 to-transparent rounded-2xl border border-gray-800 p-12 text-center">
+              <p className="text-xl text-gray-400 mb-6">Connect your wallet to view your dashboard</p>
+              <button
+                onClick={connectWallet}
+                className="px-8 py-3 rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black font-bold hover:scale-105 transition"
+              >
+                Connect Wallet
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* KEKTV Marketplace Section */}
+      <section id="marketplace" className="py-20 border-t border-gray-800">
+        <div className="container mx-auto px-6">
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold text-white mb-4">KEKTV Marketplace</h2>
+            <p className="text-gray-400">
+              Trade KEKTV vouchers - exclusive rewards for KEKTECH holders
+            </p>
+          </div>
+
+          {/* Marketplace Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+            <div className="bg-gray-900/50 rounded-xl p-4 text-center">
+              <div className="text-2xl font-bold text-[#3fb8bd]">9</div>
+              <div className="text-sm text-gray-400">Total Listed</div>
+            </div>
+            <div className="bg-gray-900/50 rounded-xl p-4 text-center">
+              <div className="text-2xl font-bold text-[#4ecca7]">0.5 ETH</div>
+              <div className="text-sm text-gray-400">Floor Price</div>
+            </div>
+            <div className="bg-gray-900/50 rounded-xl p-4 text-center">
+              <div className="text-2xl font-bold text-[#ff00ff]">7</div>
+              <div className="text-sm text-gray-400">Holders</div>
+            </div>
+            <div className="bg-gray-900/50 rounded-xl p-4 text-center">
+              <div className="text-2xl font-bold text-white">2.5 ETH</div>
+              <div className="text-sm text-gray-400">24h Volume</div>
+            </div>
+          </div>
+
+          {/* Listings Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {kektvListings.map((listing) => (
+              <div
+                key={listing.id}
+                className="bg-gray-900/50 rounded-xl overflow-hidden border border-gray-800 hover:border-[#3fb8bd]/50 transition group"
+              >
+                <div className="aspect-square bg-gradient-to-br from-[#3fb8bd]/20 to-[#4ecca7]/20 p-4">
+                  <div className="w-full h-full bg-black/50 rounded-lg flex items-center justify-center">
+                    <span className="text-4xl">🎫</span>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h4 className="font-bold text-white mb-2">{listing.name}</h4>
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-sm text-gray-400">Price</span>
+                    <span className="font-bold text-[#3fb8bd]">{listing.price} ETH</span>
+                  </div>
+                  <button className="w-full py-2 rounded-lg bg-[#3fb8bd]/20 text-[#3fb8bd] hover:bg-[#3fb8bd]/30 transition">
+                    Buy Now
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            {/* Add More Listing Button */}
+            <div className="bg-gray-900/30 rounded-xl border-2 border-dashed border-gray-700 flex items-center justify-center min-h-[300px] hover:border-[#3fb8bd]/50 transition cursor-pointer group">
+              <div className="text-center">
+                <div className="text-5xl mb-4 text-gray-600 group-hover:text-[#3fb8bd] transition">+</div>
+                <p className="text-gray-500 group-hover:text-gray-400">List Your KEKTV</p>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* About us Section */}
-        <section id="about" className="bg-gradient-to-b from-gray-900 to-gray-950 py-16 dark:from-gray-900 dark:to-gray-950 sm:py-24">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="mb-12 text-center font-fredoka text-4xl font-bold text-[#3fb8bd] sm:text-5xl">
-              About us
-            </h2>
-
-            <div className="grid items-center gap-12 lg:grid-cols-2">
-              {/* Left Column - Text Content */}
-              <div className="space-y-6">
-                <p className="font-fredoka text-lg leading-relaxed text-gray-300">
-                  𝕂Ǝ𝕂TECH emerges from the intersection of art and blockchain technology, born from our appreciation for the PepeCoin legacy dating back to 2016. Our dedicated team initially envisioned a modest NFT collection but found ourselves captivated by the energy of the PepeCoin 🐸 and $BASED 🧠 communities.
-                </p>
-                <p className="font-fredoka text-lg leading-relaxed text-gray-300">
-                  Our creative journey began in early 2024 within the thriving PepeCoin movement. Through Pepepaint, our team discovered a digital canvas where Pepe art could flourish in new ways. This discovery helped us grow as artists and develop a clear vision for our project.
-                </p>
-                <p className="font-fredoka text-lg leading-relaxed text-gray-300">
-                  What started as artistic exploration evolved into something meaningful when our early artwork received recognition from Pepelovers 🐸 and other respected figures in the Pepe community. This endorsement fueled our determination to craft more distinctive Pepe art and build something valuable for fellow enthusiasts. With each creation, we deepen our commitment to honoring the culture that brought us together. 🐸🤝
-                </p>
-              </div>
-
-              {/* Right Column - Making-of GIF */}
-              <div className="group relative overflow-hidden rounded-lg border-2 border-[#3fb8bd]/30 shadow-lg shadow-[#3fb8bd]/10 transition-all hover:border-[#3fb8bd] hover:shadow-2xl hover:shadow-[#3fb8bd]/30">
-                <Image
-                  src="/images/makingof.gif"
-                  alt="𝕂Ǝ𝕂TECH Art"
-                  width={600}
-                  height={600}
-                  className="h-auto w-full transition-transform duration-300 group-hover:scale-105"
-                  unoptimized
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#3fb8bd]/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              </div>
-            </div>
-
-            {/* Our Vision Section */}
-            <div className="mt-16 mx-auto max-w-3xl space-y-6 text-center">
-              <h3 className="font-fredoka text-3xl font-bold text-[#3fb8bd]">
-                Our Vision
-              </h3>
-              <p className="font-fredoka text-lg leading-relaxed text-gray-300">
-                At 𝕂Ǝ𝕂TECH, we aim to create more than just another NFT collection. We envision a dynamic ecosystem where art, community, and technology converge to create lasting value. At our core, spreading fresh, dank Pepe art throughout the crypto space drives everything we do. We&apos;re building a platform where holders can customize their digital identities, earn rewards, and participate in the evolution of the collection itself.
-              </p>
-              <p className="font-fredoka text-lg leading-relaxed text-gray-300">
-                Our mission extends beyond digital assets—we&apos;re committed to producing high-quality Pepe art that celebrates the culture and contributes to the broader crypto art space. This is our homage to the communities that inspired us and our contribution to the ever-evolving PEPENING 🐸🚀 movement.
-              </p>
+      {/* Footer */}
+      <footer className="py-12 border-t border-gray-800">
+        <div className="container mx-auto px-6">
+          <div className="text-center text-gray-400">
+            <p>© 2024 KEKTECH. All rights reserved. Built on BASED Chain (32323)</p>
+            <div className="mt-4 flex justify-center gap-6">
+              <Link href="#" className="hover:text-[#3fb8bd] transition">Twitter</Link>
+              <Link href="#" className="hover:text-[#3fb8bd] transition">Discord</Link>
+              <Link href="#" className="hover:text-[#3fb8bd] transition">Telegram</Link>
             </div>
           </div>
-        </section>
-
-        {/* Roadmap Section */}
-        <section id="roadmap" className="bg-gradient-to-b from-gray-950 to-black py-16 dark:from-gray-950 dark:to-black sm:py-24">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="mb-12 text-center font-fredoka text-4xl font-bold text-[#3fb8bd] sm:text-5xl">
-              ROADMAP
-            </h2>
-
-            {/* Roadmap Phases Grid */}
-            <div className="mb-16 grid gap-8 md:grid-cols-2">
-              {/* Phase 1 */}
-              <div className="rounded-xl border border-[#3fb8bd]/30 bg-gradient-to-br from-gray-900 to-gray-950 p-8 transition-all hover:border-[#3fb8bd] hover:shadow-lg hover:shadow-[#3fb8bd]/20">
-                <h3 className="mb-6 font-fredoka text-2xl font-bold text-[#3fb8bd]">
-                  Phase 1: Collection Launch
-                </h3>
-                <ul className="space-y-3 font-fredoka text-gray-300">
-                  <li className="flex items-start">
-                    <span className="mr-3 text-[#3fb8bd]">→</span>
-                    <span>Release of our founding collection: 4,200 uniquely crafted Pepe NFTs</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-3 text-[#3fb8bd]">→</span>
-                    <span>Pricing set at 18.369 $BASED per NFT</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-3 text-[#3fb8bd]">→</span>
-                    <span>Community building, NFT give-aways</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-3 text-[#3fb8bd]">→</span>
-                    <span>Snapshots for token airdrop</span>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Phase 2 */}
-              <div className="rounded-xl border border-[#3fb8bd]/30 bg-gradient-to-br from-gray-900 to-gray-950 p-8 transition-all hover:border-[#3fb8bd] hover:shadow-lg hover:shadow-[#3fb8bd]/20">
-                <h3 className="mb-6 font-fredoka text-2xl font-bold text-[#3fb8bd]">
-                  Phase 2: Reward System Implementation
-                </h3>
-                <ul className="space-y-3 font-fredoka text-gray-300">
-                  <li className="flex items-start">
-                    <span className="mr-3 text-[#3fb8bd]">→</span>
-                    <span>Establishment of the token economy that will power future upgrades</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-3 text-[#3fb8bd]">→</span>
-                    <span>Token airdrop with multiplier for early supporters</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-3 text-[#3fb8bd]">→</span>
-                    <span>Rarity and stacking multiplier - hold rare and multiple NFTs to get higher token emissions!</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-3 text-[#3fb8bd]">→</span>
-                    <span>Introduction of daily token rewards for all NFT holders</span>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Phase 3 */}
-              <div className="rounded-xl border border-[#3fb8bd]/30 bg-gradient-to-br from-gray-900 to-gray-950 p-8 transition-all hover:border-[#3fb8bd] hover:shadow-lg hover:shadow-[#3fb8bd]/20">
-                <h3 className="mb-6 font-fredoka text-2xl font-bold text-[#3fb8bd]">
-                  Phase 3: Limited Edition Mint
-                </h3>
-                <ul className="space-y-3 font-fredoka text-gray-300">
-                  <li className="flex items-start">
-                    <span className="mr-3 text-[#3fb8bd]">→</span>
-                    <span>Limited edition free mint of 420 handpicked NFTs</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-3 text-[#3fb8bd]">→</span>
-                    <span>Main collection NFT holders with Easter Egg traits qualify for the 420 limited edition free mint</span>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Phase 4 */}
-              <div className="rounded-xl border border-[#3fb8bd]/30 bg-gradient-to-br from-gray-900 to-gray-950 p-8 transition-all hover:border-[#3fb8bd] hover:shadow-lg hover:shadow-[#3fb8bd]/20">
-                <h3 className="mb-6 font-fredoka text-2xl font-bold text-[#3fb8bd]">
-                  Phase 4: NFT Upgrading System
-                </h3>
-                <ul className="space-y-3 font-fredoka text-gray-300">
-                  <li className="flex items-start">
-                    <span className="mr-3 text-[#3fb8bd]">→</span>
-                    <span>Introduction of new handcrafted characters and attributes</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-3 text-[#3fb8bd]">→</span>
-                    <span>Interactive, gamified upgrade experience allowing holders to choose their path</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-3 text-[#3fb8bd]">→</span>
-                    <span>Use earned rewards to make meaningful choices that shape your unique Pepe PFP</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-3 text-[#3fb8bd]">→</span>
-                    <span>Unlock the full potential of all Easter eggs hidden throughout the collection</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Community Journey */}
-            <div className="rounded-xl border border-[#3fb8bd]/30 bg-gradient-to-br from-gray-900 to-gray-950 p-8">
-              <h3 className="mb-6 font-fredoka text-2xl font-bold text-[#3fb8bd]">
-                Community Journey
-              </h3>
-              <p className="mb-6 font-fredoka text-lg leading-relaxed text-gray-300">
-                We&apos;re committed to engaging with our community at every step. We value your feedback and will adapt our vision to create the best experience for our holders. Above all, we&apos;re dedicated to our highest utility: spreading dank Pepe art throughout the space, bringing creative joy to the broader crypto community. 🐸🎨🔥 We strongly believe in collaborations and will pursue partnerships with other $Based NFT communities to create opportunities that strengthen the entire ecosystem.
-              </p>
-              {/* Making-of GIF */}
-              <div className="group relative overflow-hidden rounded-lg border-2 border-[#3fb8bd]/30 shadow-lg shadow-[#3fb8bd]/10 transition-all hover:border-[#3fb8bd] hover:shadow-2xl hover:shadow-[#3fb8bd]/30">
-                <Image
-                  src="/images/makingof.gif"
-                  alt="Making of 𝕂Ǝ𝕂TECH"
-                  width={1200}
-                  height={600}
-                  className="h-auto w-full transition-transform duration-300 group-hover:scale-105"
-                  unoptimized
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#3fb8bd]/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Trait Distribution Section */}
-        <section id="traits" className="bg-gradient-to-b from-black to-gray-950 py-16 dark:from-black dark:to-gray-950 sm:py-24">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <TraitDistribution />
-          </div>
-        </section>
-      </main>
-
-      <Footer />
-    </div>
+        </div>
+      </footer>
+    </main>
   )
 }
