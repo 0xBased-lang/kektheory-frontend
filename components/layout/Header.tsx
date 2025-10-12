@@ -13,11 +13,11 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[#3fb8bd]/20 bg-black backdrop-blur-md dark:border-[#3fb8bd]/20 dark:bg-black">
       <div className="container mx-auto flex h-24 items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo - Large and Prominent */}
-        <Link href="/" className="flex items-center bg-black p-2">
+        {/* Logo - Clickable Home Link */}
+        <Link href="/" className="flex items-center bg-black p-2 hover:opacity-80 transition">
           <Image
             src="/images/kektech.gif"
-            alt="𝕂Ǝ𝕂丅ᵉ匚🅷 Collection"
+            alt="𝕂Ǝ𝕂丅ᵉ匚🅷 Collection - Home"
             width={120}
             height={60}
             className="h-auto w-28 sm:w-32 md:w-36"
@@ -26,14 +26,8 @@ export function Header() {
           />
         </Link>
 
-        {/* Navigation Links - Updated Order */}
-        <nav className="hidden items-center space-x-4 md:flex">
-          <Link
-            href="/"
-            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd]"
-          >
-            Home
-          </Link>
+        {/* Navigation Links - Simplified */}
+        <nav className="hidden items-center space-x-4 md:flex lg:space-x-6">
           <Link
             href="/#dashboard"
             className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd]"
@@ -65,22 +59,16 @@ export function Header() {
             Rewards
           </Link>
           <Link
-            href="/#traits"
-            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd]"
-          >
-            Traits
-          </Link>
-          <Link
             href="/#roadmap"
             className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd]"
           >
             Roadmap
           </Link>
           <Link
-            href="/#about"
+            href="/#traits"
             className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd]"
           >
-            About Us
+            Traits
           </Link>
         </nav>
 
