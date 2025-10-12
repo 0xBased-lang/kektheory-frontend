@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useMemo } from 'react'
 import { EnhancedNFTCard } from './EnhancedNFTCard'
 import { useRankings } from '@/lib/hooks/useRankings'
 
@@ -10,6 +11,7 @@ import { useRankings } from '@/lib/hooks/useRankings'
  * - Real-time data from rankings API (2470+ NFTs)
  * - Auto-refresh every 30 seconds
  * - Live supply counter from smart contract
+ * - NFT ID search functionality
  * - Loading state with skeleton cards
  * - Empty state with mint CTA
  * - Error state with retry button
@@ -18,6 +20,17 @@ import { useRankings } from '@/lib/hooks/useRankings'
  */
 export function NFTGallery() {
   const { rankings: nfts, loading: isLoading, error } = useRankings(30000)
+  const [searchId, setSearchId] = useState('')
+
+  // Filter NFTs by ID
+  const filteredNfts = useMemo(() => {
+    if (!searchId.trim()) return nfts
+
+    const searchTerm = searchId.trim().toLowerCase()
+    return nfts.filter((nft) =>
+      nft.tokenId.toString().includes(searchTerm)
+    )
+  }, [nfts, searchId])
 
   // Loading State
   if (isLoading) {
@@ -79,20 +92,87 @@ export function NFTGallery() {
     )
   }
 
-  // NFT Grid with Enhanced Cards
+  // NFT Grid with Enhanced Cards and Search
   return (
     <div className="space-y-8">
-      {/* NFT Grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {nfts.map((nft) => (
-          <EnhancedNFTCard key={nft.tokenId} nft={nft} />
-        ))}
+      {/* Search Bar */}
+      <div className="max-w-md mx-auto">
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+            <svg
+              className="w-5 h-5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+          <input
+            type="text"
+            value={searchId}
+            onChange={(e) => setSearchId(e.target.value)}
+            placeholder="Search by NFT ID (e.g., 1, 42, 1337)..."
+            className="w-full pl-11 pr-4 py-3 bg-gray-900/60 border border-gray-800 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#3fb8bd] focus:border-transparent transition font-fredoka"
+          />
+          {searchId && (
+            <button
+              onClick={() => setSearchId('')}
+              className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-white transition"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          )}
+        </div>
       </div>
 
+      {/* No Results Message */}
+      {searchId && filteredNfts.length === 0 && (
+        <div className="text-center py-12">
+          <div className="text-5xl mb-4">🔍</div>
+          <h3 className="text-xl font-bold text-white mb-2 font-fredoka">No NFTs Found</h3>
+          <p className="text-gray-400 mb-4">
+            No NFTs match ID &quot;{searchId}&quot;
+          </p>
+          <button
+            onClick={() => setSearchId('')}
+            className="px-6 py-2 bg-[#3fb8bd] text-black font-bold rounded-lg hover:bg-[#3fb8bd]/90 transition font-fredoka"
+          >
+            Clear Search
+          </button>
+        </div>
+      )}
+
+      {/* NFT Grid */}
+      {filteredNfts.length > 0 && (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredNfts.map((nft) => (
+            <EnhancedNFTCard key={nft.tokenId} nft={nft} />
+          ))}
+        </div>
+      )}
+
       {/* Footer Stats */}
-      <div className="text-center text-gray-400 border-t border-gray-800 pt-6">
-        <p>Showing {nfts.length} NFTs • Updates automatically every 30 seconds</p>
-      </div>
+      {filteredNfts.length > 0 && (
+        <div className="text-center text-gray-400 border-t border-gray-800 pt-6">
+          <p>
+            Showing {filteredNfts.length} {searchId ? 'of ' + nfts.length : ''} NFTs • Updates
+            automatically every 30 seconds
+          </p>
+        </div>
+      )}
     </div>
   )
 }
