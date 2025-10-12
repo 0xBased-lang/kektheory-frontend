@@ -25,7 +25,7 @@ export default function MarketplacePage() {
           {/* Page Header */}
           <div className="mb-8 text-center">
             <h1 className="font-fredoka mb-4 text-4xl font-bold text-[#3fb8bd] sm:text-5xl">
-              𝕂Ǝ𝕂TECH Marketplace
+              𝕂Ǝ𝕂丅ᵉ匚🅷 Marketplace
             </h1>
             <p className="font-fredoka text-lg text-gray-300">
               Mint new NFTs or trade KEKTV vouchers

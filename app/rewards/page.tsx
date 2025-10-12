@@ -18,7 +18,7 @@ export default function RewardsPage() {
         <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
           {/* Page Header */}
           <div className="mb-12 text-center">
-            <h1 className="font-fredoka mb-4 text-4xl font-bold text-white sm:text-5xl">
+            <h1 className="font-fredoka mb-4 text-4xl font-bold text-[#3fb8bd] sm:text-5xl">
               🎁 𝕂Ǝ𝕂丅ᵉ匚🅷 Rewards
             </h1>
             <p className="font-fredoka text-lg text-gray-300">
@@ -29,7 +29,7 @@ export default function RewardsPage() {
           {/* Coming Soon Notice */}
           <div className="mb-16 bg-gradient-to-br from-[#3fb8bd]/10 via-[#4ecca7]/5 to-transparent rounded-2xl border-2 border-[#3fb8bd]/30 p-12 text-center">
             <div className="text-6xl mb-6">🎁</div>
-            <h2 className="font-fredoka mb-4 text-3xl font-bold text-white">$TECH Token Airdrops Sent!</h2>
+            <h2 className="font-fredoka mb-4 text-3xl font-bold text-[#3fb8bd]">$TECH Token Airdrops Sent!</h2>
             <p className="text-xl text-gray-300 mb-6 max-w-2xl mx-auto">
               We&apos;ve successfully distributed $TECH token airdrops to all eligible 𝕂Ǝ𝕂TECH NFT holders! 🎉
             </p>
@@ -43,7 +43,7 @@ export default function RewardsPage() {
 
           {/* How Rewards Work */}
           <div className="mb-16">
-            <h2 className="font-fredoka mb-8 text-3xl font-bold text-white text-center">How Rewards Work</h2>
+            <h2 className="font-fredoka mb-8 text-3xl font-bold text-[#3fb8bd] text-center">How Rewards Work</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Daily Rewards */}
@@ -117,7 +117,7 @@ export default function RewardsPage() {
 
           {/* Token Economy */}
           <div className="mb-16">
-            <h2 className="font-fredoka mb-8 text-3xl font-bold text-white text-center">Token Economy</h2>
+            <h2 className="font-fredoka mb-8 text-3xl font-bold text-[#3fb8bd] text-center">Token Economy</h2>
 
             <div className="max-w-4xl mx-auto">
               <div className="bg-gradient-to-br from-gray-900 to-transparent rounded-2xl border border-gray-800 p-8 space-y-6">
@@ -147,7 +147,7 @@ export default function RewardsPage() {
 
           {/* Call to Action */}
           <div className="text-center">
-            <h2 className="font-fredoka mb-6 text-3xl font-bold text-white">Start Earning Today</h2>
+            <h2 className="font-fredoka mb-6 text-3xl font-bold text-[#3fb8bd]">Start Earning Today</h2>
             <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
               The more 𝕂Ǝ𝕂TECH NFTs you hold, and the rarer they are, the more rewards you&apos;ll earn every day. Join our community and start building your token portfolio!
             </p>
