@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { getUserNFTHoldings, getKEKTVListings, getKEKTVMarketplaceStats, type NFTListing } from '@/lib/blockchain/kektv'
 
 /**
  * Dashboard-style Homepage
@@ -15,57 +16,60 @@ export default function DashboardHomepage() {
     kektech: 0,
     kektv: 0
   })
-  interface KektvListing {
-    id: number
-    name: string
-    price: string
-    image: string
-  }
+  const [kektvListings, setKektvListings] = useState<NFTListing[]>([])
+  const [marketplaceStats, setMarketplaceStats] = useState({
+    totalListed: 0,
+    floorPrice: 0,
+    holders: 0,
+    volume24h: 0
+  })
 
-  const [kektvListings, setKektvListings] = useState<KektvListing[]>([])
-
-  // Mock data for now - will be replaced with actual blockchain data
+  // Fetch blockchain data and check wallet connection
   useEffect(() => {
-    // Simulate wallet connection check
-    const checkWalletConnection = async () => {
+    const initializeData = async () => {
+      // Check wallet connection
       if (typeof window !== 'undefined' && window.ethereum) {
         try {
-          const accounts = await window.ethereum.request({ method: 'eth_accounts' })
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' }) as string[]
           if (accounts.length > 0) {
             setWalletConnected(true)
             setUserAddress(accounts[0])
-            // Mock NFT holdings - replace with actual blockchain queries
-            setNftHoldings({
-              kektech: Math.floor(Math.random() * 10),
-              kektv: Math.floor(Math.random() * 20)
-            })
+
+            // Fetch real NFT holdings from blockchain
+            const holdings = await getUserNFTHoldings(accounts[0])
+            setNftHoldings(holdings)
           }
         } catch (error) {
           console.error('Wallet check error:', error)
         }
       }
-    }
-    checkWalletConnection()
 
-    // Mock KEKTV listings data
-    setKektvListings([
-      { id: 1, name: 'KEKTV #001', price: '0.5', image: '/images/kektv1.gif' },
-      { id: 2, name: 'KEKTV #002', price: '0.8', image: '/images/kektv2.gif' },
-      { id: 3, name: 'KEKTV #003', price: '1.2', image: '/images/kektv3.gif' },
-    ])
+      // Fetch KEKTV marketplace data
+      try {
+        const [listings, stats] = await Promise.all([
+          getKEKTVListings(),
+          getKEKTVMarketplaceStats()
+        ])
+        setKektvListings(listings)
+        setMarketplaceStats(stats)
+      } catch (error) {
+        console.error('Error fetching marketplace data:', error)
+      }
+    }
+
+    initializeData()
   }, [])
 
   const connectWallet = async () => {
     if (typeof window !== 'undefined' && window.ethereum) {
       try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }) as string[]
         setWalletConnected(true)
         setUserAddress(accounts[0])
-        // Mock NFT holdings
-        setNftHoldings({
-          kektech: Math.floor(Math.random() * 10),
-          kektv: Math.floor(Math.random() * 20)
-        })
+
+        // Fetch real NFT holdings from blockchain
+        const holdings = await getUserNFTHoldings(accounts[0])
+        setNftHoldings(holdings)
       } catch (error) {
         console.error('Wallet connection error:', error)
       }
@@ -267,31 +271,31 @@ export default function DashboardHomepage() {
             </p>
           </div>
 
-          {/* Marketplace Stats */}
+          {/* Marketplace Stats - Dynamic from Blockchain */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
             <div className="bg-gray-900/50 rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-[#3fb8bd]">9</div>
+              <div className="text-2xl font-bold text-[#3fb8bd]">{marketplaceStats.totalListed}</div>
               <div className="text-sm text-gray-400">Total Listed</div>
             </div>
             <div className="bg-gray-900/50 rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-[#4ecca7]">0.5 ETH</div>
+              <div className="text-2xl font-bold text-[#4ecca7]">{marketplaceStats.floorPrice} BASED</div>
               <div className="text-sm text-gray-400">Floor Price</div>
             </div>
             <div className="bg-gray-900/50 rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-[#ff00ff]">7</div>
+              <div className="text-2xl font-bold text-[#ff00ff]">{marketplaceStats.holders}</div>
               <div className="text-sm text-gray-400">Holders</div>
             </div>
             <div className="bg-gray-900/50 rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-white">2.5 ETH</div>
+              <div className="text-2xl font-bold text-white">{marketplaceStats.volume24h} BASED</div>
               <div className="text-sm text-gray-400">24h Volume</div>
             </div>
           </div>
 
-          {/* Listings Grid */}
+          {/* Listings Grid - Dynamic from Blockchain */}
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {kektvListings.map((listing) => (
               <div
-                key={listing.id}
+                key={listing.tokenId}
                 className="bg-gray-900/50 rounded-xl overflow-hidden border border-gray-800 hover:border-[#3fb8bd]/50 transition group"
               >
                 <div className="aspect-square bg-gradient-to-br from-[#3fb8bd]/20 to-[#4ecca7]/20 p-4">
@@ -303,7 +307,7 @@ export default function DashboardHomepage() {
                   <h4 className="font-bold text-white mb-2">{listing.name}</h4>
                   <div className="flex justify-between items-center mb-3">
                     <span className="text-sm text-gray-400">Price</span>
-                    <span className="font-bold text-[#3fb8bd]">{listing.price} ETH</span>
+                    <span className="font-bold text-[#3fb8bd]">{listing.price}</span>
                   </div>
                   <button className="w-full py-2 rounded-lg bg-[#3fb8bd]/20 text-[#3fb8bd] hover:bg-[#3fb8bd]/30 transition">
                     Buy Now
