@@ -1,78 +1,13 @@
-'use client'
-
-import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
-import { getUserNFTHoldings, getKEKTVListings, getKEKTVMarketplaceStats, type NFTListing } from '@/lib/blockchain/kektv'
 
 /**
- * Dashboard-style Homepage
- * Clean, modern design inspired by professional DeFi dashboards
+ * KEKTECH Homepage
+ * Marketing-focused landing page with sections for Hero, Featured Artifacts, About Us, Roadmap, and Traits
  */
-export default function DashboardHomepage() {
-  const [walletConnected, setWalletConnected] = useState(false)
-  const [nftHoldings, setNftHoldings] = useState({
-    kektech: 0,
-    kektv: 0
-  })
-  const [kektvListings, setKektvListings] = useState<NFTListing[]>([])
-  const [marketplaceStats, setMarketplaceStats] = useState({
-    totalListed: 0,
-    floorPrice: 0,
-    holders: 0,
-    volume24h: 0
-  })
-
-  // Fetch blockchain data and check wallet connection
-  useEffect(() => {
-    const initializeData = async () => {
-      // Check wallet connection
-      if (typeof window !== 'undefined' && window.ethereum) {
-        try {
-          const accounts = await window.ethereum.request({ method: 'eth_accounts' }) as string[]
-          if (accounts.length > 0) {
-            setWalletConnected(true)
-            // Fetch real NFT holdings from blockchain
-            const holdings = await getUserNFTHoldings(accounts[0])
-            setNftHoldings(holdings)
-          }
-        } catch (error) {
-          console.error('Wallet check error:', error)
-        }
-      }
-
-      // Fetch KEKTV marketplace data
-      try {
-        const [listings, stats] = await Promise.all([
-          getKEKTVListings(),
-          getKEKTVMarketplaceStats()
-        ])
-        setKektvListings(listings)
-        setMarketplaceStats(stats)
-      } catch (error) {
-        console.error('Error fetching marketplace data:', error)
-      }
-    }
-
-    initializeData()
-  }, [])
-
-  const connectWallet = async () => {
-    if (typeof window !== 'undefined' && window.ethereum) {
-      try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }) as string[]
-        setWalletConnected(true)
-
-        // Fetch real NFT holdings from blockchain
-        const holdings = await getUserNFTHoldings(accounts[0])
-        setNftHoldings(holdings)
-      } catch (error) {
-        console.error('Wallet connection error:', error)
-      }
-    }
-  }
+export default function Homepage() {
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -108,166 +43,23 @@ export default function DashboardHomepage() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/mint"
+                href="/marketplace"
                 className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black font-bold hover:scale-105 transition font-fredoka text-lg"
               >
                 Start Minting
               </Link>
               <Link
-                href="#marketplace"
+                href="/gallery"
                 className="px-8 py-4 rounded-xl border-2 border-[#3fb8bd] text-[#3fb8bd] font-bold hover:bg-[#3fb8bd]/10 transition font-fredoka text-lg"
               >
-                Start Trading
+                Explore Gallery
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Dashboard Section */}
-      <section id="dashboard" className="py-20 border-t border-gray-800">
-        <div className="container mx-auto px-6">
-          <h2 className="text-3xl font-bold text-white mb-8">Your Dashboard</h2>
-
-          {walletConnected ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* NFT Holdings Card */}
-              <div className="bg-gradient-to-br from-[#3fb8bd]/5 to-transparent rounded-2xl border border-[#3fb8bd]/20 p-6">
-                <h3 className="text-xl font-bold text-[#3fb8bd] mb-4">Your NFT Holdings</h3>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-300">𝕂Ǝ𝕂TECH NFTs</span>
-                    <span className="text-2xl font-bold text-white">{nftHoldings.kektech}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-300">KEKTV Vouchers</span>
-                    <span className="text-2xl font-bold text-white">{nftHoldings.kektv}</span>
-                  </div>
-                  <Link
-                    href="/gallery"
-                    className="block mt-4 text-center py-2 rounded-lg bg-[#3fb8bd]/20 text-[#3fb8bd] hover:bg-[#3fb8bd]/30 transition"
-                  >
-                    View Collection
-                  </Link>
-                </div>
-              </div>
-
-              {/* Rewards Card */}
-              <div className="bg-gradient-to-br from-[#4ecca7]/5 to-transparent rounded-2xl border border-[#4ecca7]/20 p-6">
-                <h3 className="text-xl font-bold text-[#4ecca7] mb-4">Rewards & Airdrops</h3>
-                <div className="space-y-4">
-                  <div className="text-gray-300">
-                    Hold 𝕂Ǝ𝕂TECH NFTs to earn KEKTV vouchers and exclusive rewards
-                  </div>
-                  <div className="text-3xl font-bold text-white">
-                    {nftHoldings.kektv} <span className="text-sm text-gray-400">KEKTV earned</span>
-                  </div>
-                  <button className="w-full py-2 rounded-lg bg-[#4ecca7]/20 text-[#4ecca7] hover:bg-[#4ecca7]/30 transition">
-                    Claim Rewards
-                  </button>
-                </div>
-              </div>
-
-              {/* Activity Card */}
-              <div className="bg-gradient-to-br from-[#ff00ff]/5 to-transparent rounded-2xl border border-[#ff00ff]/20 p-6">
-                <h3 className="text-xl font-bold text-[#ff00ff] mb-4">Recent Activity</h3>
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between text-gray-300">
-                    <span>Minted 𝕂Ǝ𝕂TECH #1337</span>
-                    <span>2h ago</span>
-                  </div>
-                  <div className="flex justify-between text-gray-300">
-                    <span>Received KEKTV Airdrop</span>
-                    <span>1d ago</span>
-                  </div>
-                  <div className="flex justify-between text-gray-300">
-                    <span>Listed KEKTV #42</span>
-                    <span>3d ago</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="bg-gradient-to-br from-gray-900 to-transparent rounded-2xl border border-gray-800 p-12 text-center">
-              <p className="text-xl text-gray-400 mb-6">Connect your wallet to view your dashboard</p>
-              <button
-                onClick={connectWallet}
-                className="px-8 py-3 rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black font-bold hover:scale-105 transition"
-              >
-                Connect Wallet
-              </button>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* KEKTV Marketplace Section */}
-      <section id="marketplace" className="py-20 border-t border-gray-800">
-        <div className="container mx-auto px-6">
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold text-white mb-4">KEKTV Marketplace</h2>
-            <p className="text-gray-400">
-              Trade KEKTV vouchers - exclusive rewards for 𝕂Ǝ𝕂TECH holders
-            </p>
-          </div>
-
-          {/* Marketplace Stats - Dynamic from Blockchain */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-            <div className="bg-gray-900/50 rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-[#3fb8bd]">{marketplaceStats.totalListed}</div>
-              <div className="text-sm text-gray-400">Total Listed</div>
-            </div>
-            <div className="bg-gray-900/50 rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-[#4ecca7]">{marketplaceStats.floorPrice} BASED</div>
-              <div className="text-sm text-gray-400">Floor Price</div>
-            </div>
-            <div className="bg-gray-900/50 rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-[#ff00ff]">{marketplaceStats.holders}</div>
-              <div className="text-sm text-gray-400">Holders</div>
-            </div>
-            <div className="bg-gray-900/50 rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold text-white">{marketplaceStats.volume24h} BASED</div>
-              <div className="text-sm text-gray-400">24h Volume</div>
-            </div>
-          </div>
-
-          {/* Listings Grid - Dynamic from Blockchain */}
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {kektvListings.map((listing) => (
-              <div
-                key={listing.tokenId}
-                className="bg-gray-900/50 rounded-xl overflow-hidden border border-gray-800 hover:border-[#3fb8bd]/50 transition group"
-              >
-                <div className="aspect-square bg-gradient-to-br from-[#3fb8bd]/20 to-[#4ecca7]/20 p-4">
-                  <div className="w-full h-full bg-black/50 rounded-lg flex items-center justify-center">
-                    <span className="text-4xl">🎫</span>
-                  </div>
-                </div>
-                <div className="p-4">
-                  <h4 className="font-bold text-white mb-2">{listing.name}</h4>
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-sm text-gray-400">Price</span>
-                    <span className="font-bold text-[#3fb8bd]">{listing.price}</span>
-                  </div>
-                  <button className="w-full py-2 rounded-lg bg-[#3fb8bd]/20 text-[#3fb8bd] hover:bg-[#3fb8bd]/30 transition">
-                    Buy Now
-                  </button>
-                </div>
-              </div>
-            ))}
-
-            {/* Add More Listing Button */}
-            <div className="bg-gray-900/30 rounded-xl border-2 border-dashed border-gray-700 flex items-center justify-center min-h-[300px] hover:border-[#3fb8bd]/50 transition cursor-pointer group">
-              <div className="text-center">
-                <div className="text-5xl mb-4 text-gray-600 group-hover:text-[#3fb8bd] transition">+</div>
-                <p className="text-gray-500 group-hover:text-gray-400">List Your KEKTV</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* NFT Showcase Section */}
+      {/* Featured Artifacts Section */}
       <section className="py-20 border-t border-gray-800">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-white text-center mb-4 font-fredoka">Featured Artifacts</h2>

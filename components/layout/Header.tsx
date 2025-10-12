@@ -26,25 +26,19 @@ export function Header() {
           />
         </Link>
 
-        {/* Navigation Links - Simplified */}
+        {/* Navigation Links - Restructured */}
         <nav className="hidden items-center space-x-4 md:flex lg:space-x-6">
           <Link
-            href="/#dashboard"
+            href="/marketplace"
+            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd]"
+          >
+            Marketplace
+          </Link>
+          <Link
+            href="/dashboard"
             className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd]"
           >
             Dashboard
-          </Link>
-          <Link
-            href="/mint"
-            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd]"
-          >
-            Mint
-          </Link>
-          <Link
-            href="/#marketplace"
-            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd]"
-          >
-            Trade
           </Link>
           <Link
             href="/gallery"
