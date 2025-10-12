@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 /**
  * EnhancedHero Component with 3D Effects and Particles
@@ -74,19 +75,24 @@ export function EnhancedHero() {
             </span>
           </div>
 
-          {/* Main Title with 3D Effect */}
-          <h1
-            className="mb-6 text-5xl font-black tracking-tight sm:text-6xl md:text-7xl lg:text-8xl"
+          {/* Hero GIF Image */}
+          <div
+            className="mb-6 flex justify-center"
             style={{
-              background: 'linear-gradient(to right, #3fb8bd, #4ecca7, #ff00ff)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
               filter: 'drop-shadow(0 0 30px rgba(63, 184, 189, 0.5))',
               transform: `perspective(500px) rotateX(${mousePosition.y * 0.1}deg) rotateY(${mousePosition.x * 0.1}deg)`,
             }}
           >
-            𝕂Ǝ𝕂丅ᵉ匚🅷
-          </h1>
+            <Image
+              src="/images/tech.gif"
+              alt="𝕂Ǝ𝕂丅ᵉ匚🅷 Collection"
+              width={600}
+              height={400}
+              className="max-w-full h-auto"
+              unoptimized
+              priority
+            />
+          </div>
 
           {/* Subtitle */}
           <p className="mx-auto mb-8 max-w-2xl font-fredoka text-lg text-gray-300 sm:text-xl md:text-2xl">
