@@ -128,7 +128,7 @@ export default function Homepage() {
 
             <div className="relative aspect-square rounded-2xl overflow-hidden border-2 border-[#3fb8bd]/30">
               <Image
-                src="/images/686.png"
+                src="/images/1.png"
                 alt="KEKTECH NFT Artwork"
                 fill
                 className="object-cover"
@@ -141,7 +141,7 @@ export default function Homepage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
             <div className="relative aspect-square rounded-2xl overflow-hidden border-2 border-[#3fb8bd]/30 lg:order-1">
               <Image
-                src="/images/782.png"
+                src="/images/2.png"
                 alt="KEKTECH NFT Collection"
                 fill
                 className="object-cover"
@@ -263,12 +263,12 @@ export default function Homepage() {
             {[
               { name: "Background", icon: "🎨", count: 11, color: "#3fb8bd" },
               { name: "Body", icon: "👤", count: 7, color: "#4ecca7" },
-              { name: "Tattoo", icon: "✒️", count: 12, color: "#ff00ff" },
+              { name: "Tattoo", icon: "✒️", count: 12, color: "#ffd700" },
               { name: "Style", icon: "💎", count: 10, color: "#ffd700" },
               { name: "Clothes", icon: "👔", count: 15, color: "#9d4edd" },
               { name: "Tools", icon: "🛠️", count: 18, color: "#3fb8bd" },
               { name: "Eyes", icon: "👀", count: 14, color: "#4ecca7" },
-              { name: "Glasses", icon: "🕶️", count: 13, color: "#ff00ff" },
+              { name: "Glasses", icon: "🕶️", count: 13, color: "#ffd700" },
               { name: "Hat", icon: "🎩", count: 17, color: "#ffd700" },
               { name: "Special", icon: "⭐", count: 8, color: "#9d4edd" },
               { name: "Easter Eggs", icon: "🥚", count: 25, color: "#3fb8bd" }
