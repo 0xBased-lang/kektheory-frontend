@@ -110,12 +110,13 @@ export default function Homepage() {
       {/* About Us Section */}
       <section id="about" className="py-20 border-t border-gray-800">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-[#3fb8bd] text-center mb-12 font-fredoka">About Us</h2>
+          <h2 className="text-4xl font-bold text-[#3fb8bd] text-center mb-16 font-fredoka">About Us</h2>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+          {/* First Row: Text Left, Image Right */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
             <div className="space-y-6">
               <p className="text-gray-300 leading-relaxed">
-                𝕂Ǝ𝕂TECH emerges from the intersection of art and blockchain technology, born from our appreciation for the PepeCoin legacy dating back to 2016. Our dedicated team initially envisioned a modest NFT collection but found ourselves captivated by the energy of the PepeCoin 🐸 and $BASED 🧠communities.
+                𝕂Ǝ𝕂TECH emerges from the intersection of art and blockchain technology, born from our appreciation for the PepeCoin legacy dating back to 2016. Our dedicated team initially envisioned a modest NFT collection but found ourselves captivated by the energy of the PepeCoin 🐸 and $BASED 🧠 communities.
               </p>
               <p className="text-gray-300 leading-relaxed">
                 Our creative journey began in early 2024 within the thriving PepeCoin movement. Through Pepepaint, our team discovered a digital canvas where Pepe art could flourish in new ways. This discovery helped us grow as artists and develop a clear vision for our project.
@@ -125,7 +126,30 @@ export default function Homepage() {
               </p>
             </div>
 
-            <div className="space-y-6">
+            <div className="relative aspect-square rounded-2xl overflow-hidden border-2 border-[#3fb8bd]/30">
+              <Image
+                src="/images/686.png"
+                alt="KEKTECH NFT Artwork"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </div>
+          </div>
+
+          {/* Second Row: Image Left, Text Right */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+            <div className="relative aspect-square rounded-2xl overflow-hidden border-2 border-[#3fb8bd]/30 lg:order-1">
+              <Image
+                src="/images/782.png"
+                alt="KEKTECH NFT Collection"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </div>
+
+            <div className="space-y-6 lg:order-2">
               <h3 className="text-2xl font-bold text-[#3fb8bd] font-fredoka">Our Vision</h3>
               <p className="text-gray-300 leading-relaxed">
                 At 𝕂Ǝ𝕂TECH, we aim to create more than just another NFT collection. We envision a dynamic ecosystem where art, community, and technology converge to create lasting value. At our core, spreading fresh, dank Pepe art throughout the crypto space drives everything we do. We&apos;re building a platform where holders can customize their digital identities, earn rewards, and participate in the evolution of the collection itself.
@@ -134,24 +158,6 @@ export default function Homepage() {
                 Our mission extends beyond digital assets—we&apos;re committed to producing high-quality Pepe art that celebrates the culture and contributes to the broader crypto art space. This is our homage to the communities that inspired us and our contribution to the ever-evolving PEPENING 🐸🚀 movement.
               </p>
             </div>
-          </div>
-
-          {/* Making Of GIF - Behind the Scenes */}
-          <div className="max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold text-[#3fb8bd] text-center mb-6 font-fredoka">Our Creative Process</h3>
-            <div className="rounded-2xl overflow-hidden border border-[#3fb8bd]/20">
-              <Image
-                src="/images/makingof.gif"
-                alt="KEKTECH Creative Process - Behind the Scenes"
-                width={1200}
-                height={675}
-                className="w-full h-auto"
-                unoptimized
-              />
-            </div>
-            <p className="text-center text-gray-400 mt-4 text-sm">
-              Watch our artistic process: hand-drawing each unique 𝕂Ǝ𝕂TECH artifact
-            </p>
           </div>
         </div>
       </section>
@@ -222,8 +228,23 @@ export default function Homepage() {
           {/* Community Journey */}
           <div className="max-w-4xl mx-auto text-center">
             <h3 className="text-2xl font-bold text-[#3fb8bd] mb-6 font-fredoka">Community Journey</h3>
-            <p className="text-gray-300 leading-relaxed">
+            <p className="text-gray-300 leading-relaxed mb-8">
               We&apos;re committed to engaging with our community at every step. We value your feedback and will adapt our vision to create the best experience for our holders. Above all, we&apos;re dedicated to our highest utility: spreading dank Pepe art throughout the space, bringing creative joy to the broader crypto community. 🐸🎨🔥 We strongly believe in collaborations and will pursue partnerships with other $Based NFT communities to create opportunities that strengthen the entire ecosystem.
+            </p>
+
+            {/* Making Of GIF */}
+            <div className="rounded-2xl overflow-hidden border border-[#3fb8bd]/20 mt-8">
+              <Image
+                src="/images/makingof.gif"
+                alt="KEKTECH Creative Process - Behind the Scenes"
+                width={1200}
+                height={675}
+                className="w-full h-auto"
+                unoptimized
+              />
+            </div>
+            <p className="text-center text-gray-400 mt-4 text-sm">
+              Watch our artistic process: hand-drawing each unique 𝕂Ǝ𝕂TECH artifact
             </p>
           </div>
         </div>
