@@ -26,43 +26,61 @@ export function Header() {
           />
         </Link>
 
-        {/* Navigation Links */}
-        <nav className="hidden items-center space-x-6 md:flex">
+        {/* Navigation Links - Updated Order */}
+        <nav className="hidden items-center space-x-4 md:flex">
           <Link
             href="/"
-            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd] dark:text-gray-300 dark:hover:text-[#3fb8bd]"
+            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd]"
           >
             Home
           </Link>
           <Link
+            href="/#dashboard"
+            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd]"
+          >
+            Dashboard
+          </Link>
+          <Link
             href="/mint"
-            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd] dark:text-gray-300 dark:hover:text-[#3fb8bd]"
+            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd]"
           >
             Mint
           </Link>
           <Link
+            href="/#marketplace"
+            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd]"
+          >
+            Trade
+          </Link>
+          <Link
             href="/gallery"
-            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd] dark:text-gray-300 dark:hover:text-[#3fb8bd]"
+            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd]"
           >
             Gallery
           </Link>
           <Link
+            href="/rewards"
+            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd]"
+          >
+            Rewards
+          </Link>
+          <Link
             href="/#traits"
-            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd] dark:text-gray-300 dark:hover:text-[#3fb8bd]"
+            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd]"
           >
             Traits
           </Link>
           <Link
             href="/#roadmap"
-            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd] dark:text-gray-300 dark:hover:text-[#3fb8bd]"
+            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd]"
           >
             Roadmap
           </Link>
           <Link
             href="/#about"
-            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd] dark:text-gray-300 dark:hover:text-[#3fb8bd]"
+            className="font-fredoka text-sm font-medium text-gray-300 transition-colors hover:text-[#3fb8bd]"
           >
-            About us
+            About Us
           </Link>
         </nav>
 
