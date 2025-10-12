@@ -23,24 +23,24 @@ export function BlurredTitleSection({
     <div className="relative mb-12 overflow-hidden rounded-2xl">
       {/* Background Layer - Blurred Image */}
       <div className="absolute inset-0 z-0">
-        {/* Image container with blur */}
+        {/* Image container with subtle blur */}
         <div
           className="relative h-full w-full"
           style={{
             backgroundImage: `url(${imageSrc})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            filter: 'blur(40px) brightness(0.6)',
-            opacity: 0.3,
-            transform: 'scale(1.1)', // Prevent blur edge artifacts
+            filter: 'blur(8px) brightness(0.8)',
+            opacity: 0.5,
+            transform: 'scale(1.05)', // Prevent blur edge artifacts
           }}
         />
 
-        {/* Gradient overlay for better text contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
+        {/* Subtle gradient overlay for text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/50" />
 
-        {/* Vignette effect for optical elegance */}
-        <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/70" />
+        {/* Light vignette effect */}
+        <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/40" />
       </div>
 
       {/* Content Layer - Title and Subtitle */}
