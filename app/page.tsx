@@ -267,6 +267,54 @@ export default function DashboardHomepage() {
         </div>
       </section>
 
+      {/* NFT Showcase Section */}
+      <section className="py-20 border-t border-gray-800">
+        <div className="container mx-auto px-6">
+          <h2 className="text-4xl font-bold text-white text-center mb-4 font-fredoka">Featured Artifacts</h2>
+          <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
+            Explore some of our hand-drawn KEKTECH artifacts - each one unique, each one special 🐸✨
+          </p>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-7xl mx-auto">
+            {[
+              { id: 171, name: "KEKTECH #171" },
+              { id: 180, name: "KEKTECH #180" },
+              { id: 65, name: "KEKTECH #65" },
+              { id: 686, name: "KEKTECH #686" },
+              { id: 69, name: "KEKTECH #69" },
+              { id: 782, name: "KEKTECH #782" }
+            ].map((nft) => (
+              <div
+                key={nft.id}
+                className="group relative aspect-square rounded-xl overflow-hidden border-2 border-gray-800 hover:border-[#3fb8bd] transition-all duration-300 hover:scale-105 cursor-pointer"
+              >
+                <Image
+                  src={`/images/${nft.id}.png`}
+                  alt={nft.name}
+                  width={400}
+                  height={400}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute bottom-0 left-0 right-0 p-3">
+                    <p className="text-white font-bold text-sm">{nft.name}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link
+              href="/gallery"
+              className="inline-block px-8 py-4 rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black font-bold hover:scale-105 transition font-fredoka"
+            >
+              View Full Collection
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* About Us Section */}
       <section id="about" className="py-20 border-t border-gray-800">
         <div className="container mx-auto px-6">
@@ -295,6 +343,24 @@ export default function DashboardHomepage() {
               </p>
             </div>
           </div>
+
+          {/* Making Of GIF - Behind the Scenes */}
+          <div className="max-w-4xl mx-auto">
+            <h3 className="text-2xl font-bold text-white text-center mb-6 font-fredoka">Our Creative Process</h3>
+            <div className="rounded-2xl overflow-hidden border border-[#3fb8bd]/20">
+              <Image
+                src="/images/makingof.gif"
+                alt="KEKTECH Creative Process - Behind the Scenes"
+                width={1200}
+                height={675}
+                className="w-full h-auto"
+                unoptimized
+              />
+            </div>
+            <p className="text-center text-gray-400 mt-4 text-sm">
+              Watch our artistic process: hand-drawing each unique KEKTECH artifact
+            </p>
+          </div>
         </div>
       </section>
 
@@ -302,6 +368,20 @@ export default function DashboardHomepage() {
       <section id="roadmap" className="py-20 border-t border-gray-800">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-white text-center mb-12 font-fredoka">ROADMAP</h2>
+
+          {/* Visual Roadmap Image */}
+          <div className="max-w-5xl mx-auto mb-12">
+            <div className="rounded-2xl overflow-hidden border border-[#3fb8bd]/30 shadow-lg shadow-[#3fb8bd]/10">
+              <Image
+                src="/images/kekorama.jpg"
+                alt="KEKTECH Roadmap Visual"
+                width={1400}
+                height={800}
+                className="w-full h-auto"
+                unoptimized
+              />
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto mb-16">
             {/* Phase 1 */}
