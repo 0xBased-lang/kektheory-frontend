@@ -19,11 +19,11 @@ export function Header() {
         {/* Logo - Left Side */}
         <Link href="/" className="flex items-center hover:opacity-80 transition">
           <Image
-            src="/images/kektech.gif?v=3"
+            src="/images/kektech.gif?v=4"
             alt="𝕂Ǝ𝕂丅ᵉ匚🅷 Home"
-            width={120}
-            height={60}
-            className="h-auto w-24 sm:w-28 md:w-32"
+            width={200}
+            height={100}
+            className="h-auto w-40 sm:w-48 md:w-56 lg:w-60"
             unoptimized
             priority
           />
