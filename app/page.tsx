@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Header } from '@/components/layout/Header'
+import { Footer } from '@/components/layout/Footer'
 import { getUserNFTHoldings, getKEKTVListings, getKEKTVMarketplaceStats, type NFTListing } from '@/lib/blockchain/kektv'
 
 /**
@@ -11,7 +13,6 @@ import { getUserNFTHoldings, getKEKTVListings, getKEKTVMarketplaceStats, type NF
  */
 export default function DashboardHomepage() {
   const [walletConnected, setWalletConnected] = useState(false)
-  const [userAddress, setUserAddress] = useState('')
   const [nftHoldings, setNftHoldings] = useState({
     kektech: 0,
     kektv: 0
@@ -33,8 +34,6 @@ export default function DashboardHomepage() {
           const accounts = await window.ethereum.request({ method: 'eth_accounts' }) as string[]
           if (accounts.length > 0) {
             setWalletConnected(true)
-            setUserAddress(accounts[0])
-
             // Fetch real NFT holdings from blockchain
             const holdings = await getUserNFTHoldings(accounts[0])
             setNftHoldings(holdings)
@@ -65,7 +64,6 @@ export default function DashboardHomepage() {
       try {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }) as string[]
         setWalletConnected(true)
-        setUserAddress(accounts[0])
 
         // Fetch real NFT holdings from blockchain
         const holdings = await getUserNFTHoldings(accounts[0])
@@ -77,68 +75,11 @@ export default function DashboardHomepage() {
   }
 
   return (
-    <main className="min-h-screen bg-black">
-      {/* Clean Header with Wallet Connection */}
-      <header className="sticky top-0 z-50 bg-black/95 backdrop-blur-sm border-b border-[#3fb8bd]/20">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <div className="flex items-center gap-8">
-              <Image
-                src="/images/kektech.gif"
-                alt="KEKTECH"
-                width={120}
-                height={60}
-                className="h-12 w-auto"
-                unoptimized
-                priority
-              />
+    <div className="flex min-h-screen flex-col">
+      <Header />
 
-              {/* Navigation */}
-              <nav className="hidden md:flex gap-6">
-                <Link href="#dashboard" className="text-gray-300 hover:text-[#3fb8bd] transition">
-                  Dashboard
-                </Link>
-                <Link href="#marketplace" className="text-gray-300 hover:text-[#3fb8bd] transition">
-                  Marketplace
-                </Link>
-                <Link href="/gallery" className="text-gray-300 hover:text-[#3fb8bd] transition">
-                  Gallery
-                </Link>
-                <Link href="/mint" className="text-gray-300 hover:text-[#3fb8bd] transition">
-                  Mint
-                </Link>
-              </nav>
-            </div>
-
-            {/* Wallet Connection */}
-            <div className="flex items-center gap-4">
-              {walletConnected ? (
-                <div className="flex items-center gap-3">
-                  <div className="text-sm">
-                    <span className="text-gray-400">Connected:</span>
-                    <span className="ml-2 text-[#3fb8bd] font-mono">
-                      {userAddress.slice(0, 6)}...{userAddress.slice(-4)}
-                    </span>
-                  </div>
-                  <button className="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition">
-                    Disconnect
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={connectWallet}
-                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black font-bold hover:scale-105 transition"
-                >
-                  Connect Wallet
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Hero Section - With tech.gif */}
+      <main className="flex-1 bg-gradient-to-b from-black to-gray-950">
+        {/* Hero Section - With tech.gif */}
       <section className="relative py-20 overflow-hidden">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
@@ -416,18 +357,9 @@ export default function DashboardHomepage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 border-t border-gray-800">
-        <div className="container mx-auto px-6">
-          <div className="text-center text-gray-400">
-            <p>© 2024 KEKTECH. All rights reserved. Built on BASED Chain (32323)</p>
-            <div className="mt-4 flex justify-center gap-6">
-              <Link href="https://x.com/KektechNFT" className="hover:text-[#3fb8bd] transition">Twitter</Link>
-              <Link href="https://t.me/KEKTECH" className="hover:text-[#3fb8bd] transition">Telegram</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </main>
+      </main>
+
+      <Footer />
+    </div>
   )
 }
