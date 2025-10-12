@@ -46,7 +46,7 @@ export function EnhancedNFTCard({ nft }: EnhancedNFTCardProps) {
 
       {/* Card Info */}
       <div className="space-y-2 p-4">
-        <h3 className="font-fredoka truncate text-lg font-bold text-white">
+        <h3 className="font-fredoka truncate text-lg font-bold text-[#3fb8bd]">
           {nft.name}
         </h3>
 

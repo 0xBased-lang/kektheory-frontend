@@ -62,7 +62,7 @@ export default function Homepage() {
       {/* Featured Artifacts Section */}
       <section className="py-20 border-t border-gray-800">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-white text-center mb-4 font-fredoka">Featured Artifacts</h2>
+          <h2 className="text-4xl font-bold text-[#3fb8bd] text-center mb-4 font-fredoka">Featured Artifacts</h2>
           <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
             Explore some of our hand-drawn 𝕂Ǝ𝕂TECH artifacts - each one unique, each one special 🐸✨
           </p>
@@ -110,7 +110,7 @@ export default function Homepage() {
       {/* About Us Section */}
       <section id="about" className="py-20 border-t border-gray-800">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-white text-center mb-12 font-fredoka">About Us</h2>
+          <h2 className="text-4xl font-bold text-[#3fb8bd] text-center mb-12 font-fredoka">About Us</h2>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
             <div className="space-y-6">
@@ -138,7 +138,7 @@ export default function Homepage() {
 
           {/* Making Of GIF - Behind the Scenes */}
           <div className="max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold text-white text-center mb-6 font-fredoka">Our Creative Process</h3>
+            <h3 className="text-2xl font-bold text-[#3fb8bd] text-center mb-6 font-fredoka">Our Creative Process</h3>
             <div className="rounded-2xl overflow-hidden border border-[#3fb8bd]/20">
               <Image
                 src="/images/makingof.gif"
@@ -159,7 +159,7 @@ export default function Homepage() {
       {/* Roadmap Section */}
       <section id="roadmap" className="py-20 border-t border-gray-800">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-white text-center mb-12 font-fredoka">ROADMAP</h2>
+          <h2 className="text-4xl font-bold text-[#3fb8bd] text-center mb-12 font-fredoka">ROADMAP</h2>
 
           {/* Visual Roadmap Image */}
           <div className="max-w-5xl mx-auto mb-12">
@@ -221,7 +221,7 @@ export default function Homepage() {
 
           {/* Community Journey */}
           <div className="max-w-4xl mx-auto text-center">
-            <h3 className="text-2xl font-bold text-white mb-6 font-fredoka">Community Journey</h3>
+            <h3 className="text-2xl font-bold text-[#3fb8bd] mb-6 font-fredoka">Community Journey</h3>
             <p className="text-gray-300 leading-relaxed">
               We&apos;re committed to engaging with our community at every step. We value your feedback and will adapt our vision to create the best experience for our holders. Above all, we&apos;re dedicated to our highest utility: spreading dank Pepe art throughout the space, bringing creative joy to the broader crypto community. 🐸🎨🔥 We strongly believe in collaborations and will pursue partnerships with other $Based NFT communities to create opportunities that strengthen the entire ecosystem.
             </p>
@@ -232,7 +232,7 @@ export default function Homepage() {
       {/* Traits Distribution Section */}
       <section id="traits" className="py-20 border-t border-gray-800">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-white text-center mb-4 font-fredoka">𝕂Ǝ𝕂丅ᵉ匚🅷 Traits</h2>
+          <h2 className="text-4xl font-bold text-[#3fb8bd] text-center mb-4 font-fredoka">𝕂Ǝ𝕂丅ᵉ匚🅷 Traits</h2>
           <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
             Discover the diverse traits that make each 𝕂Ǝ𝕂TECH NFT unique across 11 distinct categories
           </p>
@@ -266,7 +266,7 @@ export default function Homepage() {
           {/* Coming Soon Note */}
           <div className="max-w-4xl mx-auto text-center bg-gradient-to-br from-[#3fb8bd]/10 via-[#4ecca7]/5 to-transparent rounded-2xl border border-[#3fb8bd]/30 p-8">
             <div className="text-4xl mb-4">📊</div>
-            <h3 className="text-2xl font-bold text-white mb-3">Detailed Trait Statistics</h3>
+            <h3 className="text-2xl font-bold text-[#3fb8bd] mb-3">Detailed Trait Statistics</h3>
             <p className="text-gray-300 mb-4">
               A comprehensive breakdown of all trait rarities, percentages, and distributions is coming soon to help you understand the uniqueness of your 𝕂Ǝ𝕂TECH NFT!
             </p>

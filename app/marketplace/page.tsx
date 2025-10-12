@@ -24,7 +24,7 @@ export default function MarketplacePage() {
         <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
           {/* Page Header */}
           <div className="mb-8 text-center">
-            <h1 className="font-fredoka mb-4 text-4xl font-bold text-white sm:text-5xl">
+            <h1 className="font-fredoka mb-4 text-4xl font-bold text-[#3fb8bd] sm:text-5xl">
               𝕂Ǝ𝕂TECH Marketplace
             </h1>
             <p className="font-fredoka text-lg text-gray-300">
