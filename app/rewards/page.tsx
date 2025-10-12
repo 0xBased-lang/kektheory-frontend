@@ -2,6 +2,7 @@
 
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { BlurredTitleSection } from '@/components/ui/BlurredTitleSection'
 
 /**
  * Rewards Page
@@ -16,15 +17,11 @@ export default function RewardsPage() {
 
       <main className="flex-1 bg-gradient-to-b from-black to-gray-950">
         <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
-          {/* Page Header */}
-          <div className="mb-12 text-center">
-            <h1 className="font-fredoka mb-4 text-4xl font-bold text-[#3fb8bd] sm:text-5xl">
-              🎁 𝕂Ǝ𝕂丅ᵉ匚🅷 Rewards
-            </h1>
-            <p className="font-fredoka text-lg text-gray-300">
-              Earn daily rewards by holding 𝕂Ǝ𝕂TECH NFTs. Rarity matters!
-            </p>
-          </div>
+          {/* Page Header with Blurred Background */}
+          <BlurredTitleSection
+            title="🎁 𝕂Ǝ𝕂丅ᵉ匚🅷 Rewards"
+            subtitle="Earn daily rewards by holding 𝕂Ǝ𝕂TECH NFTs. Rarity matters!"
+          />
 
           {/* Coming Soon Notice */}
           <div className="mb-16 bg-gradient-to-br from-[#3fb8bd]/10 via-[#4ecca7]/5 to-transparent rounded-2xl border-2 border-[#3fb8bd]/30 p-12 text-center">

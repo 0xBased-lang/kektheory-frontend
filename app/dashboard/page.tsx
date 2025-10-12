@@ -4,6 +4,7 @@ import { useAccount } from 'wagmi'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { NFTDashboard } from '@/components/wallet/NFTDashboard'
+import { BlurredTitleSection } from '@/components/ui/BlurredTitleSection'
 
 /**
  * Dashboard Page
@@ -24,15 +25,11 @@ export default function DashboardPage() {
 
       <main className="flex-1 bg-gradient-to-b from-black to-gray-950">
         <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
-          {/* Page Header */}
-          <div className="mb-8 text-center">
-            <h1 className="font-fredoka mb-4 text-4xl font-bold text-[#3fb8bd] sm:text-5xl">
-              Your Dashboard
-            </h1>
-            <p className="font-fredoka text-lg text-gray-300">
-              View your NFT collection, portfolio stats, and rewards
-            </p>
-          </div>
+          {/* Page Header with Blurred Background */}
+          <BlurredTitleSection
+            title="Your Dashboard"
+            subtitle="View your NFT collection, portfolio stats, and rewards"
+          />
 
           {/* Dashboard Content */}
           {isConnected && address ? (

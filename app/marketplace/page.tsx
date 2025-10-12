@@ -5,6 +5,7 @@ import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { MintTab } from '@/components/marketplace/MintTab'
 import { TradeTab } from '@/components/marketplace/TradeTab'
+import { BlurredTitleSection } from '@/components/ui/BlurredTitleSection'
 
 /**
  * Marketplace Page
@@ -22,15 +23,11 @@ export default function MarketplacePage() {
 
       <main className="flex-1 bg-gradient-to-b from-black to-gray-950">
         <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
-          {/* Page Header */}
-          <div className="mb-8 text-center">
-            <h1 className="font-fredoka mb-4 text-4xl font-bold text-[#3fb8bd] sm:text-5xl">
-              𝕂Ǝ𝕂丅ᵉ匚🅷 Marketplace
-            </h1>
-            <p className="font-fredoka text-lg text-gray-300">
-              Mint new NFTs or trade KEKTV vouchers
-            </p>
-          </div>
+          {/* Page Header with Blurred Background */}
+          <BlurredTitleSection
+            title="𝕂Ǝ𝕂丅ᵉ匚🅷 Marketplace"
+            subtitle="Mint new NFTs or trade KEKTV vouchers"
+          />
 
           {/* Tab Navigation */}
           <div className="mb-8 flex justify-center">
