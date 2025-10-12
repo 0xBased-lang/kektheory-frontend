@@ -1,27 +1,33 @@
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { NFTGallery } from '@/components/nft/NFTGallery'
+import { TierRankingWidget } from '@/components/stats/TierRankingWidget'
 
 /**
  * Gallery Page
  *
- * NFT gallery displaying all minted KEKTECH NFTs
+ * NFT gallery displaying all minted KEKTECH NFTs with collection statistics
  */
 export default function GalleryPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
 
-      <main className="flex-1 bg-gray-50 dark:bg-gray-950">
+      <main className="flex-1 bg-gradient-to-b from-black to-gray-950">
         <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
           {/* Page Header */}
           <div className="mb-8 text-center">
-            <h1 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">
-              KEKTECH Gallery
+            <h1 className="font-fredoka mb-4 text-4xl font-bold text-white sm:text-5xl">
+              𝕂Ǝ𝕂丅ᵉ匚🅷 Gallery
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400">
+            <p className="font-fredoka text-lg text-gray-300">
               Explore all minted KEKTECH NFTs on the $BASED Chain
             </p>
+          </div>
+
+          {/* Collection Stats Widget */}
+          <div className="mb-12">
+            <TierRankingWidget />
           </div>
 
           {/* NFT Gallery */}
