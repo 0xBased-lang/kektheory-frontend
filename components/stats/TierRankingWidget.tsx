@@ -34,7 +34,8 @@ export function TierRankingWidget() {
   useEffect(() => {
     const fetchRankingStats = async () => {
       try {
-        const response = await fetch('https://api.kektech.xyz/rankings')
+        // Use proxy endpoint to avoid CORS issues
+        const response = await fetch('/api/rankings')
         if (!response.ok) throw new Error('Failed to fetch rankings')
 
         const data = (await response.json()) as RankingNFT[]
