@@ -112,7 +112,7 @@ export function useStaticMetadata(): UseStaticMetadataResult {
               setIsLoading(false)
               return
             }
-          } catch (parseError) {
+          } catch {
             // Cache corrupted, fetch fresh data
             console.warn('Cache corrupted, fetching fresh data')
             sessionStorage.removeItem(cacheKey)

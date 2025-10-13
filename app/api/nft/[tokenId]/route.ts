@@ -35,9 +35,9 @@ interface NFTComplete {
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { tokenId: string } }
+  { params }: { params: Promise<{ tokenId: string }> }
 ) {
-  const { tokenId } = params
+  const { tokenId } = await params
 
   try {
     // 1. First verify NFT is minted by checking rankings
