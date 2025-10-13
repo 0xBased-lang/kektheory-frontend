@@ -51,15 +51,28 @@ function NFTDetailPageContent() {
       try {
         setLoading(true)
 
-        // Try multiple endpoints for metadata
-        const endpoints = [
+        // Fetch from ranking API to get name, rank, and rarity score
+        let rankingData: { name?: string; imageUrl?: string; rank?: number; rarityScore?: number } | null = null
+        try {
+          const rankingResponse = await fetch('https://api.kektech.xyz/rankings')
+          if (rankingResponse.ok) {
+            const data = await rankingResponse.json()
+            rankingData = data.nfts?.find((nft: { tokenId: string }) => nft.tokenId === tokenId)
+          }
+        } catch (err) {
+          console.warn('Ranking API failed:', err)
+        }
+
+        // Try multiple endpoints for metadata with traits
+        const metadataEndpoints = [
+          `http://157.173.117.77:5000/api/nft/metadata/${tokenId}`,
           `https://api.kektech.xyz/api/metadata/${tokenId}`,
           `https://kektech.xyz/metadata/${tokenId}`,
           `https://raw.githubusercontent.com/0xBased-lang/KektechNFT/main/metadata/${tokenId}.json`
         ]
 
         let metadata = null
-        for (const endpoint of endpoints) {
+        for (const endpoint of metadataEndpoints) {
           try {
             const response = await fetch(endpoint)
             if (response.ok) {
@@ -71,21 +84,23 @@ function NFTDetailPageContent() {
           }
         }
 
-        if (metadata) {
-          setNftDetails({
-            tokenId,
-            name: metadata.name || `KEKTECH #${tokenId}`,
-            imageUrl: metadata.image || `/images/${tokenId}.png`,
-            metadata
-          })
-        } else {
-          // Fallback if API fails
-          setNftDetails({
-            tokenId,
-            name: `𝕂Ǝ𝕂TECH #${tokenId}`,
-            imageUrl: `/images/${tokenId}.png`,
-          })
-        }
+        // Build NFT details with all available data
+        const nftName = rankingData?.name || metadata?.name || `𝕂Ǝ𝕂TECH #${tokenId}`
+        const imageUrl = rankingData?.imageUrl || metadata?.image || `https://api.kektech.xyz/api/image/${tokenId}`
+
+        setNftDetails({
+          tokenId,
+          name: nftName,
+          imageUrl,
+          rank: rankingData?.rank,
+          rarityScore: rankingData?.rarityScore,
+          metadata: metadata || {
+            name: nftName,
+            description: "4200 𝕂Ǝ𝕂丅ᵉ匚🅷 Artifacts: digital masterpieces blending tech and meme fun, hand-drawn by 𝔹enzo𝔹ert & princess 𝔹u𝔹𝔹legum. An homage to OG Pepecoin 🐸👑",
+            image: imageUrl,
+            attributes: []
+          }
+        })
       } catch (err) {
         console.error('Error fetching NFT details:', err)
         setError('Failed to load NFT details')
@@ -166,23 +181,48 @@ function NFTDetailPageContent() {
 
               {/* Right Column - Details */}
               <div className="space-y-6">
-                {/* Title */}
+                {/* Title and External Links */}
                 <div>
                   <h1 className="font-fredoka mb-2 text-4xl font-bold text-white">
                     {nftDetails.name}
                   </h1>
-                  <p className="font-fredoka text-xl text-[#3fb8bd]">
+                  <p className="font-fredoka mb-4 text-xl text-[#3fb8bd]">
                     Token ID: #{nftDetails.tokenId}
                   </p>
+                  {/* External Links */}
+                  <div className="flex gap-4">
+                    <a
+                      href={`https://www.nachonft.xyz/collection/0x40b6184b901334c0a88f528c1a0a1de7a77490f1/${nftDetails.tokenId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-lg border border-[#3fb8bd]/30 bg-[#3fb8bd]/10 px-4 py-2 font-fredoka text-sm text-[#3fb8bd] transition-all hover:border-[#3fb8bd] hover:bg-[#3fb8bd]/20"
+                    >
+                      <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                      Marketplace
+                    </a>
+                    <a
+                      href={`https://explorer.bf1337.org/token/0x40B6184b901334C0A88f528c1A0a1de7a77490f1/instance/${nftDetails.tokenId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-lg border border-[#4ecca7]/30 bg-[#4ecca7]/10 px-4 py-2 font-fredoka text-sm text-[#4ecca7] transition-all hover:border-[#4ecca7] hover:bg-[#4ecca7]/20"
+                    >
+                      <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                      </svg>
+                      Explorer
+                    </a>
+                  </div>
                 </div>
 
-                {/* Description */}
+                {/* About Section */}
                 {nftDetails.metadata?.description && (
                   <div className="rounded-xl border border-[#3fb8bd]/20 bg-gray-900/50 p-6">
-                    <h2 className="font-fredoka mb-3 text-xl font-bold text-[#3fb8bd]">
-                      Description
+                    <h2 className="font-fredoka mb-3 text-2xl font-bold text-[#3fb8bd]">
+                      ABOUT
                     </h2>
-                    <p className="font-fredoka text-gray-300">
+                    <p className="font-fredoka leading-relaxed text-gray-300">
                       {nftDetails.metadata.description}
                     </p>
                   </div>
@@ -213,29 +253,24 @@ function NFTDetailPageContent() {
                 {/* Attributes/Traits */}
                 {nftDetails.metadata?.attributes && nftDetails.metadata.attributes.length > 0 && (
                   <div className="rounded-xl border border-[#3fb8bd]/20 bg-gray-900/50 p-6">
-                    <h2 className="font-fredoka mb-4 text-xl font-bold text-[#3fb8bd]">
-                      Attributes
+                    <h2 className="font-fredoka mb-4 text-2xl font-bold text-[#3fb8bd]">
+                      TRAITS
                     </h2>
-                    <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="grid gap-4 sm:grid-cols-2">
                       {nftDetails.metadata.attributes.map((attr, index) => (
                         <div
                           key={index}
-                          className="rounded-lg border border-[#4ecca7]/20 bg-black/40 p-4"
+                          className="rounded-lg border border-[#3fb8bd]/30 bg-black/60 p-4 transition-all hover:border-[#3fb8bd] hover:bg-black/80"
                         >
-                          <div className="mb-2 flex items-center justify-between">
-                            <div className="text-xs uppercase text-gray-400">{attr.trait_type}</div>
-                            {attr.rarity && (
-                              <div className="text-xs font-bold text-[#3fb8bd]">
-                                {attr.rarity.toFixed(2)}%
-                              </div>
-                            )}
+                          <div className="mb-2 text-xs font-bold uppercase tracking-wider text-[#3fb8bd]">
+                            {attr.trait_type}
                           </div>
-                          <div className="font-fredoka font-semibold text-[#4ecca7]">
-                            {attr.value}
+                          <div className="font-fredoka mb-2 text-lg font-semibold capitalize text-[#4ecca7]">
+                            {String(attr.value).replace(/_/g, ' ')}
                           </div>
-                          {attr.count && (
-                            <div className="mt-1 text-xs text-gray-500">
-                              {attr.count} / 4200
+                          {attr.rarity && (
+                            <div className="inline-block rounded bg-[#3fb8bd]/20 px-2 py-1 text-xs font-bold text-[#3fb8bd]">
+                              {attr.rarity.toFixed(2)}%
                             </div>
                           )}
                         </div>
