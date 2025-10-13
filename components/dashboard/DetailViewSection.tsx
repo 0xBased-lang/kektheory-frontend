@@ -74,18 +74,22 @@ export function DetailViewSection({
   // NFT Section - ONLY KEKTECH NFTs
   if (activeSection === 'nfts') {
     return (
-      <div className="bg-gradient-to-br from-green-500/5 to-emerald-500/5 rounded-2xl border border-green-500/20 p-8">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-3xl font-bold text-green-400 mb-2 font-fredoka">
-              🐸 Your KEKTECH NFT Collection
-            </h2>
-            <p className="text-gray-400">
-              View and manage your KEKTECH NFTs on BasedAI Network
-            </p>
+      <div className="relative bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl border border-green-500/20 p-8 overflow-hidden">
+        {/* Checkered Background Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
+        <div className="relative">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-3xl font-bold text-green-400 mb-2 font-fredoka">
+                🐸 Your KEKTECH NFT Collection
+              </h2>
+              <p className="text-gray-400">
+                View and manage your KEKTECH NFTs on BasedAI Network
+              </p>
+            </div>
           </div>
+          <KektechNFTsOnly address={address} />
         </div>
-        <KektechNFTsOnly address={address} />
       </div>
     )
   }
@@ -107,14 +111,18 @@ export function DetailViewSection({
   // Vouchers Section
   if (activeSection === 'vouchers') {
     return (
-      <div className="bg-gradient-to-br from-purple-500/5 to-pink-500/5 rounded-2xl border border-purple-500/20 p-8">
-        <VoucherSection
-          vouchers={vouchers}
-          ownedVouchers={ownedVouchers}
-          totalVouchers={totalVouchers}
-          isLoading={vouchersLoading}
-          explorerUrl={explorerUrl}
-        />
+      <div className="relative bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl border border-purple-500/20 p-8 overflow-hidden">
+        {/* Checkered Background Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
+        <div className="relative">
+          <VoucherSection
+            vouchers={vouchers}
+            ownedVouchers={ownedVouchers}
+            totalVouchers={totalVouchers}
+            isLoading={vouchersLoading}
+            explorerUrl={explorerUrl}
+          />
+        </div>
       </div>
     )
   }
@@ -122,7 +130,10 @@ export function DetailViewSection({
   // Total Assets Overview Section
   if (activeSection === 'assets') {
     return (
-      <div className="bg-gradient-to-br from-gray-700/10 to-gray-800/10 rounded-2xl border border-gray-700/30 p-8">
+      <div className="relative bg-gradient-to-br from-gray-700/10 to-gray-800/10 rounded-2xl border border-gray-700/30 p-8 overflow-hidden">
+        {/* Checkered Background Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
+        <div className="relative">
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-[#3fb8bd] mb-2 font-fredoka">
             📊 Complete Portfolio Overview
@@ -326,6 +337,7 @@ export function DetailViewSection({
           >
             📊 Export Portfolio (Coming Soon)
           </button>
+        </div>
         </div>
       </div>
     )
