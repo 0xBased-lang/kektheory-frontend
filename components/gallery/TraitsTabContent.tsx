@@ -24,9 +24,18 @@ export function TraitsTabContent() {
 
   // Filter NFTs based on selected traits
   const filteredNFTs = useMemo(() => {
-    if (!nfts || Object.keys(filters).length === 0) return nfts || []
+    const baseNFTs = nfts || []
 
-    return nfts.filter(nft => {
+    // Sort by Token ID (ascending) for filter view
+    const sortedNFTs = [...baseNFTs].sort((a, b) =>
+      parseInt(a.tokenId) - parseInt(b.tokenId)
+    )
+
+    // If no filters, return all sorted by Token ID
+    if (Object.keys(filters).length === 0) return sortedNFTs
+
+    // Filter NFTs that match ALL selected traits
+    return sortedNFTs.filter(nft => {
       // NFT must match ALL selected categories (AND logic)
       return Object.entries(filters).every(([category, selectedValues]) => {
         if (selectedValues.length === 0) return true
@@ -74,30 +83,40 @@ export function TraitsTabContent() {
 
   return (
     <div className="space-y-6">
-      {/* Mode Switcher */}
-      <div className="flex justify-center">
-        <div className="inline-flex rounded-xl bg-gray-900/60 border border-gray-800 p-1">
-          <button
-            onClick={() => setViewMode('filter')}
-            className={`px-6 py-2 rounded-lg font-fredoka font-medium transition-all duration-200 ${
-              viewMode === 'filter'
-                ? 'bg-[#3fb8bd] text-black shadow-lg'
-                : 'text-gray-400 hover:text-white'
-            }`}
-          >
-            🔍 Filter Collection
-          </button>
-          <button
-            onClick={() => setViewMode('overview')}
-            className={`px-6 py-2 rounded-lg font-fredoka font-medium transition-all duration-200 ${
-              viewMode === 'overview'
-                ? 'bg-[#4ecca7] text-black shadow-lg'
-                : 'text-gray-400 hover:text-white'
-            }`}
-          >
-            📊 Overview
-          </button>
+      {/* Subtle Mode Toggle */}
+      <div className="flex justify-between items-center border-b border-[#3fb8bd]/30 pb-4">
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-gray-400 font-fredoka">View Mode:</span>
+          <div className="flex items-center gap-2 bg-gray-900/60 rounded-lg p-1 border border-[#3fb8bd]/20">
+            <button
+              onClick={() => setViewMode('filter')}
+              className={`px-4 py-1.5 rounded-md font-fredoka text-sm font-medium transition-all duration-200 ${
+                viewMode === 'filter'
+                  ? 'bg-[#3fb8bd] text-black'
+                  : 'text-[#3fb8bd] hover:bg-[#3fb8bd]/10'
+              }`}
+            >
+              🔍 Filter
+            </button>
+            <button
+              onClick={() => setViewMode('overview')}
+              className={`px-4 py-1.5 rounded-md font-fredoka text-sm font-medium transition-all duration-200 ${
+                viewMode === 'overview'
+                  ? 'bg-[#4ecca7] text-black'
+                  : 'text-[#4ecca7] hover:bg-[#4ecca7]/10'
+              }`}
+            >
+              📊 Overview
+            </button>
+          </div>
         </div>
+
+        {/* Sort indicator for Filter mode */}
+        {viewMode === 'filter' && (
+          <div className="text-xs text-gray-500 font-fredoka">
+            Sorted by Token ID
+          </div>
+        )}
       </div>
 
       {/* Stats Bar */}

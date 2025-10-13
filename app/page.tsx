@@ -44,13 +44,13 @@ export default function Homepage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/marketplace"
-                className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black font-bold hover:scale-105 transition font-fredoka text-lg"
+                className="px-8 py-4 rounded-xl border-2 border-[#3fb8bd] text-[#3fb8bd] font-bold hover:bg-[#3fb8bd]/10 hover:scale-105 transition font-fredoka text-lg"
               >
                 Start Minting
               </Link>
               <Link
                 href="/gallery"
-                className="px-8 py-4 rounded-xl border-2 border-[#3fb8bd] text-[#3fb8bd] font-bold hover:bg-[#3fb8bd]/10 transition font-fredoka text-lg"
+                className="px-8 py-4 rounded-xl border-2 border-[#3fb8bd] text-[#3fb8bd] font-bold hover:bg-[#3fb8bd]/10 hover:scale-105 transition font-fredoka text-lg"
               >
                 Explore Gallery
               </Link>
@@ -99,7 +99,7 @@ export default function Homepage() {
           <div className="text-center mt-12">
             <Link
               href="/gallery"
-              className="inline-block px-8 py-4 rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black font-bold hover:scale-105 transition font-fredoka"
+              className="inline-block px-8 py-4 rounded-xl border-2 border-[#3fb8bd] text-[#3fb8bd] font-bold hover:bg-[#3fb8bd]/10 hover:scale-105 transition font-fredoka"
             >
               View Full Collection
             </Link>
