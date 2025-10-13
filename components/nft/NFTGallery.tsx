@@ -4,13 +4,14 @@ import { useState, useMemo } from 'react'
 import { EnhancedNFTCard } from './EnhancedNFTCard'
 import { useRankings } from '@/lib/hooks/useRankings'
 import { GalleryTabs } from '@/components/gallery/GalleryTabs'
+import { TraitDistribution } from '@/components/traits/TraitDistribution'
 
 /**
  * NFTGallery Component
  *
  * Two-tab gallery layout:
  * - Ranking: Shows all minted NFTs by rank
- * - Traits: Placeholder for trait filtering (coming soon)
+ * - Traits: Complete trait distribution viewer
  */
 export function NFTGallery() {
   const { rankings: nfts, loading: isLoading, error } = useRankings(30000)
@@ -170,25 +171,18 @@ export function NFTGallery() {
     </div>
   )
 
-  // Traits Tab Content (Placeholder)
+  // Traits Tab Content
   const renderTraitsTab = () => (
-    <div className="flex items-center justify-center min-h-[600px]">
-      <div className="text-center max-w-md">
-        <div className="text-6xl mb-6">🎨</div>
-        <h3 className="text-2xl font-bold text-white mb-4 font-fredoka">
-          Trait Filtering Coming Soon
-        </h3>
-        <p className="text-gray-400 mb-6">
-          We&apos;re working on an advanced trait filtering system to help you discover NFTs by their unique attributes.
+    <div className="space-y-6">
+      <div className="text-center max-w-2xl mx-auto mb-8">
+        <h3 className="text-2xl font-bold text-white mb-3 font-fredoka">𝕂Ǝ𝕂丅ᵉ匚🅷 Traits</h3>
+        <p className="text-gray-400">
+          Explore the rarity of traits across the KEKTECH collection. Browse by category to discover what makes each artifact unique.
         </p>
-        <div className="inline-flex gap-2 text-sm text-gray-500">
-          <span>🔍 Multi-trait filtering</span>
-          <span>•</span>
-          <span>📊 Rarity insights</span>
-          <span>•</span>
-          <span>🎯 Smart search</span>
-        </div>
       </div>
+
+      {/* Trait Distribution Table */}
+      <TraitDistribution />
     </div>
   )
 

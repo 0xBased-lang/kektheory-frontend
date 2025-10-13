@@ -73,12 +73,12 @@ export function Header() {
             Roadmap
           </Link>
           <Link
-            href="/#traits"
+            href="/#about"
             className={`font-fredoka text-sm font-medium transition-colors hover:text-[#3fb8bd] ${
-              pathname === '/' && typeof window !== 'undefined' && window.location.hash === '#traits' ? 'text-[#3fb8bd] font-bold' : 'text-gray-300'
+              pathname === '/' && typeof window !== 'undefined' && window.location.hash === '#about' ? 'text-[#3fb8bd] font-bold' : 'text-gray-300'
             }`}
           >
-            Traits
+            About Us
           </Link>
         </nav>
 
