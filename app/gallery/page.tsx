@@ -22,13 +22,13 @@ export default function GalleryPage() {
             subtitle="Explore all minted 𝕂Ǝ𝕂TECH NFTs on the $BASED Chain"
           />
 
+          {/* NFT Gallery with Tabs */}
+          <NFTGallery />
+
           {/* Compact Collection Stats & Tier Distribution */}
-          <div className="mb-8">
+          <div className="mt-8">
             <CompactStatsWidget />
           </div>
-
-          {/* NFT Gallery */}
-          <NFTGallery />
         </div>
       </main>
 
