@@ -84,33 +84,29 @@ export function TraitsTabContent() {
   return (
     <div className="space-y-6">
       {/* Subtle Mode Toggle */}
-      <div className="flex justify-between items-center border-b border-[#3fb8bd]/30 pb-4">
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-400 font-fredoka">View Mode:</span>
-          <div className="flex items-center gap-2 bg-gray-900/60 rounded-lg p-1 border border-[#3fb8bd]/20">
-            <button
-              onClick={() => setViewMode('filter')}
-              className={`px-4 py-1.5 rounded-md font-fredoka text-sm font-medium transition-all duration-200 ${
-                viewMode === 'filter'
-                  ? 'bg-[#3fb8bd] text-black'
-                  : 'text-[#3fb8bd] hover:bg-[#3fb8bd]/10'
-              }`}
-            >
-              🔍 Filter
-            </button>
-            <button
-              onClick={() => setViewMode('overview')}
-              className={`px-4 py-1.5 rounded-md font-fredoka text-sm font-medium transition-all duration-200 ${
-                viewMode === 'overview'
-                  ? 'bg-[#4ecca7] text-black'
-                  : 'text-[#4ecca7] hover:bg-[#4ecca7]/10'
-              }`}
-            >
-              📊 Overview
-            </button>
-          </div>
+      <div className="flex justify-center border-b border-[#3fb8bd]/30 pb-4">
+        <div className="flex items-center gap-2 bg-gray-900/60 rounded-lg p-1 border border-[#3fb8bd]/20">
+          <button
+            onClick={() => setViewMode('filter')}
+            className={`px-4 py-1.5 rounded-md font-fredoka text-sm font-medium transition-all duration-200 ${
+              viewMode === 'filter'
+                ? 'bg-[#3fb8bd] text-black'
+                : 'text-[#3fb8bd] hover:bg-[#3fb8bd]/10'
+            }`}
+          >
+            🔍 Filter
+          </button>
+          <button
+            onClick={() => setViewMode('overview')}
+            className={`px-4 py-1.5 rounded-md font-fredoka text-sm font-medium transition-all duration-200 ${
+              viewMode === 'overview'
+                ? 'bg-[#4ecca7] text-black'
+                : 'text-[#4ecca7] hover:bg-[#4ecca7]/10'
+            }`}
+          >
+            📊 Overview
+          </button>
         </div>
-
       </div>
 
       {/* Stats Bar */}
@@ -132,7 +128,7 @@ export function TraitsTabContent() {
           <div className="text-center max-w-2xl mx-auto">
             <h3 className="text-2xl font-bold text-[#3fb8bd] mb-3 font-fredoka">𝕂Ǝ𝕂丅ᵉ匚🅷 Traits</h3>
             <p className="text-gray-400">
-              Explore the rarity of traits across the 𝕂Ǝ𝕂丅ᵉ匚🅷 collection.
+              Explore the rarity of traits across the 𝕂Ǝ𝕂TECH collection.
               Switch to Filter mode to find NFTs with specific traits.
             </p>
           </div>

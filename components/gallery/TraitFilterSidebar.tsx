@@ -36,7 +36,7 @@ const TRAIT_CATEGORIES = {
 export function TraitFilterSidebar({ nfts, onFilterChange }: TraitFilterSidebarProps) {
   const [filters, setFilters] = useState<FilterState>({})
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
-    new Set(['Background', 'Body']) // Default expanded
+    new Set() // All categories start closed
   )
 
   // Build trait options from actual NFT data

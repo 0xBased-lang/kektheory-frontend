@@ -151,15 +151,23 @@ export default function RewardsPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="/mint"
-                className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black font-bold hover:scale-105 transition font-fredoka text-lg"
+                className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] p-[2px] shadow-lg shadow-[#3fb8bd]/50 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-[#3fb8bd]/70"
               >
-                Mint 𝕂Ǝ𝕂TECH NFTs
+                <div className="relative rounded-[10px] bg-gray-900 px-8 py-4 transition-all group-hover:bg-transparent">
+                  <span className="text-lg font-bold text-[#3fb8bd] group-hover:text-black font-fredoka">
+                    Mint 𝕂Ǝ𝕂TECH NFTs
+                  </span>
+                </div>
               </a>
               <a
                 href="/gallery"
-                className="px-8 py-4 rounded-xl border-2 border-[#3fb8bd] text-[#3fb8bd] font-bold hover:bg-[#3fb8bd]/10 transition font-fredoka text-lg"
+                className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] p-[2px] shadow-lg shadow-[#3fb8bd]/50 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-[#3fb8bd]/70"
               >
-                Browse Gallery
+                <div className="relative rounded-[10px] bg-gray-900 px-8 py-4 transition-all group-hover:bg-transparent">
+                  <span className="text-lg font-bold text-[#3fb8bd] group-hover:text-black font-fredoka">
+                    Browse Gallery
+                  </span>
+                </div>
               </a>
             </div>
           </div>

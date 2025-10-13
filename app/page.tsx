@@ -44,15 +44,23 @@ export default function Homepage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/marketplace"
-                className="px-8 py-4 rounded-xl border-2 border-[#3fb8bd] text-[#3fb8bd] font-bold hover:bg-[#3fb8bd]/10 hover:scale-105 transition font-fredoka text-lg"
+                className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] p-[2px] shadow-lg shadow-[#3fb8bd]/50 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-[#3fb8bd]/70"
               >
-                Start Minting
+                <div className="relative rounded-[10px] bg-gray-900 px-8 py-4 transition-all group-hover:bg-transparent">
+                  <span className="text-lg font-bold text-[#3fb8bd] group-hover:text-black font-fredoka">
+                    Start Minting
+                  </span>
+                </div>
               </Link>
               <Link
                 href="/gallery"
-                className="px-8 py-4 rounded-xl border-2 border-[#3fb8bd] text-[#3fb8bd] font-bold hover:bg-[#3fb8bd]/10 hover:scale-105 transition font-fredoka text-lg"
+                className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] p-[2px] shadow-lg shadow-[#3fb8bd]/50 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-[#3fb8bd]/70"
               >
-                Explore Gallery
+                <div className="relative rounded-[10px] bg-gray-900 px-8 py-4 transition-all group-hover:bg-transparent">
+                  <span className="text-lg font-bold text-[#3fb8bd] group-hover:text-black font-fredoka">
+                    Explore Gallery
+                  </span>
+                </div>
               </Link>
             </div>
           </div>
@@ -99,9 +107,13 @@ export default function Homepage() {
           <div className="text-center mt-12">
             <Link
               href="/gallery"
-              className="inline-block px-8 py-4 rounded-xl border-2 border-[#3fb8bd] text-[#3fb8bd] font-bold hover:bg-[#3fb8bd]/10 hover:scale-105 transition font-fredoka"
+              className="group relative inline-block overflow-hidden rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] p-[2px] shadow-lg shadow-[#3fb8bd]/50 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-[#3fb8bd]/70"
             >
-              View Full Collection
+              <div className="relative rounded-[10px] bg-gray-900 px-8 py-4 transition-all group-hover:bg-transparent">
+                <span className="font-bold text-[#3fb8bd] group-hover:text-black font-fredoka">
+                  View Full Collection
+                </span>
+              </div>
             </Link>
           </div>
         </div>
