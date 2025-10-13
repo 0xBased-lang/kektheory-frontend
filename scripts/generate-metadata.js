@@ -21,6 +21,12 @@
 const fs = require('fs')
 const path = require('path')
 
+// Polyfill fetch for Node.js < 18 (Vercel compatibility)
+const fetch = globalThis.fetch || (async (...args) => {
+  const nodeFetch = await import('node-fetch')
+  return nodeFetch.default(...args)
+})
+
 // Configuration
 const CONFIG = {
   RANKINGS_API: 'https://api.kektech.xyz/rankings',
