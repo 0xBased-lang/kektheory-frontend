@@ -32,15 +32,17 @@ export function PortfolioOverview({
 }: PortfolioOverviewProps) {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div className="flex flex-wrap items-center gap-2 mb-6">
         {[...Array(4)].map((_, i) => (
           <div
             key={i}
-            className="bg-gray-900/60 rounded-xl border border-gray-800 p-6 animate-pulse"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-800 bg-gray-900/60 animate-pulse"
           >
-            <div className="h-10 w-10 bg-gray-800 rounded-lg mb-3"></div>
-            <div className="h-8 w-20 bg-gray-800 rounded mb-2"></div>
-            <div className="h-4 w-24 bg-gray-800 rounded"></div>
+            <div className="h-5 w-5 bg-gray-800 rounded"></div>
+            <div>
+              <div className="h-3 w-16 bg-gray-800 rounded mb-1"></div>
+              <div className="h-4 w-12 bg-gray-800 rounded"></div>
+            </div>
           </div>
         ))}
       </div>
@@ -48,84 +50,82 @@ export function PortfolioOverview({
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-      {/* KEKTECH NFTs - MAIN POSITION */}
+    <div className="flex flex-wrap items-center gap-2 mb-6">
+      {/* KEKTECH NFTs - Compact Button */}
       <button
         onClick={() => onSectionChange('nfts')}
-        className={`bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl border p-6 transition text-left cursor-pointer hover:scale-105 ${
+        className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border transition hover:scale-105 ${
           activeSection === 'nfts'
-            ? 'border-green-500/60 ring-2 ring-green-500/30 shadow-lg shadow-green-500/20'
-            : 'border-green-500/20 hover:border-green-500/40'
+            ? 'bg-green-500/20 border-green-500/60 ring-1 ring-green-500/30'
+            : 'bg-green-500/5 border-green-500/20 hover:border-green-500/40 hover:bg-green-500/10'
         }`}
       >
-        <div className="text-4xl mb-3">🐸</div>
-        <div className="text-3xl font-bold text-green-400 mb-2 font-fredoka">
-          {kektechNFTCount}
-        </div>
-        <div className="text-sm text-gray-400">KEKTECH NFTs</div>
-        {totalNFTs > kektechNFTCount && (
-          <div className="text-xs text-gray-500 mt-1">
-            +{totalNFTs - kektechNFTCount} other NFTs
+        <span className="text-xl">🐸</span>
+        <div className="text-left">
+          <div className="text-xs text-gray-400 leading-none">KEKTECH NFTs</div>
+          <div className="text-sm font-bold text-green-400 font-fredoka leading-tight">
+            {kektechNFTCount}
+            {totalNFTs > kektechNFTCount && (
+              <span className="text-xs text-gray-500 ml-1">+{totalNFTs - kektechNFTCount}</span>
+            )}
           </div>
-        )}
+        </div>
       </button>
 
-      {/* TECH Token */}
+      {/* TECH Token - Compact Button */}
       <button
         onClick={() => onSectionChange('tech')}
-        className={`bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-xl border p-6 transition text-left cursor-pointer hover:scale-105 ${
+        className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border transition hover:scale-105 ${
           activeSection === 'tech'
-            ? 'border-cyan-500/60 ring-2 ring-cyan-500/30 shadow-lg shadow-cyan-500/20'
-            : 'border-cyan-500/20 hover:border-cyan-500/40'
+            ? 'bg-cyan-500/20 border-cyan-500/60 ring-1 ring-cyan-500/30'
+            : 'bg-cyan-500/5 border-cyan-500/20 hover:border-cyan-500/40 hover:bg-cyan-500/10'
         }`}
       >
-        <div className="text-4xl mb-3">💰</div>
-        <div className="text-3xl font-bold text-cyan-400 mb-2 font-fredoka">
-          {techBalanceCompact}
-        </div>
-        <div className="text-sm text-gray-400">TECH Tokens</div>
-        <div className="text-xs text-gray-500 mt-1 truncate" title={techBalance}>
-          {parseFloat(techBalance) > 0 ? `${techBalance} TECH` : 'No tokens'}
+        <span className="text-xl">💰</span>
+        <div className="text-left">
+          <div className="text-xs text-gray-400 leading-none">TECH Tokens</div>
+          <div className="text-sm font-bold text-cyan-400 font-fredoka leading-tight">
+            {techBalanceCompact}
+          </div>
         </div>
       </button>
 
-      {/* Vouchers */}
+      {/* Vouchers - Compact Button */}
       <button
         onClick={() => onSectionChange('vouchers')}
-        className={`bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl border p-6 transition text-left cursor-pointer hover:scale-105 ${
+        className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border transition hover:scale-105 ${
           activeSection === 'vouchers'
-            ? 'border-purple-500/60 ring-2 ring-purple-500/30 shadow-lg shadow-purple-500/20'
-            : 'border-purple-500/20 hover:border-purple-500/40'
+            ? 'bg-purple-500/20 border-purple-500/60 ring-1 ring-purple-500/30'
+            : 'bg-purple-500/5 border-purple-500/20 hover:border-purple-500/40 hover:bg-purple-500/10'
         }`}
       >
-        <div className="text-4xl mb-3">🎫</div>
-        <div className="text-3xl font-bold text-purple-400 mb-2 font-fredoka">
-          {totalVouchers}
-        </div>
-        <div className="text-sm text-gray-400">Total Vouchers</div>
-        {uniqueVoucherTypes > 0 && (
-          <div className="text-xs text-gray-500 mt-1">
-            {uniqueVoucherTypes} type{uniqueVoucherTypes !== 1 ? 's' : ''}
+        <span className="text-xl">🎫</span>
+        <div className="text-left">
+          <div className="text-xs text-gray-400 leading-none">Vouchers</div>
+          <div className="text-sm font-bold text-purple-400 font-fredoka leading-tight">
+            {totalVouchers}
+            {uniqueVoucherTypes > 0 && (
+              <span className="text-xs text-gray-500 ml-1">({uniqueVoucherTypes})</span>
+            )}
           </div>
-        )}
+        </div>
       </button>
 
-      {/* Total Assets */}
+      {/* Total Assets - Compact Button */}
       <button
         onClick={() => onSectionChange('assets')}
-        className={`bg-gradient-to-br from-gray-700/20 to-gray-800/20 rounded-xl border p-6 transition text-left cursor-pointer hover:scale-105 ${
+        className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border transition hover:scale-105 ${
           activeSection === 'assets'
-            ? 'border-gray-600/60 ring-2 ring-gray-600/30 shadow-lg shadow-gray-600/20'
-            : 'border-gray-700/30 hover:border-gray-600/40'
+            ? 'bg-gray-700/30 border-gray-600/60 ring-1 ring-gray-600/30'
+            : 'bg-gray-700/10 border-gray-700/30 hover:border-gray-600/40 hover:bg-gray-700/20'
         }`}
       >
-        <div className="text-4xl mb-3">📊</div>
-        <div className="text-3xl font-bold text-white mb-2 font-fredoka">
-          {totalNFTs + (totalVouchers > 0 ? 1 : 0) + (parseFloat(techBalance) > 0 ? 1 : 0)}
-        </div>
-        <div className="text-sm text-gray-400">Asset Types</div>
-        <div className="text-xs text-gray-500 mt-1">
-          Total holdings
+        <span className="text-xl">📊</span>
+        <div className="text-left">
+          <div className="text-xs text-gray-400 leading-none">Asset Types</div>
+          <div className="text-sm font-bold text-white font-fredoka leading-tight">
+            {totalNFTs + (totalVouchers > 0 ? 1 : 0) + (parseFloat(techBalance) > 0 ? 1 : 0)}
+          </div>
         </div>
       </button>
     </div>

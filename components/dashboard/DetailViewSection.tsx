@@ -1,9 +1,13 @@
 'use client'
 
+import { useMemo } from 'react'
+import Image from 'next/image'
 import type { DashboardSection } from './PortfolioOverview'
 import { TechTokenCard } from './TechTokenCard'
 import { VoucherSection } from './VoucherSection'
 import { KektechNFTsOnly } from '@/components/wallet/KektechNFTsOnly'
+import { useWalletNFTs } from '@/lib/hooks/useWalletNFTs'
+import { KEKTECH_CONTRACT_ADDRESS } from '@/config/constants'
 import type { VoucherBalance } from '@/lib/hooks/useVoucherBalance'
 
 interface DetailViewSectionProps {
@@ -54,6 +58,18 @@ export function DetailViewSection({
   totalNFTs,
   kektechNFTCount,
 }: DetailViewSectionProps) {
+
+  // Fetch all NFTs to show other NFTs in the portfolio overview
+  const { nfts } = useWalletNFTs(address)
+
+  // Filter to get only non-KEKTECH NFTs
+  const otherNFTs = useMemo(() => {
+    return nfts.filter((nft) => {
+      const nftAddress = nft?.token?.address_hash
+      if (!nftAddress || !KEKTECH_CONTRACT_ADDRESS) return true
+      return nftAddress.toLowerCase() !== KEKTECH_CONTRACT_ADDRESS.toLowerCase()
+    })
+  }, [nfts])
 
   // NFT Section - ONLY KEKTECH NFTs
   if (activeSection === 'nfts') {
@@ -246,6 +262,54 @@ export function DetailViewSection({
             )}
           </div>
         </div>
+
+        {/* Other NFTs Visual Gallery */}
+        {otherNFTs.length > 0 && (
+          <div className="mt-8 bg-gray-900/60 rounded-xl border border-gray-800 p-6">
+            <h3 className="text-xl font-bold text-[#3fb8bd] mb-4 font-fredoka">
+              🎨 Other NFTs on Base Network
+            </h3>
+            <p className="text-sm text-gray-400 mb-4">
+              Your collection of {otherNFTs.length} NFT{otherNFTs.length !== 1 ? 's' : ''} from various Base collections
+            </p>
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+              {otherNFTs.map((nft) => (
+                <div
+                  key={nft.id}
+                  className="aspect-square relative bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:border-gray-600 transition group"
+                  title={nft.metadata?.name || `NFT #${nft.id}`}
+                >
+                  {nft.image_url || nft.metadata?.image_url ? (
+                    <Image
+                      src={nft.image_url || nft.metadata?.image_url || ''}
+                      alt={nft.metadata?.name || `NFT #${nft.id}`}
+                      fill
+                      className="object-cover group-hover:scale-110 transition"
+                      unoptimized
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none'
+                        const placeholder = e.currentTarget.nextElementSibling as HTMLElement
+                        if (placeholder) placeholder.style.display = 'flex'
+                      }}
+                    />
+                  ) : null}
+                  <div
+                    className="absolute inset-0 flex items-center justify-center text-2xl bg-gray-800"
+                    style={{ display: nft.image_url || nft.metadata?.image_url ? 'none' : 'flex' }}
+                  >
+                    🎨
+                  </div>
+                  {/* Hover overlay with name */}
+                  <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition flex items-center justify-center p-2">
+                    <p className="text-white text-xs text-center line-clamp-2 font-semibold">
+                      {nft.metadata?.name || `#${nft.id}`}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Quick Actions */}
         <div className="mt-6 flex flex-wrap gap-4">
