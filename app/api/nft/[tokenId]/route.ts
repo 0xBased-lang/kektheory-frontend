@@ -34,7 +34,7 @@ interface NFTComplete {
 }
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { tokenId: string } }
 ) {
   const { tokenId } = params
@@ -80,8 +80,7 @@ export async function GET(
         metadata = await metadataResponse.json()
         attributes = metadata.attributes || []
 
-        // Calculate rarity percentages based on collection size
-        const COLLECTION_SIZE = 2470 // Current minted supply
+        // Calculate rarity percentages
         attributes = attributes.map(attr => {
           // You could enhance this with actual rarity calculation
           // For now, we'll add placeholder rarity
@@ -127,7 +126,7 @@ export async function GET(
 }
 
 // Helper function to calculate rarity percentages
-function calculateRarity(value: string, traitType: string): number {
+function calculateRarity(value: string, _traitType: string): number {
   // This is a placeholder - in production you'd calculate from actual distribution
   const rarityMap: Record<string, number> = {
     'psychedelic': 1.45,

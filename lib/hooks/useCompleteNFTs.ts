@@ -5,7 +5,7 @@
  * Kept for backwards compatibility.
  */
 
-import { useStaticMetadata } from './useStaticMetadata'
+import { useStaticMetadata, type CompleteNFT } from './useStaticMetadata'
 
 export type { NFTAttribute, CompleteNFT } from './useStaticMetadata'
 

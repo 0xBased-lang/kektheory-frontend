@@ -32,7 +32,7 @@ export function TraitsTabContent() {
         if (selectedValues.length === 0) return true
 
         // Find if NFT has any of the selected values for this category
-        return nft.attributes?.some(attr =>
+        return nft.attributes?.some((attr: { trait_type: string; value: string }) =>
           attr.trait_type === category &&
           selectedValues.includes(attr.value)
         )
