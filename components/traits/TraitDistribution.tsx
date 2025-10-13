@@ -193,7 +193,12 @@ export function TraitDistribution() {
     { key: 'easter-eggs', label: 'Easter Eggs' },
   ]
 
-  const traits = Object.entries(traitDistributions[activeCategory])
+  // Get traits and sort by percentage (ascending - rarest first)
+  const traits = Object.entries(traitDistributions[activeCategory]).sort((a, b) => {
+    const percentA = parseFloat(a[1].percentage)
+    const percentB = parseFloat(b[1].percentage)
+    return percentA - percentB
+  })
 
   return (
     <div className="mx-auto max-w-7xl">

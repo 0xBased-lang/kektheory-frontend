@@ -6,6 +6,7 @@ import { RankingNFT } from '@/lib/api/kektech-rankings'
 
 interface EnhancedNFTCardProps {
   nft: RankingNFT
+  showRank?: boolean  // Optional prop to show/hide rank badge
 }
 
 /**
@@ -16,7 +17,7 @@ interface EnhancedNFTCardProps {
  * - Clickable to navigate to NFT detail page
  * - Shows rank badge, token ID, and name
  */
-export function EnhancedNFTCard({ nft }: EnhancedNFTCardProps) {
+export function EnhancedNFTCard({ nft, showRank = true }: EnhancedNFTCardProps) {
   return (
     <Link
       href={`/nft?id=${nft.tokenId}`}
@@ -36,12 +37,14 @@ export function EnhancedNFTCard({ nft }: EnhancedNFTCardProps) {
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
-        {/* Rank Badge */}
-        <div className="absolute right-3 top-3">
-          <div className="rounded-full bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] px-4 py-1.5 text-sm font-bold text-black shadow-lg">
-            #{nft.rank}
+        {/* Rank Badge - Only show if showRank is true */}
+        {showRank && (
+          <div className="absolute right-3 top-3">
+            <div className="rounded-full bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] px-4 py-1.5 text-sm font-bold text-black shadow-lg">
+              #{nft.rank}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Card Info */}

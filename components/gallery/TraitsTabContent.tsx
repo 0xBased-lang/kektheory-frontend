@@ -111,12 +111,6 @@ export function TraitsTabContent() {
           </div>
         </div>
 
-        {/* Sort indicator for Filter mode */}
-        {viewMode === 'filter' && (
-          <div className="text-xs text-gray-500 font-fredoka">
-            Sorted by Token ID
-          </div>
-        )}
       </div>
 
       {/* Stats Bar */}
@@ -136,9 +130,9 @@ export function TraitsTabContent() {
       {viewMode === 'overview' ? (
         <div className="space-y-6">
           <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-white mb-3 font-fredoka">𝕂Ǝ𝕂丅ᵉ匚🅷 Traits</h3>
+            <h3 className="text-2xl font-bold text-[#3fb8bd] mb-3 font-fredoka">𝕂Ǝ𝕂丅ᵉ匚🅷 Traits</h3>
             <p className="text-gray-400">
-              Explore the rarity of traits across the KEKTECH collection.
+              Explore the rarity of traits across the 𝕂Ǝ𝕂丅ᵉ匚🅷 collection.
               Switch to Filter mode to find NFTs with specific traits.
             </p>
           </div>
@@ -169,7 +163,7 @@ export function TraitsTabContent() {
             ) : (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {filteredNFTs.map((nft) => (
-                  <EnhancedNFTCard key={nft.tokenId} nft={nft} />
+                  <EnhancedNFTCard key={nft.tokenId} nft={nft} showRank={false} />
                 ))}
               </div>
             )}
