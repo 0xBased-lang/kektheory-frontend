@@ -28,19 +28,31 @@ export function usePortfolioData() {
 
   // Separate KEKTECH NFTs from other NFTs
   const { kektechNFTs, otherNFTs } = useMemo(() => {
-    const kektech = nftData.nfts.filter(
-      (nft) =>
-        nft.token.address_hash.toLowerCase() === KEKTECH_CONTRACT_ADDRESS.toLowerCase()
-    )
-    const others = nftData.nfts.filter(
-      (nft) =>
-        nft.token.address_hash.toLowerCase() !== KEKTECH_CONTRACT_ADDRESS.toLowerCase()
-    )
+    // Ensure nftData.nfts is an array and filter safely
+    const nfts = nftData.nfts || []
+
+    const kektech = nfts.filter((nft) => {
+      // Safe property access with null checks
+      const nftAddress = nft?.token?.address_hash
+      if (!nftAddress || !KEKTECH_CONTRACT_ADDRESS) return false
+      return nftAddress.toLowerCase() === KEKTECH_CONTRACT_ADDRESS.toLowerCase()
+    })
+
+    const others = nfts.filter((nft) => {
+      // Safe property access with null checks
+      const nftAddress = nft?.token?.address_hash
+      if (!nftAddress || !KEKTECH_CONTRACT_ADDRESS) return !nftAddress // Include NFTs without address in 'others'
+      return nftAddress.toLowerCase() !== KEKTECH_CONTRACT_ADDRESS.toLowerCase()
+    })
+
     return { kektechNFTs: kektech, otherNFTs: others }
   }, [nftData.nfts])
 
   // Calculate portfolio metrics
   const portfolioMetrics = useMemo(() => {
+    // Safe access for NFT array
+    const nftsArray = nftData.nfts || []
+
     return {
       // Token metrics
       techBalance: techBalance.balanceNumber,
@@ -48,7 +60,7 @@ export function usePortfolioData() {
       techBalanceCompact: techBalance.balanceCompact,
 
       // NFT metrics
-      totalNFTs: nftData.nfts.length,
+      totalNFTs: nftsArray.length,
       kektechNFTCount: kektechNFTs.length,
       otherNFTCount: otherNFTs.length,
 
@@ -66,7 +78,7 @@ export function usePortfolioData() {
     }
   }, [
     techBalance,
-    nftData.nfts.length,
+    nftData.nfts,
     kektechNFTs.length,
     otherNFTs.length,
     voucherBalance.totalVouchers,
@@ -103,7 +115,7 @@ export function usePortfolioData() {
     techBalance,
     voucherBalance,
     nfts: {
-      all: nftData.nfts,
+      all: nftData.nfts || [],
       kektech: kektechNFTs,
       others: otherNFTs,
     },
