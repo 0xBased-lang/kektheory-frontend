@@ -104,7 +104,7 @@ export function TraitsTabContent() {
                 : 'text-[#4ecca7] hover:bg-[#4ecca7]/10'
             }`}
           >
-            📊 Overview
+            👀 Overview
           </button>
         </div>
       </div>

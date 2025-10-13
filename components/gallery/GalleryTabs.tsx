@@ -43,7 +43,7 @@ export function GalleryTabs({ children }: GalleryTabsProps) {
               }
             `}
           >
-            🎨 Traits
+            🐸 Traits
           </button>
         </div>
       </div>

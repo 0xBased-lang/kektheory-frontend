@@ -140,7 +140,10 @@ export default function Homepage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto mb-16">
             {/* Phase 1 */}
-            <div className="bg-gradient-to-br from-[#3fb8bd]/10 to-transparent rounded-2xl border border-[#3fb8bd]/20 p-8">
+            <div className="relative bg-gradient-to-br from-[#3fb8bd]/10 to-transparent rounded-2xl border border-[#3fb8bd]/20 p-8 overflow-hidden">
+              {/* Checkered Background Pattern */}
+              <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
+              <div className="relative">
               <h3 className="text-2xl font-bold text-[#3fb8bd] mb-4 font-fredoka">Phase 1: Collection Launch</h3>
               <ul className="space-y-3 text-gray-300">
                 <li>→ Release of our founding collection: 4,200 uniquely crafted Pepe NFTs</li>
@@ -148,10 +151,14 @@ export default function Homepage() {
                 <li>→ Community building, NFT give-aways</li>
                 <li>→ Snapshots for token airdrop</li>
               </ul>
+              </div>
             </div>
 
             {/* Phase 2 */}
-            <div className="bg-gradient-to-br from-[#4ecca7]/10 to-transparent rounded-2xl border border-[#4ecca7]/20 p-8">
+            <div className="relative bg-gradient-to-br from-[#4ecca7]/10 to-transparent rounded-2xl border border-[#4ecca7]/20 p-8 overflow-hidden">
+              {/* Checkered Background Pattern */}
+              <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
+              <div className="relative">
               <h3 className="text-2xl font-bold text-[#4ecca7] mb-4 font-fredoka">Phase 2: Reward System Implementation</h3>
               <ul className="space-y-3 text-gray-300">
                 <li>→ Establishment of the token economy that will power future upgrades</li>
@@ -159,26 +166,35 @@ export default function Homepage() {
                 <li>→ Rarity and stacking multiplier - hold rare and multiple NFTs to get higher token emissions!</li>
                 <li>→ Introduction of daily token rewards for all NFT holders</li>
               </ul>
+              </div>
             </div>
 
             {/* Phase 3 */}
-            <div className="bg-gradient-to-br from-[#3fb8bd]/10 to-transparent rounded-2xl border border-[#3fb8bd]/20 p-8">
+            <div className="relative bg-gradient-to-br from-[#3fb8bd]/10 to-transparent rounded-2xl border border-[#3fb8bd]/20 p-8 overflow-hidden">
+              {/* Checkered Background Pattern */}
+              <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
+              <div className="relative">
               <h3 className="text-2xl font-bold text-[#3fb8bd] mb-4 font-fredoka">Phase 3: Limited Edition Mint</h3>
               <ul className="space-y-3 text-gray-300">
                 <li>→ Limited edition free mint of 420 handpicked NFTs</li>
                 <li>→ Main collection NFT holders with Easter Egg traits qualify for the 420 limited edition free mint</li>
               </ul>
+              </div>
             </div>
 
             {/* Phase 4 */}
-            <div className="bg-gradient-to-br from-[#3fb8bd]/10 to-transparent rounded-2xl border border-[#3fb8bd]/20 p-8">
-              <h3 className="text-2xl font-bold text-[#3fb8bd] mb-4 font-fredoka">Phase 4: NFT Upgrading System</h3>
+            <div className="relative bg-gradient-to-br from-[#4ecca7]/10 to-transparent rounded-2xl border border-[#4ecca7]/20 p-8 overflow-hidden">
+              {/* Checkered Background Pattern */}
+              <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
+              <div className="relative">
+              <h3 className="text-2xl font-bold text-[#4ecca7] mb-4 font-fredoka">Phase 4: NFT Upgrading System</h3>
               <ul className="space-y-3 text-gray-300">
                 <li>→ Introduction of new handcrafted characters and attributes</li>
                 <li>→ Interactive, gamified upgrade experience allowing holders to choose their path</li>
                 <li>→ Use earned rewards to make meaningful choices that shape your unique Pepe PFP</li>
                 <li>→ Unlock the full potential of all Easter eggs hidden throughout the collection</li>
               </ul>
+              </div>
             </div>
           </div>
         </div>
