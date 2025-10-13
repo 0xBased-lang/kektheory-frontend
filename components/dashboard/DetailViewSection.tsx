@@ -8,6 +8,7 @@ import type { VoucherBalance } from '@/lib/hooks/useVoucherBalance'
 
 interface DetailViewSectionProps {
   activeSection: DashboardSection
+  onSectionChange: (section: DashboardSection) => void
   address: string
 
   // TECH Token props
@@ -39,6 +40,7 @@ interface DetailViewSectionProps {
  */
 export function DetailViewSection({
   activeSection,
+  onSectionChange,
   address,
   techBalance,
   techBalanceFormatted,
@@ -106,10 +108,10 @@ export function DetailViewSection({
     return (
       <div className="bg-gradient-to-br from-gray-700/10 to-gray-800/10 rounded-2xl border border-gray-700/30 p-8">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-white mb-2 font-fredoka">
+          <h2 className="text-3xl font-bold text-[#3fb8bd] mb-2 font-fredoka">
             📊 Complete Portfolio Overview
           </h2>
-          <p className="text-[#3fb8bd] text-lg font-semibold">
+          <p className="text-white text-lg">
             Comprehensive view of all your assets on BasedAI Network
           </p>
         </div>
@@ -164,29 +166,18 @@ export function DetailViewSection({
 
         {/* Asset Breakdown */}
         <div className="bg-gray-900/60 rounded-xl border border-gray-800 p-6">
-          <h3 className="text-xl font-bold text-white mb-4 font-fredoka">
+          <h3 className="text-xl font-bold text-[#3fb8bd] mb-4 font-fredoka">
             Asset Breakdown
           </h3>
           <div className="space-y-4">
-            <div className="flex items-center justify-between pb-4 border-b border-gray-800">
-              <div className="flex items-center gap-3">
-                <div className="text-2xl">💰</div>
-                <div>
-                  <div className="text-white font-bold">TECH Token (ERC-20)</div>
-                  <div className="text-sm text-gray-400">{techBalanceCompact} balance</div>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-cyan-400 font-bold">
-                  {parseFloat(techBalance) > 0 ? 'Active' : 'Empty'}
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pb-4 border-b border-gray-800">
+            {/* 1st: KEKTECH NFTs - Clickable */}
+            <button
+              onClick={() => onSectionChange('nfts')}
+              className="w-full flex items-center justify-between pb-4 border-b border-gray-800 hover:bg-gray-800/50 -mx-3 px-3 py-2 rounded-lg transition cursor-pointer"
+            >
               <div className="flex items-center gap-3">
                 <div className="text-2xl">🐸</div>
-                <div>
+                <div className="text-left">
                   <div className="text-white font-bold">KEKTECH NFTs (ERC-721)</div>
                   <div className="text-sm text-gray-400">{kektechNFTCount} collectibles</div>
                 </div>
@@ -196,10 +187,49 @@ export function DetailViewSection({
                   {kektechNFTCount} Owned
                 </div>
               </div>
-            </div>
+            </button>
 
+            {/* 2nd: TECH Token - Clickable */}
+            <button
+              onClick={() => onSectionChange('tech')}
+              className="w-full flex items-center justify-between pb-4 border-b border-gray-800 hover:bg-gray-800/50 -mx-3 px-3 py-2 rounded-lg transition cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <div className="text-2xl">💰</div>
+                <div className="text-left">
+                  <div className="text-white font-bold">TECH Token (ERC-20)</div>
+                  <div className="text-sm text-gray-400">{techBalanceCompact} balance</div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-cyan-400 font-bold">
+                  {parseFloat(techBalance) > 0 ? 'Active' : 'Empty'}
+                </div>
+              </div>
+            </button>
+
+            {/* 3rd: KEKTECH Vouchers - Clickable */}
+            <button
+              onClick={() => onSectionChange('vouchers')}
+              className="w-full flex items-center justify-between pb-4 border-b border-gray-800 hover:bg-gray-800/50 -mx-3 px-3 py-2 rounded-lg transition cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <div className="text-2xl">🎫</div>
+                <div className="text-left">
+                  <div className="text-white font-bold">KEKTECH Vouchers (ERC-1155)</div>
+                  <div className="text-sm text-gray-400">{ownedVouchers.length} types</div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-purple-400 font-bold">
+                  {totalVouchers} Total
+                </div>
+              </div>
+            </button>
+
+            {/* 4th: Other NFTs (only show if they exist) - Non-clickable info */}
             {totalNFTs > kektechNFTCount && (
-              <div className="flex items-center justify-between pb-4 border-b border-gray-800">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="text-2xl">🎨</div>
                   <div>
@@ -214,21 +244,6 @@ export function DetailViewSection({
                 </div>
               </div>
             )}
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="text-2xl">🎫</div>
-                <div>
-                  <div className="text-white font-bold">KEKTECH Vouchers (ERC-1155)</div>
-                  <div className="text-sm text-gray-400">{ownedVouchers.length} types</div>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-purple-400 font-bold">
-                  {totalVouchers} Total
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 

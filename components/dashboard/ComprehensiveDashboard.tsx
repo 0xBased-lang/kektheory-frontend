@@ -78,6 +78,7 @@ export function ComprehensiveDashboard({ address }: ComprehensiveDashboardProps)
       {/* Dynamic Detail View - Changes based on selected section */}
       <DetailViewSection
         activeSection={activeSection}
+        onSectionChange={setActiveSection}
         address={address}
         techBalance={portfolio.techBalance?.balance || '0'}
         techBalanceFormatted={portfolio.techBalance?.balanceFormatted || '0'}
