@@ -16,7 +16,7 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {/* Brand */}
           <div>
-            <h3 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">KEKTECH</h3>
+            <h3 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">𝕂Ǝ𝕂TECH</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               NFT Collection on the $BASED Chain (32323)
             </p>
@@ -24,7 +24,7 @@ export function Footer() {
 
           {/* Links */}
           <div>
-            <h4 className="mb-2 text-sm font-semibold text-gray-900 dark:text-white">Links</h4>
+            <h4 className="mb-2 text-sm font-semibold text-[#06b6d4]">Links</h4>
             <ul className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
               <li>
                 <Link href="/" className="hover:text-gray-900 dark:hover:text-white">
@@ -46,7 +46,7 @@ export function Footer() {
 
           {/* Chain Info */}
           <div>
-            <h4 className="mb-2 text-sm font-semibold text-gray-900 dark:text-white">
+            <h4 className="mb-2 text-sm font-semibold text-[#06b6d4]">
               Blockchain
             </h4>
             <ul className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
@@ -78,7 +78,7 @@ export function Footer() {
         {/* Copyright */}
         <div className="mt-8 border-t border-gray-200 pt-4 dark:border-gray-800">
           <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-            © {currentYear} KEKTECH. All rights reserved.
+            © {currentYear} 𝕂Ǝ𝕂TECH. All rights reserved.
           </p>
         </div>
       </div>
