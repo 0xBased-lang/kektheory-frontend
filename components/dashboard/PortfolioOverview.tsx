@@ -1,5 +1,7 @@
 'use client'
 
+export type DashboardSection = 'nfts' | 'tech' | 'vouchers' | 'assets'
+
 interface PortfolioOverviewProps {
   techBalance: string
   techBalanceCompact: string
@@ -8,6 +10,8 @@ interface PortfolioOverviewProps {
   totalVouchers: number
   uniqueVoucherTypes: number
   isLoading: boolean
+  activeSection: DashboardSection
+  onSectionChange: (section: DashboardSection) => void
 }
 
 /**
@@ -23,6 +27,8 @@ export function PortfolioOverview({
   totalVouchers,
   uniqueVoucherTypes,
   isLoading,
+  activeSection,
+  onSectionChange,
 }: PortfolioOverviewProps) {
   if (isLoading) {
     return (
@@ -43,20 +49,15 @@ export function PortfolioOverview({
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-      {/* TECH Token Balance */}
-      <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-xl border border-cyan-500/20 p-6 hover:border-cyan-500/40 transition">
-        <div className="text-4xl mb-3">💰</div>
-        <div className="text-3xl font-bold text-cyan-400 mb-2 font-fredoka">
-          {techBalanceCompact}
-        </div>
-        <div className="text-sm text-gray-400">TECH Tokens</div>
-        <div className="text-xs text-gray-500 mt-1 truncate" title={techBalance}>
-          {parseFloat(techBalance) > 0 ? `${techBalance} TECH` : 'No tokens'}
-        </div>
-      </div>
-
-      {/* NFT Collection */}
-      <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl border border-green-500/20 p-6 hover:border-green-500/40 transition">
+      {/* KEKTECH NFTs - MAIN POSITION */}
+      <button
+        onClick={() => onSectionChange('nfts')}
+        className={`bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl border p-6 transition text-left cursor-pointer hover:scale-105 ${
+          activeSection === 'nfts'
+            ? 'border-green-500/60 ring-2 ring-green-500/30 shadow-lg shadow-green-500/20'
+            : 'border-green-500/20 hover:border-green-500/40'
+        }`}
+      >
         <div className="text-4xl mb-3">🐸</div>
         <div className="text-3xl font-bold text-green-400 mb-2 font-fredoka">
           {kektechNFTCount}
@@ -67,10 +68,36 @@ export function PortfolioOverview({
             +{totalNFTs - kektechNFTCount} other NFTs
           </div>
         )}
-      </div>
+      </button>
 
-      {/* Voucher Collection */}
-      <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/20 p-6 hover:border-purple-500/40 transition">
+      {/* TECH Token */}
+      <button
+        onClick={() => onSectionChange('tech')}
+        className={`bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-xl border p-6 transition text-left cursor-pointer hover:scale-105 ${
+          activeSection === 'tech'
+            ? 'border-cyan-500/60 ring-2 ring-cyan-500/30 shadow-lg shadow-cyan-500/20'
+            : 'border-cyan-500/20 hover:border-cyan-500/40'
+        }`}
+      >
+        <div className="text-4xl mb-3">💰</div>
+        <div className="text-3xl font-bold text-cyan-400 mb-2 font-fredoka">
+          {techBalanceCompact}
+        </div>
+        <div className="text-sm text-gray-400">TECH Tokens</div>
+        <div className="text-xs text-gray-500 mt-1 truncate" title={techBalance}>
+          {parseFloat(techBalance) > 0 ? `${techBalance} TECH` : 'No tokens'}
+        </div>
+      </button>
+
+      {/* Vouchers */}
+      <button
+        onClick={() => onSectionChange('vouchers')}
+        className={`bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl border p-6 transition text-left cursor-pointer hover:scale-105 ${
+          activeSection === 'vouchers'
+            ? 'border-purple-500/60 ring-2 ring-purple-500/30 shadow-lg shadow-purple-500/20'
+            : 'border-purple-500/20 hover:border-purple-500/40'
+        }`}
+      >
         <div className="text-4xl mb-3">🎫</div>
         <div className="text-3xl font-bold text-purple-400 mb-2 font-fredoka">
           {totalVouchers}
@@ -81,10 +108,17 @@ export function PortfolioOverview({
             {uniqueVoucherTypes} type{uniqueVoucherTypes !== 1 ? 's' : ''}
           </div>
         )}
-      </div>
+      </button>
 
       {/* Total Assets */}
-      <div className="bg-gradient-to-br from-gray-700/20 to-gray-800/20 rounded-xl border border-gray-700/30 p-6 hover:border-gray-600/40 transition">
+      <button
+        onClick={() => onSectionChange('assets')}
+        className={`bg-gradient-to-br from-gray-700/20 to-gray-800/20 rounded-xl border p-6 transition text-left cursor-pointer hover:scale-105 ${
+          activeSection === 'assets'
+            ? 'border-gray-600/60 ring-2 ring-gray-600/30 shadow-lg shadow-gray-600/20'
+            : 'border-gray-700/30 hover:border-gray-600/40'
+        }`}
+      >
         <div className="text-4xl mb-3">📊</div>
         <div className="text-3xl font-bold text-white mb-2 font-fredoka">
           {totalNFTs + (totalVouchers > 0 ? 1 : 0) + (parseFloat(techBalance) > 0 ? 1 : 0)}
@@ -93,7 +127,7 @@ export function PortfolioOverview({
         <div className="text-xs text-gray-500 mt-1">
           Total holdings
         </div>
-      </div>
+      </button>
     </div>
   )
 }

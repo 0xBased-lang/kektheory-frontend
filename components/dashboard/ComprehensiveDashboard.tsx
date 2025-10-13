@@ -1,10 +1,9 @@
 'use client'
 
+import { useState } from 'react'
 import { usePortfolioData } from '@/lib/hooks/usePortfolioData'
-import { PortfolioOverview } from './PortfolioOverview'
-import { TechTokenCard } from './TechTokenCard'
-import { VoucherSection } from './VoucherSection'
-import { NFTDashboard } from '@/components/wallet/NFTDashboard'
+import { PortfolioOverview, type DashboardSection } from './PortfolioOverview'
+import { DetailViewSection } from './DetailViewSection'
 
 interface ComprehensiveDashboardProps {
   address: string
@@ -21,6 +20,9 @@ interface ComprehensiveDashboardProps {
  */
 export function ComprehensiveDashboard({ address }: ComprehensiveDashboardProps) {
   const portfolio = usePortfolioData()
+
+  // State to track which section is active (default: KEKTECH NFTs as main focus)
+  const [activeSection, setActiveSection] = useState<DashboardSection>('nfts')
 
   // Global loading state
   if (portfolio.isLoading) {
@@ -60,7 +62,7 @@ export function ComprehensiveDashboard({ address }: ComprehensiveDashboardProps)
 
   return (
     <div className="space-y-8">
-      {/* Portfolio Overview - Hero Section */}
+      {/* Portfolio Overview - Interactive Section Selector */}
       <PortfolioOverview
         techBalance={portfolio.techBalance?.balance || '0'}
         techBalanceCompact={portfolio.techBalance?.balanceCompact || '0'}
@@ -69,28 +71,25 @@ export function ComprehensiveDashboard({ address }: ComprehensiveDashboardProps)
         totalVouchers={portfolio.metrics?.totalVouchers || 0}
         uniqueVoucherTypes={portfolio.metrics?.uniqueVoucherTypes || 0}
         isLoading={portfolio.isLoading}
+        activeSection={activeSection}
+        onSectionChange={setActiveSection}
       />
 
-      {/* TECH Token - Primary Asset */}
-      <TechTokenCard
-        balance={portfolio.techBalance?.balance || '0'}
-        balanceFormatted={portfolio.techBalance?.balanceFormatted || '0'}
-        balanceCompact={portfolio.techBalance?.balanceCompact || '0'}
-        isLoading={portfolio.techBalance?.isLoading || false}
-      />
-
-      {/* NFT Gallery - Visual Assets */}
-      <div>
-        <NFTDashboard address={address} />
-      </div>
-
-      {/* Voucher Section - Utility Assets */}
-      <VoucherSection
+      {/* Dynamic Detail View - Changes based on selected section */}
+      <DetailViewSection
+        activeSection={activeSection}
+        address={address}
+        techBalance={portfolio.techBalance?.balance || '0'}
+        techBalanceFormatted={portfolio.techBalance?.balanceFormatted || '0'}
+        techBalanceCompact={portfolio.techBalance?.balanceCompact || '0'}
+        techLoading={portfolio.techBalance?.isLoading || false}
         vouchers={portfolio.voucherBalance?.vouchers || []}
         ownedVouchers={portfolio.voucherBalance?.ownedVouchers || []}
         totalVouchers={portfolio.voucherBalance?.totalVouchers || 0}
-        isLoading={portfolio.voucherBalance?.isLoading || false}
+        vouchersLoading={portfolio.voucherBalance?.isLoading || false}
         explorerUrl={portfolio.voucherBalance?.explorerUrl || 'https://explorer.bf1337.org'}
+        totalNFTs={portfolio.metrics?.totalNFTs || 0}
+        kektechNFTCount={portfolio.metrics?.kektechNFTCount || 0}
       />
 
       {/* Refresh Button */}
