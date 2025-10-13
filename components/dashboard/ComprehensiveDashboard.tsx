@@ -62,21 +62,21 @@ export function ComprehensiveDashboard({ address }: ComprehensiveDashboardProps)
     <div className="space-y-8">
       {/* Portfolio Overview - Hero Section */}
       <PortfolioOverview
-        techBalance={portfolio.techBalance.balance}
-        techBalanceCompact={portfolio.techBalance.balanceCompact}
-        totalNFTs={portfolio.metrics.totalNFTs}
-        kektechNFTCount={portfolio.metrics.kektechNFTCount}
-        totalVouchers={portfolio.metrics.totalVouchers}
-        uniqueVoucherTypes={portfolio.metrics.uniqueVoucherTypes}
+        techBalance={portfolio.techBalance?.balance || '0'}
+        techBalanceCompact={portfolio.techBalance?.balanceCompact || '0'}
+        totalNFTs={portfolio.metrics?.totalNFTs || 0}
+        kektechNFTCount={portfolio.metrics?.kektechNFTCount || 0}
+        totalVouchers={portfolio.metrics?.totalVouchers || 0}
+        uniqueVoucherTypes={portfolio.metrics?.uniqueVoucherTypes || 0}
         isLoading={portfolio.isLoading}
       />
 
       {/* TECH Token - Primary Asset */}
       <TechTokenCard
-        balance={portfolio.techBalance.balance}
-        balanceFormatted={portfolio.techBalance.balanceFormatted}
-        balanceCompact={portfolio.techBalance.balanceCompact}
-        isLoading={portfolio.techBalance.isLoading}
+        balance={portfolio.techBalance?.balance || '0'}
+        balanceFormatted={portfolio.techBalance?.balanceFormatted || '0'}
+        balanceCompact={portfolio.techBalance?.balanceCompact || '0'}
+        isLoading={portfolio.techBalance?.isLoading || false}
       />
 
       {/* NFT Gallery - Visual Assets */}
@@ -86,11 +86,11 @@ export function ComprehensiveDashboard({ address }: ComprehensiveDashboardProps)
 
       {/* Voucher Section - Utility Assets */}
       <VoucherSection
-        vouchers={portfolio.voucherBalance.vouchers}
-        ownedVouchers={portfolio.voucherBalance.ownedVouchers}
-        totalVouchers={portfolio.voucherBalance.totalVouchers}
-        isLoading={portfolio.voucherBalance.isLoading}
-        explorerUrl={portfolio.voucherBalance.explorerUrl}
+        vouchers={portfolio.voucherBalance?.vouchers || []}
+        ownedVouchers={portfolio.voucherBalance?.ownedVouchers || []}
+        totalVouchers={portfolio.voucherBalance?.totalVouchers || 0}
+        isLoading={portfolio.voucherBalance?.isLoading || false}
+        explorerUrl={portfolio.voucherBalance?.explorerUrl || 'https://explorer.bf1337.org'}
       />
 
       {/* Refresh Button */}
