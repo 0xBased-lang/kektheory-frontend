@@ -7,10 +7,11 @@
   },
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "npm run generate-metadata && next build --turbopack",
+    "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "generate-metadata": "node scripts/generate-metadata.js"
+    "generate-metadata": "node scripts/generate-metadata.js",
+    "prebuild:full": "npm run generate-metadata"
   },
   "dependencies": {
     "@reown/appkit": "^1.8.9",
