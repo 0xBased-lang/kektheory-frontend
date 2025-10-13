@@ -96,12 +96,12 @@ export default function RewardsPage() {
               </div>
 
               {/* Stacking Multiplier */}
-              <div className="relative bg-gradient-to-br from-[#ff00ff]/10 to-transparent rounded-2xl border border-[#ff00ff]/20 p-8 overflow-hidden">
+              <div className="relative bg-gradient-to-br from-[#a855f7]/10 to-transparent rounded-2xl border border-[#a855f7]/20 p-8 overflow-hidden">
                 {/* Checkered Background Pattern */}
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
                 <div className="relative">
                 <div className="text-4xl mb-4">📚</div>
-                <h3 className="font-fredoka text-xl font-bold text-[#ff00ff] mb-3">Stacking Multiplier</h3>
+                <h3 className="font-fredoka text-xl font-bold text-[#a855f7] mb-3">Stacking Multiplier</h3>
                 <p className="text-gray-300">
                   Hold multiple 𝕂Ǝ𝕂TECH NFTs to unlock stacking bonuses! The more NFTs you hold, the higher your multiplier gets.
                 </p>
@@ -152,7 +152,7 @@ export default function RewardsPage() {
                 </div>
 
                 <div>
-                  <h3 className="font-fredoka text-xl font-bold text-[#ff00ff] mb-3">Future Utility</h3>
+                  <h3 className="font-fredoka text-xl font-bold text-[#a855f7] mb-3">Future Utility</h3>
                   <p className="text-gray-300">
                     Tokens will unlock NFT upgrade paths, allow trait customization, and grant access to exclusive features. The gamified upgrade system lets you shape your unique Pepe PFP using earned rewards.
                   </p>
