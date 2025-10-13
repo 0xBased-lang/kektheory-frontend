@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "npm run generate-metadata && next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate-metadata": "node scripts/generate-metadata.js"
   },
   "dependencies": {
     "@reown/appkit": "^1.8.9",

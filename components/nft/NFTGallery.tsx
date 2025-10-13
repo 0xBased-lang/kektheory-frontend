@@ -4,8 +4,8 @@ import { useState, useMemo } from 'react'
 import { EnhancedNFTCard } from './EnhancedNFTCard'
 import { useRankings } from '@/lib/hooks/useRankings'
 import { GalleryTabs } from '@/components/gallery/GalleryTabs'
-import { TraitDistribution } from '@/components/traits/TraitDistribution'
 import { CompactStatsWidget } from '@/components/CompactStatsWidget'
+import { TraitsTabContent } from '@/components/gallery/TraitsTabContent'
 
 /**
  * NFTGallery Component
@@ -177,20 +177,8 @@ export function NFTGallery() {
     </div>
   )
 
-  // Traits Tab Content
-  const renderTraitsTab = () => (
-    <div className="space-y-6">
-      <div className="text-center max-w-2xl mx-auto mb-8">
-        <h3 className="text-2xl font-bold text-white mb-3 font-fredoka">𝕂Ǝ𝕂丅ᵉ匚🅷 Traits</h3>
-        <p className="text-gray-400">
-          Explore the rarity of traits across the KEKTECH collection. Browse by category to discover what makes each artifact unique.
-        </p>
-      </div>
-
-      {/* Trait Distribution Table */}
-      <TraitDistribution />
-    </div>
-  )
+  // Traits Tab Content - Now with filtering!
+  const renderTraitsTab = () => <TraitsTabContent />
 
   // Two-Tab Layout
   return (
