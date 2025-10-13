@@ -55,7 +55,7 @@ export function CompactStatsWidget() {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
       <div className="relative">
       {/* Collection Stats - Top Section */}
-      <div className="flex items-center justify-center gap-8 mb-6 pb-6 border-b border-gray-700/50">
+      <div className="flex items-center justify-center gap-8 mb-6 pb-6">
         <div className="text-center">
           <div className="text-sm text-gray-400 mb-2 font-medium">Minted</div>
           <div className="text-3xl font-bold text-[#3fb8bd]">{totalMinted.toLocaleString()}</div>

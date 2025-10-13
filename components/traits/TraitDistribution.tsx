@@ -225,7 +225,7 @@ export function TraitDistribution() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
         <div className="relative overflow-x-auto">
           <table className="w-full">
-            <thead className="border-b border-[#3fb8bd]/20 bg-gray-800">
+            <thead className="bg-gray-800">
               <tr>
                 <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider text-[#3fb8bd]">
                   Trait
@@ -241,7 +241,7 @@ export function TraitDistribution() {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#3fb8bd]/10">
+            <tbody>
               {traits.map(([name, data]) => {
                 const rarity = getRarity(data.percentage)
                 return (

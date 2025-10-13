@@ -48,16 +48,23 @@ export default function RewardsPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Daily Rewards */}
-              <div className="bg-gradient-to-br from-[#3fb8bd]/10 to-transparent rounded-2xl border border-[#3fb8bd]/20 p-8">
+              <div className="relative bg-gradient-to-br from-[#3fb8bd]/10 to-transparent rounded-2xl border border-[#3fb8bd]/20 p-8 overflow-hidden">
+                {/* Checkered Background Pattern */}
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
+                <div className="relative">
                 <div className="text-4xl mb-4">💰</div>
                 <h3 className="font-fredoka text-xl font-bold text-[#3fb8bd] mb-3">Daily Token Rewards</h3>
                 <p className="text-gray-300">
                   All 𝕂Ǝ𝕂TECH NFT holders receive daily token emissions automatically. The base rate applies to all holders, making passive income accessible to everyone.
                 </p>
+                </div>
               </div>
 
               {/* Rarity Multiplier */}
-              <div className="bg-gradient-to-br from-[#4ecca7]/10 to-transparent rounded-2xl border border-[#4ecca7]/20 p-8">
+              <div className="relative bg-gradient-to-br from-[#4ecca7]/10 to-transparent rounded-2xl border border-[#4ecca7]/20 p-8 overflow-hidden">
+                {/* Checkered Background Pattern */}
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
+                <div className="relative">
                 <div className="text-4xl mb-4">⭐</div>
                 <h3 className="font-fredoka text-xl font-bold text-[#4ecca7] mb-3">Rarity Multiplier</h3>
                 <p className="text-gray-300">
@@ -85,10 +92,14 @@ export default function RewardsPage() {
                     <span className="font-bold">1.0x</span>
                   </div>
                 </div>
+                </div>
               </div>
 
               {/* Stacking Multiplier */}
-              <div className="bg-gradient-to-br from-[#ff00ff]/10 to-transparent rounded-2xl border border-[#ff00ff]/20 p-8">
+              <div className="relative bg-gradient-to-br from-[#ff00ff]/10 to-transparent rounded-2xl border border-[#ff00ff]/20 p-8 overflow-hidden">
+                {/* Checkered Background Pattern */}
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
+                <div className="relative">
                 <div className="text-4xl mb-4">📚</div>
                 <h3 className="font-fredoka text-xl font-bold text-[#ff00ff] mb-3">Stacking Multiplier</h3>
                 <p className="text-gray-300">
@@ -112,6 +123,7 @@ export default function RewardsPage() {
                     <span className="font-bold">2.0x</span>
                   </div>
                 </div>
+                </div>
               </div>
             </div>
           </div>
@@ -121,7 +133,10 @@ export default function RewardsPage() {
             <h2 className="font-fredoka mb-8 text-3xl font-bold text-[#3fb8bd] text-center">Token Economy</h2>
 
             <div className="max-w-4xl mx-auto">
-              <div className="bg-gradient-to-br from-gray-900 to-transparent rounded-2xl border border-gray-800 p-8 space-y-6">
+              <div className="relative bg-gradient-to-br from-gray-900 to-transparent rounded-2xl border border-gray-800 p-8 space-y-6 overflow-hidden">
+                {/* Checkered Background Pattern */}
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
+                <div className="relative">
                 <div>
                   <h3 className="font-fredoka text-xl font-bold text-[#3fb8bd] mb-3">What Are 𝕂Ǝ𝕂TECH Tokens?</h3>
                   <p className="text-gray-300">
@@ -141,6 +156,7 @@ export default function RewardsPage() {
                   <p className="text-gray-300">
                     Tokens will unlock NFT upgrade paths, allow trait customization, and grant access to exclusive features. The gamified upgrade system lets you shape your unique Pepe PFP using earned rewards.
                   </p>
+                </div>
                 </div>
               </div>
             </div>
