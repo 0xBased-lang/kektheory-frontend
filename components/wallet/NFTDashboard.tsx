@@ -20,12 +20,16 @@ export function NFTDashboard({ address }: NFTDashboardProps) {
 
   // Separate KEKTECH NFTs from other NFTs
   const { kektechNFTs, otherNFTs } = useMemo(() => {
-    const kektech = nfts.filter(
-      (nft) => nft.token.address_hash.toLowerCase() === KEKTECH_CONTRACT_ADDRESS.toLowerCase()
-    )
-    const others = nfts.filter(
-      (nft) => nft.token.address_hash.toLowerCase() !== KEKTECH_CONTRACT_ADDRESS.toLowerCase()
-    )
+    const kektech = nfts.filter((nft) => {
+      const nftAddress = nft?.token?.address_hash
+      if (!nftAddress || !KEKTECH_CONTRACT_ADDRESS) return false
+      return nftAddress.toLowerCase() === KEKTECH_CONTRACT_ADDRESS.toLowerCase()
+    })
+    const others = nfts.filter((nft) => {
+      const nftAddress = nft?.token?.address_hash
+      if (!nftAddress || !KEKTECH_CONTRACT_ADDRESS) return true
+      return nftAddress.toLowerCase() !== KEKTECH_CONTRACT_ADDRESS.toLowerCase()
+    })
     return { kektechNFTs: kektech, otherNFTs: others }
   }, [nfts])
 

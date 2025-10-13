@@ -75,7 +75,7 @@ export function ConnectButton() {
         connector = connectors.find(c =>
           c.id === 'metaMask' ||
           c.id === 'injected' ||
-          c.name.toLowerCase().includes('metamask')
+          (c.name && c.name.toLowerCase().includes('metamask'))
         )
 
         // Fallback to any available connector
