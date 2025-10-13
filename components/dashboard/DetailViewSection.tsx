@@ -145,8 +145,11 @@ export function DetailViewSection({
 
         {/* Portfolio Summary Cards - Reordered: KEKTECH NFTs, TECH Tokens, Vouchers */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* KEKTECH NFTs Summary - LEFT */}
-          <div className="bg-green-500/10 rounded-xl border border-green-500/20 p-6">
+          {/* KEKTECH NFTs Summary - LEFT - Clickable */}
+          <button
+            onClick={() => onSectionChange('nfts')}
+            className="bg-green-500/10 rounded-xl border border-green-500/20 p-6 hover:border-green-500/40 hover:bg-green-500/15 transition cursor-pointer text-left"
+          >
             <div className="text-4xl mb-4">🐸</div>
             <h3 className="text-xl font-bold text-green-400 mb-2 font-fredoka">
               KEKTECH NFT Collection
@@ -158,10 +161,13 @@ export function DetailViewSection({
               KEKTECH NFTs
               {totalNFTs > kektechNFTCount && ` (+${totalNFTs - kektechNFTCount} others)`}
             </p>
-          </div>
+          </button>
 
-          {/* TECH Tokens Summary - MIDDLE */}
-          <div className="bg-cyan-500/10 rounded-xl border border-cyan-500/20 p-6">
+          {/* TECH Tokens Summary - MIDDLE - Clickable */}
+          <button
+            onClick={() => onSectionChange('tech')}
+            className="bg-cyan-500/10 rounded-xl border border-cyan-500/20 p-6 hover:border-cyan-500/40 hover:bg-cyan-500/15 transition cursor-pointer text-left"
+          >
             <div className="text-4xl mb-4">💰</div>
             <h3 className="text-xl font-bold text-cyan-400 mb-2 font-fredoka">
               TECH Tokens
@@ -174,10 +180,13 @@ export function DetailViewSection({
                 ? `${techBalance} TECH`
                 : 'No tokens held'}
             </p>
-          </div>
+          </button>
 
-          {/* Vouchers Summary - RIGHT */}
-          <div className="bg-purple-500/10 rounded-xl border border-purple-500/20 p-6">
+          {/* Vouchers Summary - RIGHT - Clickable */}
+          <button
+            onClick={() => onSectionChange('vouchers')}
+            className="bg-purple-500/10 rounded-xl border border-purple-500/20 p-6 hover:border-purple-500/40 hover:bg-purple-500/15 transition cursor-pointer text-left"
+          >
             <div className="text-4xl mb-4">🎫</div>
             <h3 className="text-xl font-bold text-purple-400 mb-2 font-fredoka">
               Vouchers
@@ -188,7 +197,7 @@ export function DetailViewSection({
             <p className="text-sm text-gray-400">
               {ownedVouchers.length} type{ownedVouchers.length !== 1 ? 's' : ''} owned
             </p>
-          </div>
+          </button>
         </div>
 
         {/* Asset Breakdown */}
