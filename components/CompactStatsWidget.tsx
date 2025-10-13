@@ -50,7 +50,10 @@ export function CompactStatsWidget() {
   ]
 
   return (
-    <div className="bg-gradient-to-r from-gray-900/90 via-gray-900/80 to-gray-900/90 rounded-2xl border-2 border-[#3fb8bd]/30 px-8 py-6 backdrop-blur-md shadow-lg shadow-[#3fb8bd]/10">
+    <div className="relative bg-gradient-to-r from-gray-900/90 via-gray-900/80 to-gray-900/90 rounded-2xl border-2 border-[#3fb8bd]/30 px-8 py-6 backdrop-blur-md shadow-lg shadow-[#3fb8bd]/10 overflow-hidden">
+      {/* Checkered Background Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
+      <div className="relative">
       {/* Collection Stats - Top Section */}
       <div className="flex items-center justify-center gap-8 mb-6 pb-6 border-b border-gray-700/50">
         <div className="text-center">
@@ -87,6 +90,7 @@ export function CompactStatsWidget() {
             </div>
           </div>
         ))}
+      </div>
       </div>
     </div>
   )

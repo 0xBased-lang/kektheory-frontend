@@ -24,7 +24,10 @@ export default function RewardsPage() {
           />
 
           {/* Coming Soon Notice */}
-          <div className="mb-16 bg-gradient-to-br from-[#3fb8bd]/10 via-[#4ecca7]/5 to-transparent rounded-2xl border-2 border-[#3fb8bd]/30 p-12 text-center">
+          <div className="relative mb-16 bg-gradient-to-br from-[#3fb8bd]/10 via-[#4ecca7]/5 to-transparent rounded-2xl border-2 border-[#3fb8bd]/30 p-12 text-center overflow-hidden">
+            {/* Checkered Background Pattern */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
+            <div className="relative">
             <div className="text-6xl mb-6">🎁</div>
             <h2 className="font-fredoka mb-4 text-3xl font-bold text-[#3fb8bd]">$TECH Token Airdrops Sent!</h2>
             <p className="text-xl text-gray-300 mb-6 max-w-2xl mx-auto">
@@ -36,6 +39,7 @@ export default function RewardsPage() {
             <p className="text-gray-400 max-w-xl mx-auto">
               The rewards claiming interface is currently under development. Check back soon to claim your tokens and start earning daily rewards! 🚀
             </p>
+            </div>
           </div>
 
           {/* How Rewards Work */}

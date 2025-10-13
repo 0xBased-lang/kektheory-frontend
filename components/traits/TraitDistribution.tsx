@@ -220,8 +220,10 @@ export function TraitDistribution() {
       </div>
 
       {/* Traits Table */}
-      <div className="overflow-hidden rounded-lg border border-[#3fb8bd]/20 bg-gray-900">
-        <div className="overflow-x-auto">
+      <div className="relative overflow-hidden rounded-lg border border-[#3fb8bd]/20 bg-gray-900">
+        {/* Checkered Background Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
+        <div className="relative overflow-x-auto">
           <table className="w-full">
             <thead className="border-b border-[#3fb8bd]/20 bg-gray-800">
               <tr>
