@@ -2,11 +2,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
-import { TraitDistribution } from '@/components/traits/TraitDistribution'
 
 /**
  * KEKTECH Homepage
- * Marketing-focused landing page with sections for Hero, Featured Artifacts, About Us, Roadmap, and Traits
+ * Marketing-focused landing page with sections for Hero, Featured Artifacts, Roadmap, and About Us
  */
 export default function Homepage() {
 
@@ -108,61 +107,6 @@ export default function Homepage() {
         </div>
       </section>
 
-      {/* About Us Section */}
-      <section id="about" className="py-20 border-t border-gray-800">
-        <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-[#3fb8bd] text-center mb-16 font-fredoka">About Us</h2>
-
-          {/* First Row: Text Left, Image Right */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
-            <div className="space-y-6">
-              <p className="text-gray-300 leading-relaxed">
-                𝕂Ǝ𝕂TECH emerges from the intersection of art and blockchain technology, born from our appreciation for the PepeCoin legacy dating back to 2016. Our dedicated team initially envisioned a modest NFT collection but found ourselves captivated by the energy of the PepeCoin 🐸 and $BASED 🧠 communities.
-              </p>
-              <p className="text-gray-300 leading-relaxed">
-                Our creative journey began in early 2024 within the thriving PepeCoin movement. Through Pepepaint, our team discovered a digital canvas where Pepe art could flourish in new ways. This discovery helped us grow as artists and develop a clear vision for our project.
-              </p>
-              <p className="text-gray-300 leading-relaxed">
-                What started as artistic exploration evolved into something meaningful when our early artwork received recognition from Pepelovers 🐸 and other respected figures in the Pepe community. This endorsement fueled our determination to craft more distinctive Pepe art and build something valuable for fellow enthusiasts. With each creation, we deepen our commitment to honoring the culture that brought us together. 🐸🤝
-              </p>
-            </div>
-
-            <div className="relative aspect-square rounded-2xl overflow-hidden border-2 border-[#3fb8bd]/30">
-              <Image
-                src="/images/1.png"
-                alt="KEKTECH NFT Artwork"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </div>
-          </div>
-
-          {/* Second Row: Image Left, Text Right */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
-            <div className="relative aspect-square rounded-2xl overflow-hidden border-2 border-[#3fb8bd]/30 lg:order-1">
-              <Image
-                src="/images/2.png"
-                alt="KEKTECH NFT Collection"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </div>
-
-            <div className="space-y-6 lg:order-2">
-              <h3 className="text-2xl font-bold text-[#3fb8bd] font-fredoka">Our Vision</h3>
-              <p className="text-gray-300 leading-relaxed">
-                At 𝕂Ǝ𝕂TECH, we aim to create more than just another NFT collection. We envision a dynamic ecosystem where art, community, and technology converge to create lasting value. At our core, spreading fresh, dank Pepe art throughout the crypto space drives everything we do. We&apos;re building a platform where holders can customize their digital identities, earn rewards, and participate in the evolution of the collection itself.
-              </p>
-              <p className="text-gray-300 leading-relaxed">
-                Our mission extends beyond digital assets—we&apos;re committed to producing high-quality Pepe art that celebrates the culture and contributes to the broader crypto art space. This is our homage to the communities that inspired us and our contribution to the ever-evolving PEPENING 🐸🚀 movement.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Roadmap Section */}
       <section id="roadmap" className="py-20 border-t border-gray-800">
         <div className="container mx-auto px-6">
@@ -225,6 +169,61 @@ export default function Homepage() {
               </ul>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* About Us Section */}
+      <section id="about" className="py-20 border-t border-gray-800">
+        <div className="container mx-auto px-6">
+          <h2 className="text-4xl font-bold text-[#3fb8bd] text-center mb-16 font-fredoka">About Us</h2>
+
+          {/* First Row: Text Left, Image Right */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+            <div className="space-y-6">
+              <p className="text-gray-300 leading-relaxed">
+                𝕂Ǝ𝕂TECH emerges from the intersection of art and blockchain technology, born from our appreciation for the PepeCoin legacy dating back to 2016. Our dedicated team initially envisioned a modest NFT collection but found ourselves captivated by the energy of the PepeCoin 🐸 and $BASED 🧠 communities.
+              </p>
+              <p className="text-gray-300 leading-relaxed">
+                Our creative journey began in early 2024 within the thriving PepeCoin movement. Through Pepepaint, our team discovered a digital canvas where Pepe art could flourish in new ways. This discovery helped us grow as artists and develop a clear vision for our project.
+              </p>
+              <p className="text-gray-300 leading-relaxed">
+                What started as artistic exploration evolved into something meaningful when our early artwork received recognition from Pepelovers 🐸 and other respected figures in the Pepe community. This endorsement fueled our determination to craft more distinctive Pepe art and build something valuable for fellow enthusiasts. With each creation, we deepen our commitment to honoring the culture that brought us together. 🐸🤝
+              </p>
+            </div>
+
+            <div className="relative aspect-square rounded-2xl overflow-hidden border-2 border-[#3fb8bd]/30">
+              <Image
+                src="/images/1.png"
+                alt="KEKTECH NFT Artwork"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </div>
+          </div>
+
+          {/* Second Row: Image Left, Text Right */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+            <div className="relative aspect-square rounded-2xl overflow-hidden border-2 border-[#3fb8bd]/30 lg:order-1">
+              <Image
+                src="/images/2.png"
+                alt="KEKTECH NFT Collection"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </div>
+
+            <div className="space-y-6 lg:order-2">
+              <h3 className="text-2xl font-bold text-[#3fb8bd] font-fredoka">Our Vision</h3>
+              <p className="text-gray-300 leading-relaxed">
+                At 𝕂Ǝ𝕂TECH, we aim to create more than just another NFT collection. We envision a dynamic ecosystem where art, community, and technology converge to create lasting value. At our core, spreading fresh, dank Pepe art throughout the crypto space drives everything we do. We&apos;re building a platform where holders can customize their digital identities, earn rewards, and participate in the evolution of the collection itself.
+              </p>
+              <p className="text-gray-300 leading-relaxed">
+                Our mission extends beyond digital assets—we&apos;re committed to producing high-quality Pepe art that celebrates the culture and contributes to the broader crypto art space. This is our homage to the communities that inspired us and our contribution to the ever-evolving PEPENING 🐸🚀 movement.
+              </p>
+            </div>
+          </div>
 
           {/* Community Journey */}
           <div className="max-w-4xl mx-auto text-center">
@@ -247,21 +246,6 @@ export default function Homepage() {
             <p className="text-center text-gray-400 mt-4 text-sm">
               Watch our artistic process: hand-drawing each unique 𝕂Ǝ𝕂TECH artifact
             </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Traits Section */}
-      <section id="traits" className="py-20 border-t border-gray-800">
-        <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-[#3fb8bd] text-center mb-4 font-fredoka">𝕂Ǝ𝕂丅ᵉ匚🅷 Traits</h2>
-          <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
-            Explore the rarity of traits across the KEKTECH collection. Browse by category to discover what makes each artifact unique.
-          </p>
-
-          {/* Trait Distribution Table */}
-          <div className="max-w-7xl mx-auto">
-            <TraitDistribution />
           </div>
         </div>
       </section>
