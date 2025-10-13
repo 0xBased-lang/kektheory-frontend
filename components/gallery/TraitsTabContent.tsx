@@ -19,7 +19,7 @@ interface FilterState {
  */
 export function TraitsTabContent() {
   const { data: nfts, isLoading, error, stats } = useCompleteNFTs()
-  const [viewMode, setViewMode] = useState<'overview' | 'filter'>('overview')
+  const [viewMode, setViewMode] = useState<'overview' | 'filter'>('filter')
   const [filters, setFilters] = useState<FilterState>({})
 
   // Filter NFTs based on selected traits
@@ -78,16 +78,6 @@ export function TraitsTabContent() {
       <div className="flex justify-center">
         <div className="inline-flex rounded-xl bg-gray-900/60 border border-gray-800 p-1">
           <button
-            onClick={() => setViewMode('overview')}
-            className={`px-6 py-2 rounded-lg font-fredoka font-medium transition-all duration-200 ${
-              viewMode === 'overview'
-                ? 'bg-[#4ecca7] text-black shadow-lg'
-                : 'text-gray-400 hover:text-white'
-            }`}
-          >
-            📊 Overview
-          </button>
-          <button
             onClick={() => setViewMode('filter')}
             className={`px-6 py-2 rounded-lg font-fredoka font-medium transition-all duration-200 ${
               viewMode === 'filter'
@@ -97,22 +87,28 @@ export function TraitsTabContent() {
           >
             🔍 Filter Collection
           </button>
+          <button
+            onClick={() => setViewMode('overview')}
+            className={`px-6 py-2 rounded-lg font-fredoka font-medium transition-all duration-200 ${
+              viewMode === 'overview'
+                ? 'bg-[#4ecca7] text-black shadow-lg'
+                : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            📊 Overview
+          </button>
         </div>
       </div>
 
       {/* Stats Bar */}
       {stats && viewMode === 'filter' && (
-        <div className="flex justify-center gap-8 text-sm text-gray-400">
+        <div className="flex justify-center gap-8 text-sm text-gray-400 font-fredoka">
           <span>
             Total Minted: <span className="text-[#3fb8bd] font-bold">{stats.total}</span>
           </span>
           <span>•</span>
           <span>
-            With Traits: <span className="text-[#4ecca7] font-bold">{stats.withTraits}</span>
-          </span>
-          <span>•</span>
-          <span>
-            Filtered: <span className="text-white font-bold">{filteredNFTs.length}</span>
+            Filtered: <span className="text-[#4ecca7] font-bold">{filteredNFTs.length}</span>
           </span>
         </div>
       )}

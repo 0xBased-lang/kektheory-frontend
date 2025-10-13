@@ -88,14 +88,14 @@ export function TraitFilterSidebar({ nfts, onFilterChange }: TraitFilterSidebarP
   const activeFilterCount = Object.values(filters).reduce((sum, values) => sum + values.length, 0)
 
   return (
-    <div className="w-80 bg-gray-900/60 border border-gray-800 rounded-xl p-6 space-y-6">
+    <div className="w-80 bg-gray-900/80 border border-[#3fb8bd]/30 rounded-xl p-6 space-y-6 shadow-lg shadow-[#3fb8bd]/10">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-bold text-white font-fredoka">Filter by Traits</h3>
+        <h3 className="text-lg font-bold text-[#3fb8bd] font-fredoka">Filter by Traits</h3>
         {activeFilterCount > 0 && (
           <button
             onClick={clearAll}
-            className="text-sm text-[#3fb8bd] hover:text-[#4ecca7] transition"
+            className="text-sm text-[#4ecca7] hover:text-[#3fb8bd] transition font-fredoka"
           >
             Clear All ({activeFilterCount})
           </button>
@@ -112,22 +112,22 @@ export function TraitFilterSidebar({ nfts, onFilterChange }: TraitFilterSidebarP
           if (options.length === 0) return null
 
           return (
-            <div key={key} className="border border-gray-800 rounded-lg overflow-hidden">
+            <div key={key} className="border border-[#3fb8bd]/20 rounded-lg overflow-hidden bg-black/30">
               {/* Category Header */}
               <button
                 onClick={() => toggleCategory(key)}
-                className="w-full px-4 py-3 bg-gray-800/50 hover:bg-gray-800 transition flex items-center justify-between"
+                className="w-full px-4 py-3 bg-[#3fb8bd]/10 hover:bg-[#3fb8bd]/20 transition flex items-center justify-between"
               >
-                <span className="font-medium text-white flex items-center gap-2">
+                <span className="font-medium text-[#4ecca7] font-fredoka flex items-center gap-2">
                   {label}
                   {categoryFilters.length > 0 && (
-                    <span className="px-2 py-0.5 bg-[#3fb8bd]/20 text-[#3fb8bd] text-xs rounded-full">
+                    <span className="px-2 py-0.5 bg-[#3fb8bd] text-black text-xs rounded-full font-bold">
                       {categoryFilters.length}
                     </span>
                   )}
                 </span>
                 <svg
-                  className={`w-4 h-4 text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                  className={`w-4 h-4 text-[#3fb8bd] transition-transform ${isExpanded ? 'rotate-180' : ''}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -138,11 +138,11 @@ export function TraitFilterSidebar({ nfts, onFilterChange }: TraitFilterSidebarP
 
               {/* Category Options */}
               {isExpanded && (
-                <div className="p-4 space-y-2">
+                <div className="p-4 space-y-2 bg-black/20">
                   {categoryFilters.length > 0 && (
                     <button
                       onClick={() => clearCategory(key)}
-                      className="text-xs text-gray-400 hover:text-white mb-2"
+                      className="text-xs text-[#3fb8bd] hover:text-[#4ecca7] mb-2 font-fredoka transition"
                     >
                       Clear {label}
                     </button>
@@ -155,20 +155,23 @@ export function TraitFilterSidebar({ nfts, onFilterChange }: TraitFilterSidebarP
                     return (
                       <label
                         key={value}
-                        className="flex items-center justify-between cursor-pointer hover:bg-gray-800/30 p-2 rounded transition"
+                        className="flex items-center justify-between cursor-pointer hover:bg-[#3fb8bd]/10 p-2 rounded transition group"
                       >
                         <div className="flex items-center gap-2">
                           <input
                             type="checkbox"
                             checked={isChecked}
                             onChange={() => toggleFilter(key, value)}
-                            className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-[#3fb8bd] focus:ring-[#3fb8bd] focus:ring-offset-0"
+                            className="w-4 h-4 rounded border-2 border-[#3fb8bd]/50 bg-gray-900 checked:bg-[#3fb8bd] checked:border-[#3fb8bd] focus:ring-2 focus:ring-[#3fb8bd] focus:ring-offset-0 cursor-pointer transition-all"
+                            style={{
+                              colorScheme: 'dark'
+                            }}
                           />
-                          <span className="text-sm text-gray-300">{displayName}</span>
+                          <span className="text-sm text-gray-300 group-hover:text-white transition font-fredoka">{displayName}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-xs">
+                        <div className="flex items-center gap-2 text-xs font-fredoka">
                           <span className="text-gray-500">{count}</span>
-                          <span className={`${getRarityColor(percentage)} font-medium`}>
+                          <span className={`${getRarityColor(percentage)} font-bold`}>
                             {percentage.toFixed(1)}%
                           </span>
                         </div>
@@ -184,11 +187,11 @@ export function TraitFilterSidebar({ nfts, onFilterChange }: TraitFilterSidebarP
 
       {/* Active Filters Summary */}
       {activeFilterCount > 0 && (
-        <div className="pt-4 border-t border-gray-800">
-          <p className="text-sm text-gray-400">
+        <div className="pt-4 border-t border-[#3fb8bd]/30">
+          <p className="text-sm text-[#4ecca7] font-fredoka font-bold">
             {activeFilterCount} filter{activeFilterCount !== 1 ? 's' : ''} active
           </p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-400 mt-1 font-fredoka">
             Showing NFTs matching ALL selected traits
           </p>
         </div>
@@ -239,9 +242,9 @@ function formatTraitName(name: string): string {
 }
 
 function getRarityColor(percentage: number): string {
-  if (percentage < 1) return 'text-purple-400'
-  if (percentage < 5) return 'text-yellow-400'
-  if (percentage < 15) return 'text-green-400'
-  if (percentage < 30) return 'text-blue-400'
-  return 'text-cyan-400'
+  if (percentage < 1) return 'text-[#ff00ff]'      // Magenta for ultra rare (<1%)
+  if (percentage < 5) return 'text-[#4ecca7]'      // Mint green for very rare (<5%)
+  if (percentage < 15) return 'text-[#3fb8bd]'     // Cyan for rare (<15%)
+  if (percentage < 30) return 'text-[#3fb8bd]/70'  // Muted cyan for uncommon (<30%)
+  return 'text-gray-400'                            // Gray for common (>30%)
 }
