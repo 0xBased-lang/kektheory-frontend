@@ -1,7 +1,6 @@
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { NFTGallery } from '@/components/nft/NFTGallery'
-import { CompactStatsWidget } from '@/components/CompactStatsWidget'
 import { BlurredTitleSection } from '@/components/ui/BlurredTitleSection'
 
 /**
@@ -22,13 +21,8 @@ export default function GalleryPage() {
             subtitle="Explore all minted 𝕂Ǝ𝕂TECH NFTs on the $BASED Chain"
           />
 
-          {/* NFT Gallery with Tabs */}
+          {/* NFT Gallery with Tabs (Stats widget inside Ranking tab only) */}
           <NFTGallery />
-
-          {/* Compact Collection Stats & Tier Distribution */}
-          <div className="mt-8">
-            <CompactStatsWidget />
-          </div>
         </div>
       </main>
 

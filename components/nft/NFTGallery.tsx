@@ -5,12 +5,13 @@ import { EnhancedNFTCard } from './EnhancedNFTCard'
 import { useRankings } from '@/lib/hooks/useRankings'
 import { GalleryTabs } from '@/components/gallery/GalleryTabs'
 import { TraitDistribution } from '@/components/traits/TraitDistribution'
+import { CompactStatsWidget } from '@/components/CompactStatsWidget'
 
 /**
  * NFTGallery Component
  *
  * Two-tab gallery layout:
- * - Ranking: Shows all minted NFTs by rank
+ * - Ranking: Shows all minted NFTs by rank with stats widget
  * - Traits: Complete trait distribution viewer
  */
 export function NFTGallery() {
@@ -90,6 +91,11 @@ export function NFTGallery() {
   // Ranking Tab Content
   const renderRankingTab = () => (
     <div className="space-y-8">
+      {/* Stats Widget */}
+      <div className="mb-8">
+        <CompactStatsWidget />
+      </div>
+
       {/* Search Bar */}
       <div className="max-w-md mx-auto">
         <div className="relative">
