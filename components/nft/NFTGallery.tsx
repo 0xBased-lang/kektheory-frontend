@@ -3,20 +3,14 @@
 import { useState, useMemo } from 'react'
 import { EnhancedNFTCard } from './EnhancedNFTCard'
 import { useRankings } from '@/lib/hooks/useRankings'
+import { GalleryTabs } from '@/components/gallery/GalleryTabs'
 
 /**
  * NFTGallery Component
  *
- * Displays a grid of NFTs with:
- * - Real-time data from rankings API (2470+ NFTs)
- * - Auto-refresh every 30 seconds
- * - Live supply counter from smart contract
- * - NFT ID search functionality
- * - Loading state with skeleton cards
- * - Empty state with mint CTA
- * - Error state with retry button
- * - Responsive grid layout (1-4 columns)
- * - Automatic fallback to mock data if API unavailable
+ * Two-tab gallery layout:
+ * - Ranking: Shows all minted NFTs by rank
+ * - Traits: Placeholder for trait filtering (coming soon)
  */
 export function NFTGallery() {
   const { rankings: nfts, loading: isLoading, error } = useRankings(30000)
@@ -92,8 +86,8 @@ export function NFTGallery() {
     )
   }
 
-  // NFT Grid with Enhanced Cards and Search
-  return (
+  // Ranking Tab Content
+  const renderRankingTab = () => (
     <div className="space-y-8">
       {/* Search Bar */}
       <div className="max-w-md mx-auto">
@@ -174,5 +168,39 @@ export function NFTGallery() {
         </div>
       )}
     </div>
+  )
+
+  // Traits Tab Content (Placeholder)
+  const renderTraitsTab = () => (
+    <div className="flex items-center justify-center min-h-[600px]">
+      <div className="text-center max-w-md">
+        <div className="text-6xl mb-6">🎨</div>
+        <h3 className="text-2xl font-bold text-white mb-4 font-fredoka">
+          Trait Filtering Coming Soon
+        </h3>
+        <p className="text-gray-400 mb-6">
+          We&apos;re working on an advanced trait filtering system to help you discover NFTs by their unique attributes.
+        </p>
+        <div className="inline-flex gap-2 text-sm text-gray-500">
+          <span>🔍 Multi-trait filtering</span>
+          <span>•</span>
+          <span>📊 Rarity insights</span>
+          <span>•</span>
+          <span>🎯 Smart search</span>
+        </div>
+      </div>
+    </div>
+  )
+
+  // Two-Tab Layout
+  return (
+    <GalleryTabs>
+      {(activeTab) => (
+        <>
+          {activeTab === 'ranking' && renderRankingTab()}
+          {activeTab === 'traits' && renderTraitsTab()}
+        </>
+      )}
+    </GalleryTabs>
   )
 }
