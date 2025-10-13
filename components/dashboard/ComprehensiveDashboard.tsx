@@ -21,8 +21,8 @@ interface ComprehensiveDashboardProps {
 export function ComprehensiveDashboard({ address }: ComprehensiveDashboardProps) {
   const portfolio = usePortfolioData()
 
-  // State to track which section is active (default: KEKTECH NFTs as main focus)
-  const [activeSection, setActiveSection] = useState<DashboardSection>('nfts')
+  // State to track which section is active (default: Complete Portfolio Overview)
+  const [activeSection, setActiveSection] = useState<DashboardSection>('assets')
 
   // Global loading state
   if (portfolio.isLoading) {

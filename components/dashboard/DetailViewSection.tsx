@@ -3,7 +3,7 @@
 import type { DashboardSection } from './PortfolioOverview'
 import { TechTokenCard } from './TechTokenCard'
 import { VoucherSection } from './VoucherSection'
-import { NFTDashboard } from '@/components/wallet/NFTDashboard'
+import { KektechNFTsOnly } from '@/components/wallet/KektechNFTsOnly'
 import type { VoucherBalance } from '@/lib/hooks/useVoucherBalance'
 
 interface DetailViewSectionProps {
@@ -53,7 +53,7 @@ export function DetailViewSection({
   kektechNFTCount,
 }: DetailViewSectionProps) {
 
-  // NFT Section
+  // NFT Section - ONLY KEKTECH NFTs
   if (activeSection === 'nfts') {
     return (
       <div className="bg-gradient-to-br from-green-500/5 to-emerald-500/5 rounded-2xl border border-green-500/20 p-8">
@@ -63,11 +63,11 @@ export function DetailViewSection({
               🐸 Your KEKTECH NFT Collection
             </h2>
             <p className="text-gray-400">
-              View and manage your complete NFT portfolio on BasedAI Network
+              View and manage your KEKTECH NFTs on BasedAI Network
             </p>
           </div>
         </div>
-        <NFTDashboard address={address} />
+        <KektechNFTsOnly address={address} />
       </div>
     )
   }
@@ -109,14 +109,29 @@ export function DetailViewSection({
           <h2 className="text-3xl font-bold text-white mb-2 font-fredoka">
             📊 Complete Portfolio Overview
           </h2>
-          <p className="text-gray-400">
+          <p className="text-[#3fb8bd] text-lg font-semibold">
             Comprehensive view of all your assets on BasedAI Network
           </p>
         </div>
 
-        {/* Portfolio Summary Cards */}
+        {/* Portfolio Summary Cards - Reordered: KEKTECH NFTs, TECH Tokens, Vouchers */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* TECH Tokens Summary */}
+          {/* KEKTECH NFTs Summary - LEFT */}
+          <div className="bg-green-500/10 rounded-xl border border-green-500/20 p-6">
+            <div className="text-4xl mb-4">🐸</div>
+            <h3 className="text-xl font-bold text-green-400 mb-2 font-fredoka">
+              KEKTECH NFT Collection
+            </h3>
+            <div className="text-3xl font-bold text-white mb-2">
+              {kektechNFTCount}
+            </div>
+            <p className="text-sm text-gray-400">
+              KEKTECH NFTs
+              {totalNFTs > kektechNFTCount && ` (+${totalNFTs - kektechNFTCount} others)`}
+            </p>
+          </div>
+
+          {/* TECH Tokens Summary - MIDDLE */}
           <div className="bg-cyan-500/10 rounded-xl border border-cyan-500/20 p-6">
             <div className="text-4xl mb-4">💰</div>
             <h3 className="text-xl font-bold text-cyan-400 mb-2 font-fredoka">
@@ -132,22 +147,7 @@ export function DetailViewSection({
             </p>
           </div>
 
-          {/* NFTs Summary */}
-          <div className="bg-green-500/10 rounded-xl border border-green-500/20 p-6">
-            <div className="text-4xl mb-4">🐸</div>
-            <h3 className="text-xl font-bold text-green-400 mb-2 font-fredoka">
-              NFT Collection
-            </h3>
-            <div className="text-3xl font-bold text-white mb-2">
-              {kektechNFTCount}
-            </div>
-            <p className="text-sm text-gray-400">
-              KEKTECH NFTs
-              {totalNFTs > kektechNFTCount && ` (+${totalNFTs - kektechNFTCount} others)`}
-            </p>
-          </div>
-
-          {/* Vouchers Summary */}
+          {/* Vouchers Summary - RIGHT */}
           <div className="bg-purple-500/10 rounded-xl border border-purple-500/20 p-6">
             <div className="text-4xl mb-4">🎫</div>
             <h3 className="text-xl font-bold text-purple-400 mb-2 font-fredoka">
