@@ -66,7 +66,7 @@ export function PortfolioOverview({
           <span className="text-xl">🐸</span>
           <span>KEKTECH NFTs</span>
           <span className="text-sm opacity-75">
-            {kektechNFTCount}{totalNFTs > kektechNFTCount && `+${totalNFTs - kektechNFTCount}`}
+            {kektechNFTCount}
           </span>
         </button>
 
@@ -92,7 +92,7 @@ export function PortfolioOverview({
           className={`
             px-6 py-3 rounded-lg font-fredoka font-bold transition-all duration-200 flex items-center gap-2
             ${activeSection === 'vouchers'
-              ? 'bg-[#4ecca7] text-black shadow-lg shadow-[#4ecca7]/20'
+              ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/20'
               : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
             }
           `}
