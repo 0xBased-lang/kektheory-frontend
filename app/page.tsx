@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { FeaturedNFTs } from '@/components/sections/FeaturedNFTs'
 
 /**
  * KEKTECH Homepage
@@ -67,57 +68,8 @@ export default function Homepage() {
         </div>
       </section>
 
-      {/* Featured Artifacts Section */}
-      <section className="py-20 border-t border-gray-800">
-        <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-[#3fb8bd] text-center mb-4 font-fredoka">Featured Artifacts</h2>
-          <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
-            Explore some of our hand-drawn 𝕂Ǝ𝕂TECH artifacts - each one unique, each one special 🐸✨
-          </p>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-7xl mx-auto">
-            {[
-              { id: 171, name: "KEKTECH #171" },
-              { id: 180, name: "KEKTECH #180" },
-              { id: 65, name: "KEKTECH #65" },
-              { id: 686, name: "KEKTECH #686" },
-              { id: 69, name: "KEKTECH #69" },
-              { id: 782, name: "KEKTECH #782" }
-            ].map((nft) => (
-              <div
-                key={nft.id}
-                className="group relative aspect-square rounded-xl overflow-hidden border-2 border-gray-800 hover:border-[#3fb8bd] transition-all duration-300 hover:scale-105 cursor-pointer"
-              >
-                <Image
-                  src={`/images/${nft.id}.png`}
-                  alt={nft.name}
-                  width={400}
-                  height={400}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="absolute bottom-0 left-0 right-0 p-3">
-                    <p className="text-white font-bold text-sm">{nft.name}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <Link
-              href="/gallery"
-              className="group relative inline-block overflow-hidden rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] p-[2px] shadow-lg shadow-[#3fb8bd]/50 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-[#3fb8bd]/70"
-            >
-              <div className="relative rounded-[10px] bg-gray-900 px-8 py-4 transition-all group-hover:bg-transparent">
-                <span className="font-bold text-[#3fb8bd] group-hover:text-black font-fredoka">
-                  View Full Collection
-                </span>
-              </div>
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Featured Artifacts Section - Dynamic with Rotation */}
+      <FeaturedNFTs />
 
       {/* Roadmap Section */}
       <section id="roadmap" className="py-20 border-t border-gray-800">
