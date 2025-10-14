@@ -153,7 +153,7 @@ export function FeaturedNFTs() {
                     {/* NFT Image */}
                     <div className="aspect-square relative overflow-hidden">
                       <Image
-                        src={`/images/${nft.tokenId}.png`}
+                        src={nft.imageUrl}
                         alt={nft.name}
                         fill
                         className="object-cover transition-transform duration-300 group-hover:scale-110"
