@@ -64,7 +64,7 @@ export function PortfolioOverview({
           `}
         >
           <span className="text-xl">🐸</span>
-          <span>KEKTECH NFTs</span>
+          <span>𝕂Ǝ𝕂TECH NFTs</span>
           <span className="text-sm opacity-75">
             {kektechNFTCount}
           </span>

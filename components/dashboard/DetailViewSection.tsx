@@ -81,10 +81,10 @@ export function DetailViewSection({
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-3xl font-bold text-green-400 mb-2 font-fredoka">
-                🐸 Your KEKTECH NFT Collection
+                🐸 Your 𝕂Ǝ𝕂TECH NFT Collection
               </h2>
               <p className="text-gray-400">
-                View and manage your KEKTECH NFTs on BasedAI Network
+                View and manage your 𝕂Ǝ𝕂TECH NFTs on BasedAI Network
               </p>
             </div>
           </div>
@@ -152,13 +152,13 @@ export function DetailViewSection({
           >
             <div className="text-4xl mb-4">🐸</div>
             <h3 className="text-xl font-bold text-green-400 mb-2 font-fredoka">
-              KEKTECH NFT Collection
+              𝕂Ǝ𝕂TECH NFT Collection
             </h3>
             <div className="text-3xl font-bold text-white mb-2">
               {kektechNFTCount}
             </div>
             <p className="text-sm text-gray-400">
-              KEKTECH NFTs
+              𝕂Ǝ𝕂TECH NFTs
               {totalNFTs > kektechNFTCount && ` (+${totalNFTs - kektechNFTCount} others)`}
             </p>
           </button>
@@ -214,7 +214,7 @@ export function DetailViewSection({
               <div className="flex items-center gap-3">
                 <div className="text-2xl">🐸</div>
                 <div className="text-left">
-                  <div className="text-white font-bold">KEKTECH NFTs (ERC-721)</div>
+                  <div className="text-white font-bold">𝕂Ǝ𝕂TECH NFTs (ERC-721)</div>
                   <div className="text-sm text-gray-400">{kektechNFTCount} collectibles</div>
                 </div>
               </div>
@@ -252,7 +252,7 @@ export function DetailViewSection({
               <div className="flex items-center gap-3">
                 <div className="text-2xl">🎫</div>
                 <div className="text-left">
-                  <div className="text-white font-bold">KEKTECH Vouchers (ERC-1155)</div>
+                  <div className="text-white font-bold">𝕂Ǝ𝕂TECH Vouchers (ERC-1155)</div>
                   <div className="text-sm text-gray-400">{ownedVouchers.length} types</div>
                 </div>
               </div>

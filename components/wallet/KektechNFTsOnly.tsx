@@ -32,7 +32,7 @@ export function KektechNFTsOnly({ address }: KektechNFTsOnlyProps) {
     return (
       <div className="text-center py-12">
         <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#3fb8bd]"></div>
-        <p className="mt-4 text-gray-400">Loading your KEKTECH NFTs...</p>
+        <p className="mt-4 text-gray-400">Loading your 𝕂Ǝ𝕂TECH NFTs...</p>
       </div>
     )
   }
@@ -62,15 +62,15 @@ export function KektechNFTsOnly({ address }: KektechNFTsOnlyProps) {
     return (
       <div className="bg-gray-900/60 rounded-xl border border-gray-800 p-12 text-center max-w-2xl mx-auto">
         <div className="text-6xl mb-6">🐸</div>
-        <h3 className="text-2xl font-bold text-white mb-4 font-fredoka">No KEKTECH NFTs Found</h3>
+        <h3 className="text-2xl font-bold text-white mb-4 font-fredoka">No 𝕂Ǝ𝕂TECH NFTs Found</h3>
         <p className="text-gray-400 mb-6">
-          You don&apos;t have any KEKTECH NFTs in your wallet yet. Start by minting one!
+          You don&apos;t have any 𝕂Ǝ𝕂TECH NFTs in your wallet yet. Start by minting one!
         </p>
         <Link
           href="/marketplace"
           className="inline-block px-8 py-3 rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black font-bold hover:scale-105 transition font-fredoka"
         >
-          Mint KEKTECH NFTs
+          Mint 𝕂Ǝ𝕂TECH NFTs
         </Link>
       </div>
     )

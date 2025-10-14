@@ -50,8 +50,8 @@ export function VoucherSection({
   if (totalVouchers === 0) {
     return (
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-white mb-6 font-fredoka flex items-center gap-2">
-          🎫 Your KEKTECH Vouchers
+        <h2 className="text-2xl font-bold text-purple-400 mb-6 font-fredoka flex items-center gap-2">
+          🎫 Your 𝕂Ǝ𝕂TECH Vouchers
           <span className="text-gray-500 text-lg">(0)</span>
         </h2>
 
@@ -61,7 +61,7 @@ export function VoucherSection({
             No Vouchers Found
           </h3>
           <p className="text-gray-400 mb-6">
-            You don&apos;t have any KEKTECH vouchers yet. Vouchers grant exclusive
+            You don&apos;t have any 𝕂Ǝ𝕂TECH vouchers yet. Vouchers grant exclusive
             benefits and rewards!
           </p>
           <Link
@@ -89,9 +89,9 @@ export function VoucherSection({
     <div className="mb-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-white font-fredoka flex items-center gap-2">
-          🎫 Your KEKTECH Vouchers
-          <span className="text-purple-400 text-lg">({totalVouchers})</span>
+        <h2 className="text-2xl font-bold text-purple-400 font-fredoka flex items-center gap-2">
+          🎫 Your 𝕂Ǝ𝕂TECH Vouchers
+          <span className="text-purple-300 text-lg">({totalVouchers})</span>
         </h2>
         <Link
           href={explorerUrl}
@@ -168,7 +168,7 @@ export function VoucherSection({
               {ownedVouchers.length !== 1 ? 's' : ''}
             </p>
             <p className="text-sm text-gray-400 mt-1">
-              Vouchers grant exclusive benefits and rewards in the KEKTECH ecosystem
+              Vouchers grant exclusive benefits and rewards in the 𝕂Ǝ𝕂TECH ecosystem
             </p>
           </div>
           <button
