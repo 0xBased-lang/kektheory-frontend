@@ -46,15 +46,25 @@ export function FeaturedNFTs() {
   useEffect(() => {
     async function fetchNFTs() {
       try {
-        const response = await fetch('/api/nfts-complete')
+        // Use rankings API directly - it's fast and has all the data we need
+        const response = await fetch('https://api.kektech.xyz/rankings')
         if (!response.ok) throw new Error('Failed to fetch NFTs')
 
-        const data: NFTData[] = await response.json()
-        setAllNFTs(data)
+        const data = await response.json()
+
+        // Transform rankings data to our format
+        const nfts: NFTData[] = data.nfts.map((nft: any) => ({
+          tokenId: nft.tokenId,
+          name: nft.name,
+          imageUrl: nft.imageUrl,
+          rarityScore: nft.rarityScore
+        }))
+
+        setAllNFTs(nfts)
 
         // Set initial random selection
-        if (data.length >= 6) {
-          setDisplayedNFTs(getRandomNFTs(data, 6))
+        if (nfts.length >= 6) {
+          setDisplayedNFTs(getRandomNFTs(nfts, 6))
         }
         setIsLoading(false)
       } catch (error) {
