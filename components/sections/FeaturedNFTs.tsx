@@ -11,6 +11,16 @@ interface NFTData {
   rarityScore: number
 }
 
+interface RankingsAPIResponse {
+  nfts: Array<{
+    rank: number
+    tokenId: string
+    name: string
+    rarityScore: number
+    imageUrl: string
+  }>
+}
+
 // Fallback NFTs in case API fails
 const FALLBACK_NFTS = [
   { tokenId: '65', name: 'KEKTECH #65', imageUrl: '/images/65.png', rarityScore: 85 },
@@ -50,10 +60,10 @@ export function FeaturedNFTs() {
         const response = await fetch('https://api.kektech.xyz/rankings')
         if (!response.ok) throw new Error('Failed to fetch NFTs')
 
-        const data = await response.json()
+        const data: RankingsAPIResponse = await response.json()
 
         // Transform rankings data to our format
-        const nfts: NFTData[] = data.nfts.map((nft: any) => ({
+        const nfts: NFTData[] = data.nfts.map((nft) => ({
           tokenId: nft.tokenId,
           name: nft.name,
           imageUrl: nft.imageUrl,
