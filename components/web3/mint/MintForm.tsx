@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { useMint } from '@/lib/hooks/useMint'
 import { EXPLORER_URL } from '@/config/constants'
 import { CooldownTracker } from '@/lib/validation'
+import { NetworkSwitcher } from '@/components/web3/NetworkSwitcher'
+import { useNetworkValidation } from '@/lib/hooks/useNetworkValidation'
 
 /**
  * MintForm Component
@@ -36,6 +38,8 @@ export function MintForm() {
     mint,
     maxMintPerTx,
   } = useMint()
+
+  const { isWrongNetwork } = useNetworkValidation()
 
   const [localError, setLocalError] = useState<string | null>(null)
   const [cooldownRemaining, setCooldownRemaining] = useState(0)
@@ -133,6 +137,11 @@ export function MintForm() {
         </p>
       </div>
     )
+  }
+
+  // If connected but on wrong network, show network switcher
+  if (isWrongNetwork) {
+    return <NetworkSwitcher />
   }
 
   // If transaction confirmed, show success

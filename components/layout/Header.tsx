@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { ConnectButton } from '@/components/web3/ConnectButton'
+import { NetworkSwitcher } from '@/components/web3/NetworkSwitcher'
 
 /**
  * Header Component
@@ -82,8 +83,11 @@ export function Header() {
           </Link>
         </nav>
 
-        {/* Wallet Connect Button */}
-        <ConnectButton />
+        {/* Wallet Connect & Network Switcher */}
+        <div className="flex items-center gap-3">
+          <NetworkSwitcher inline />
+          <ConnectButton />
+        </div>
       </div>
     </header>
   )
