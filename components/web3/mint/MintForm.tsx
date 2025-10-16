@@ -9,6 +9,7 @@ import { NetworkCurrencyWarning } from '@/components/web3/NetworkCurrencyWarning
 import { NetworkConfigurationBlocker } from '@/components/web3/NetworkConfigurationBlocker'
 import { useNetworkValidation } from '@/lib/hooks/useNetworkValidation'
 import { useNetworkConfigValidator } from '@/lib/hooks/useNetworkConfigValidator'
+import { useMintedNFTs } from '@/lib/hooks/useMintedNFTs'
 
 /**
  * MintForm Component
@@ -44,6 +45,7 @@ export function MintForm() {
 
   const { isWrongNetwork } = useNetworkValidation()
   const { needsVerification, markAsValid } = useNetworkConfigValidator()
+  const { mintedNFTs, isLoading: nftsLoading } = useMintedNFTs(hash, isConfirmed)
 
   const [localError, setLocalError] = useState<string | null>(null)
   const [cooldownRemaining, setCooldownRemaining] = useState(0)
@@ -157,7 +159,52 @@ export function MintForm() {
   if (isConfirmed && hash) {
     return (
       <div className="rounded-lg border border-green-200 bg-green-50 p-8 text-center dark:border-green-900 dark:bg-green-900/20">
-        <div className="mb-4 text-5xl">🎉</div>
+        {/* NFT Images or Loading State */}
+        {nftsLoading ? (
+          <div className="mb-4">
+            <div className="text-5xl animate-pulse">🎉</div>
+            <p className="mt-2 text-sm text-green-600 dark:text-green-400">
+              Loading your NFT{mintAmount > 1 ? 's' : ''}...
+            </p>
+          </div>
+        ) : mintedNFTs.length > 0 ? (
+          <div className="mb-4">
+            {/* Display 1-3 NFT images in a grid */}
+            <div className={`grid gap-4 mb-4 ${
+              mintedNFTs.length === 1 ? 'grid-cols-1' :
+              mintedNFTs.length === 2 ? 'grid-cols-2' :
+              'grid-cols-3'
+            }`}>
+              {mintedNFTs.map((nft) => (
+                <div key={nft.tokenId} className="relative group">
+                  {nft.imageUrl ? (
+                    <img
+                      src={nft.imageUrl}
+                      alt={nft.name}
+                      className="w-full aspect-square object-cover rounded-lg border-2 border-[#3fb8bd] shadow-lg transition-transform group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="w-full aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg border-2 border-[#3fb8bd] flex items-center justify-center">
+                      <span className="text-gray-400 dark:text-gray-500">Loading...</span>
+                    </div>
+                  )}
+                  {/* Token ID overlay */}
+                  <div className="absolute bottom-2 left-2 right-2 bg-black/70 backdrop-blur-sm rounded px-2 py-1">
+                    <p className="text-xs font-medium text-white truncate">{nft.name}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {mintAmount > 3 && (
+              <p className="text-sm text-green-600 dark:text-green-400 mb-2">
+                + {mintAmount - 3} more NFT{mintAmount - 3 > 1 ? 's' : ''}
+              </p>
+            )}
+          </div>
+        ) : (
+          <div className="mb-4 text-5xl">🎉</div>
+        )}
+
         <h3 className="mb-2 text-lg font-semibold text-green-900 dark:text-green-100">
           Mint Successful!
         </h3>
@@ -173,6 +220,14 @@ export function MintForm() {
           >
             View Transaction ↗
           </a>
+          {mintedNFTs.length > 0 && (
+            <a
+              href={`/nft?tokenId=${mintedNFTs[0].tokenId}`}
+              className="ml-2 inline-block rounded-lg bg-[#3fb8bd]/20 border-2 border-[#3fb8bd] px-4 py-2 text-sm font-medium text-[#3fb8bd] transition-colors hover:bg-[#3fb8bd]/30"
+            >
+              View NFT
+            </a>
+          )}
           <button
             onClick={() => window.location.reload()}
             className="ml-2 inline-block rounded-lg border-2 border-[#3fb8bd] px-4 py-2 text-sm font-medium text-[#3fb8bd] transition-colors hover:bg-[#3fb8bd]/10"
