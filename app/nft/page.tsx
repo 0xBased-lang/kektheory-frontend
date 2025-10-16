@@ -79,13 +79,14 @@ function NFTDetailPageContent() {
           {nft && !loading && !error && (
             <div className="grid gap-8 lg:grid-cols-2">
               {/* Left Column - Image */}
-              <div className="group relative overflow-hidden rounded-xl border-2 border-[#3fb8bd]/30 bg-gradient-to-br from-gray-900 to-gray-950 p-4 shadow-2xl transition-all hover:border-[#3fb8bd] hover:shadow-[#3fb8bd]/20">
-                <div className="relative aspect-square overflow-hidden rounded-lg">
+              <div className="group relative overflow-hidden rounded-xl border-2 border-[#3fb8bd]/30 bg-gradient-to-br from-gray-900 to-gray-950 shadow-2xl transition-all hover:border-[#3fb8bd] hover:shadow-[#3fb8bd]/20">
+                <div className="relative w-full overflow-hidden">
                   <Image
                     src={nft.imageUrl}
                     alt={nft.name}
-                    fill
-                    className="object-cover"
+                    width={800}
+                    height={800}
+                    className="w-full h-auto object-contain"
                     sizes="(max-width: 768px) 100vw, 50vw"
                     unoptimized
                   />
@@ -96,23 +97,27 @@ function NFTDetailPageContent() {
               <div className="space-y-6">
                 {/* Title and External Links */}
                 <div>
-                  <h1 className="font-fredoka mb-2 text-4xl font-bold text-white">
+                  <h1 className="font-fredoka mb-2 text-4xl font-bold text-[#3fb8bd]">
                     {nft.name}
                   </h1>
-                  <p className="font-fredoka mb-4 text-xl text-[#3fb8bd]">
+                  <p className="font-fredoka mb-4 text-xl text-white">
                     Token ID: #{nft.tokenId}
                   </p>
                   {/* External Links */}
                   <div className="flex gap-4">
                     <a
-                      href={`https://www.nachonft.xyz/collection/0x40b6184b901334c0a88f528c1a0a1de7a77490f1/${nft.tokenId}`}
+                      href={`https://aftermint.trade/nft/0x40b6184b901334c0a88f528c1a0a1de7a77490f1/${nft.tokenId}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 rounded-lg border border-[#3fb8bd]/30 bg-[#3fb8bd]/10 px-4 py-2 font-fredoka text-sm text-[#3fb8bd] transition-all hover:border-[#3fb8bd] hover:bg-[#3fb8bd]/20"
                     >
-                      <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                      </svg>
+                      <Image
+                        src="/aftermint-logo.avif"
+                        alt="AfterMint"
+                        width={20}
+                        height={20}
+                        className="h-5 w-5 object-contain"
+                      />
                       Marketplace
                     </a>
                     <a
@@ -147,9 +152,9 @@ function NFTDetailPageContent() {
                       #{nft.rank}
                     </div>
                   </div>
-                  <div className="rounded-xl border border-[#ff00ff]/20 bg-gray-900/50 p-6">
+                  <div className="rounded-xl border border-purple-400/20 bg-gray-900/50 p-6">
                     <div className="text-sm text-gray-400">Rarity Score</div>
-                    <div className="font-fredoka text-3xl font-bold text-[#ff00ff]">
+                    <div className="font-fredoka text-3xl font-bold text-purple-400">
                       {nft.rarityScore.toFixed(2)}
                     </div>
                   </div>
