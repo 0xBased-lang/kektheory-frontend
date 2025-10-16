@@ -6,7 +6,9 @@ import { EXPLORER_URL } from '@/config/constants'
 import { CooldownTracker } from '@/lib/validation'
 import { NetworkSwitcher } from '@/components/web3/NetworkSwitcher'
 import { NetworkCurrencyWarning } from '@/components/web3/NetworkCurrencyWarning'
+import { NetworkConfigurationBlocker } from '@/components/web3/NetworkConfigurationBlocker'
 import { useNetworkValidation } from '@/lib/hooks/useNetworkValidation'
+import { useNetworkConfigValidator } from '@/lib/hooks/useNetworkConfigValidator'
 
 /**
  * MintForm Component
@@ -41,6 +43,7 @@ export function MintForm() {
   } = useMint()
 
   const { isWrongNetwork } = useNetworkValidation()
+  const { needsVerification, markAsValid } = useNetworkConfigValidator()
 
   const [localError, setLocalError] = useState<string | null>(null)
   const [cooldownRemaining, setCooldownRemaining] = useState(0)
@@ -143,6 +146,11 @@ export function MintForm() {
   // If connected but on wrong network, show network switcher
   if (isWrongNetwork) {
     return <NetworkSwitcher />
+  }
+
+  // BULLETPROOF: Block minting if network configuration needs verification
+  if (needsVerification) {
+    return <NetworkConfigurationBlocker onVerified={markAsValid} />
   }
 
   // If transaction confirmed, show success
