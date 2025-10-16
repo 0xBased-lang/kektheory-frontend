@@ -96,10 +96,10 @@ export function DetailViewSection({
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-3xl font-bold text-green-400 mb-2 font-fredoka">
-                🐸 Your 𝕂Ǝ𝕂TECH NFT Collection
+                🐸 Your 𝕂Ǝ𝕂TECH NFTs
               </h2>
               <p className="text-gray-400">
-                View and manage your 𝕂Ǝ𝕂TECH NFTs on BasedAI Network
+                View and manage your {kektechNFTCount} 𝕂Ǝ𝕂TECH NFTs on BasedAI Network
               </p>
             </div>
           </div>

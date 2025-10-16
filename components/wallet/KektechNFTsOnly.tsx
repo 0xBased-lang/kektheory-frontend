@@ -129,7 +129,6 @@ export function KektechNFTsOnly({ address }: KektechNFTsOnlyProps) {
                 <h3 className="font-bold text-[#3fb8bd] text-sm truncate">
                   {nft.metadata?.name || `#${nft.id}`}
                 </h3>
-                <p className="text-xs text-gray-400">𝕂Ǝ𝕂TECH</p>
               </div>
             </Link>
           ))}
