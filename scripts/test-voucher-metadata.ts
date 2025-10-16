@@ -6,7 +6,6 @@
  */
 
 import { createPublicClient, http } from 'viem'
-import { mainnet } from 'viem/chains'
 import { KEKTECH_VOUCHERS } from '../config/contracts/kektech-vouchers'
 
 // BasedAI Chain configuration
