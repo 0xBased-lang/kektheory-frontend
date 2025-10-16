@@ -96,13 +96,14 @@ export function KektechNFTsOnly({ address }: KektechNFTsOnlyProps) {
       {/* KEKTECH Collection */}
       <div>
         <h2 className="text-2xl font-bold text-white mb-6 font-fredoka">
-          Your 𝕂Ǝ𝕂TECH Collection ({kektechNFTs.length})
+          {kektechNFTs.length} 𝕂Ǝ𝕂TECHs
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {kektechNFTs.map((nft) => (
-            <div
+            <Link
               key={nft.id}
-              className="bg-gray-900/60 rounded-xl border border-gray-800 hover:border-[#3fb8bd] transition overflow-hidden group"
+              href={`/nft?id=${nft.id}`}
+              className="bg-gray-900/60 rounded-xl border border-gray-800 hover:border-[#3fb8bd] transition overflow-hidden group cursor-pointer"
             >
               <div className="aspect-square relative bg-gray-800">
                 {nft.image_url || nft.metadata?.image_url ? (
@@ -110,7 +111,7 @@ export function KektechNFTsOnly({ address }: KektechNFTsOnlyProps) {
                     src={nft.image_url || nft.metadata?.image_url || ''}
                     alt={nft.metadata?.name || `NFT #${nft.id}`}
                     fill
-                    className="object-cover"
+                    className="object-cover group-hover:scale-105 transition"
                     unoptimized
                     onError={(e) => {
                       // Fallback to placeholder on image error
@@ -125,12 +126,12 @@ export function KektechNFTsOnly({ address }: KektechNFTsOnlyProps) {
                 </div>
               </div>
               <div className="p-3">
-                <h3 className="font-bold text-white text-sm truncate">
+                <h3 className="font-bold text-[#3fb8bd] text-sm truncate">
                   {nft.metadata?.name || `#${nft.id}`}
                 </h3>
                 <p className="text-xs text-gray-400">𝕂Ǝ𝕂TECH</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

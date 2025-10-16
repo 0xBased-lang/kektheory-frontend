@@ -59,12 +59,11 @@ export function PortfolioOverview({
             px-6 py-3 rounded-lg font-fredoka font-bold transition-all duration-200 flex items-center gap-2
             ${activeSection === 'nfts'
               ? 'bg-[#4ecca7] text-black shadow-lg shadow-[#4ecca7]/20'
-              : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
+              : 'text-[#4ecca7] hover:text-white hover:bg-gray-800/50'
             }
           `}
         >
-          <span className="text-xl">🐸</span>
-          <span>𝕂Ǝ𝕂TECH NFTs</span>
+          <span>𝕂Ǝ𝕂TECH</span>
           <span className="text-sm opacity-75">
             {kektechNFTCount}
           </span>
@@ -77,12 +76,11 @@ export function PortfolioOverview({
             px-6 py-3 rounded-lg font-fredoka font-bold transition-all duration-200 flex items-center gap-2
             ${activeSection === 'tech'
               ? 'bg-[#3fb8bd] text-black shadow-lg shadow-[#3fb8bd]/20'
-              : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
+              : 'text-[#3fb8bd] hover:text-white hover:bg-gray-800/50'
             }
           `}
         >
-          <span className="text-xl">💰</span>
-          <span>TECH Token</span>
+          <span>TƎCH</span>
           <span className="text-sm opacity-75">{techBalanceCompact}</span>
         </button>
 
@@ -93,12 +91,11 @@ export function PortfolioOverview({
             px-6 py-3 rounded-lg font-fredoka font-bold transition-all duration-200 flex items-center gap-2
             ${activeSection === 'vouchers'
               ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/20'
-              : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
+              : 'text-purple-400 hover:text-white hover:bg-gray-800/50'
             }
           `}
         >
-          <span className="text-xl">🎫</span>
-          <span>Vouchers</span>
+          <span>𝕂Ǝ𝕂TV</span>
           <span className="text-sm opacity-75">
             {totalVouchers}{uniqueVoucherTypes > 0 && ` (${uniqueVoucherTypes})`}
           </span>
@@ -115,7 +112,6 @@ export function PortfolioOverview({
             }
           `}
         >
-          <span className="text-xl">📊</span>
           <span>Overview</span>
           <span className="text-sm opacity-75">
             {totalNFTs + (totalVouchers > 0 ? 1 : 0) + (parseFloat(techBalance) > 0 ? 1 : 0)}
