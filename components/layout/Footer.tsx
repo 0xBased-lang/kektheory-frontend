@@ -16,7 +16,7 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {/* Brand */}
           <div>
-            <h3 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">𝕂Ǝ𝕂TECH</h3>
+            <h3 className="mb-2 text-lg font-bold text-[#06b6d4]">𝕂Ǝ𝕂TECH</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               NFT Collection on the $BASED Chain (32323)
             </p>

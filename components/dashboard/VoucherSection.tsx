@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import type { VoucherBalance } from '@/lib/hooks/useVoucherBalance'
 import { KEKTECH_VOUCHERS } from '@/config/contracts'
 
@@ -118,9 +119,21 @@ export function VoucherSection({
                   : 'bg-gray-900/30 border-gray-800/50 opacity-50'
               }`}
             >
-              {/* Voucher Icon & Badge */}
+              {/* Voucher Icon/Image & Badge */}
               <div className="flex items-start justify-between mb-3">
-                <div className="text-5xl">{voucher.icon}</div>
+                {voucher.imageUrl ? (
+                  <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-black/20">
+                    <Image
+                      src={voucher.imageUrl}
+                      alt={voucher.name}
+                      fill
+                      className="object-contain"
+                      unoptimized
+                    />
+                  </div>
+                ) : (
+                  <div className="text-5xl">{voucher.icon}</div>
+                )}
                 {owned ? (
                   <div className={`px-3 py-1 rounded-lg bg-gradient-to-r ${gradient} text-white text-xs font-bold`}>
                     ×{voucher.balanceNumber}

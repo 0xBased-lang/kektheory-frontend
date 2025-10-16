@@ -79,6 +79,7 @@ export const VOUCHER_TYPES = [
     name: 'Genesis Voucher',
     description: 'Original KEKTECH voucher for early supporters',
     icon: '🎫',
+    imageUrl: '', // TODO: Add actual GIF URL from IPFS/metadata
     rarity: 'legendary',
   },
   {
@@ -86,6 +87,7 @@ export const VOUCHER_TYPES = [
     name: 'Silver Voucher',
     description: 'Standard KEKTECH voucher with base benefits',
     icon: '🎟️',
+    imageUrl: '', // TODO: Add actual GIF URL from IPFS/metadata
     rarity: 'common',
   },
   {
@@ -93,6 +95,7 @@ export const VOUCHER_TYPES = [
     name: 'Gold Voucher',
     description: 'Premium KEKTECH voucher with enhanced rewards',
     icon: '🏆',
+    imageUrl: '', // TODO: Add actual GIF URL from IPFS/metadata
     rarity: 'rare',
   },
   {
@@ -100,6 +103,7 @@ export const VOUCHER_TYPES = [
     name: 'Platinum Voucher',
     description: 'Elite KEKTECH voucher with maximum benefits',
     icon: '💎',
+    imageUrl: '', // TODO: Add actual GIF URL from IPFS/metadata
     rarity: 'epic',
   },
 ] as const

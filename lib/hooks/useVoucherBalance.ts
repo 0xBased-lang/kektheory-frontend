@@ -11,6 +11,7 @@ export interface VoucherBalance {
   name: string
   description: string
   icon: string
+  imageUrl?: string
   rarity: string
   balance: bigint
   balanceNumber: number
@@ -59,6 +60,7 @@ export function useVoucherBalance() {
       name: voucherType.name,
       description: voucherType.description,
       icon: voucherType.icon,
+      imageUrl: voucherType.imageUrl,
       rarity: voucherType.rarity,
       balance,
       balanceNumber: Number(balance),
