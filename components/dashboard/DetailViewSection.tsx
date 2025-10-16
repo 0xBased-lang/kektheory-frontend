@@ -278,13 +278,13 @@ export function DetailViewSection({
               </div>
             </button>
 
-            {/* 4th: Other NFTs (only show if they exist) - Non-clickable info */}
+            {/* 4th: Based NFTs (only show if they exist) - Non-clickable info */}
             {totalNFTs > kektechNFTCount && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="text-2xl">🎨</div>
                   <div>
-                    <div className="text-white font-bold">Other NFTs (ERC-721)</div>
+                    <div className="text-white font-bold">Based NFTs (ERC-721)</div>
                     <div className="text-sm text-gray-400">Various collections</div>
                   </div>
                 </div>
@@ -298,11 +298,11 @@ export function DetailViewSection({
           </div>
         </div>
 
-        {/* Other NFTs Visual Gallery */}
+        {/* Based NFTs Visual Gallery */}
         {otherNFTs.length > 0 && (
           <div className="mt-8 bg-gray-900/60 rounded-xl border border-gray-800 p-6">
             <h3 className="text-xl font-bold text-[#3fb8bd] mb-4 font-fredoka">
-              🎨 Other Based NFTs
+              🎨 Based NFTs
             </h3>
             <p className="text-sm text-gray-400 mb-4">
               Your collection of {otherNFTs.length} NFT{otherNFTs.length !== 1 ? 's' : ''} from various Based collections

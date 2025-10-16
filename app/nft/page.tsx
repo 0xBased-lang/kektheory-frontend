@@ -178,7 +178,7 @@ function NFTDetailPageContent() {
                           <div className="mb-2 text-xs font-bold uppercase tracking-wider text-[#3fb8bd]">
                             {attr.trait_type}
                           </div>
-                          <div className="font-fredoka mb-2 text-lg font-semibold capitalize text-gray-300">
+                          <div className="font-fredoka mb-2 text-lg font-normal capitalize text-gray-300">
                             {String(attr.value).replace(/_/g, ' ')}
                           </div>
                         </div>
