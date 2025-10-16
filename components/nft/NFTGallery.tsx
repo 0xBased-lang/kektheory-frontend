@@ -5,14 +5,16 @@ import { EnhancedNFTCard } from './EnhancedNFTCard'
 import { useRankings } from '@/lib/hooks/useRankings'
 import { GalleryTabs } from '@/components/gallery/GalleryTabs'
 import { CompactStatsWidget } from '@/components/CompactStatsWidget'
-import { TraitsTabContent } from '@/components/gallery/TraitsTabContent'
+import { FilterTabContent } from '@/components/gallery/FilterTabContent'
+import { TraitsOverviewContent } from '@/components/gallery/TraitsOverviewContent'
 
 /**
  * NFTGallery Component
  *
- * Two-tab gallery layout:
+ * Three-tab gallery layout:
  * - Ranking: Shows all minted NFTs by rank with stats widget
- * - Traits: Complete trait distribution viewer
+ * - Filter: Trait filtering with sidebar
+ * - Traits: Trait distribution table (rarity overview)
  */
 export function NFTGallery() {
   const { rankings: nfts, loading: isLoading, error } = useRankings(30000)
@@ -177,15 +179,19 @@ export function NFTGallery() {
     </div>
   )
 
-  // Traits Tab Content - Now with filtering!
-  const renderTraitsTab = () => <TraitsTabContent />
+  // Filter Tab Content
+  const renderFilterTab = () => <FilterTabContent />
 
-  // Two-Tab Layout
+  // Traits Tab Content
+  const renderTraitsTab = () => <TraitsOverviewContent />
+
+  // Three-Tab Layout
   return (
     <GalleryTabs>
       {(activeTab) => (
         <>
           {activeTab === 'ranking' && renderRankingTab()}
+          {activeTab === 'filter' && renderFilterTab()}
           {activeTab === 'traits' && renderTraitsTab()}
         </>
       )}
