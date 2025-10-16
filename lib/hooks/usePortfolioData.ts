@@ -33,14 +33,14 @@ export function usePortfolioData() {
 
     const kektech = nfts.filter((nft) => {
       // Safe property access with null checks
-      const nftAddress = nft?.token?.address_hash
+      const nftAddress = nft?.token?.address  // ← FIXED: Use "address" not "address_hash"
       if (!nftAddress || !KEKTECH_CONTRACT_ADDRESS) return false
       return nftAddress.toLowerCase() === KEKTECH_CONTRACT_ADDRESS.toLowerCase()
     })
 
     const others = nfts.filter((nft) => {
       // Safe property access with null checks
-      const nftAddress = nft?.token?.address_hash
+      const nftAddress = nft?.token?.address  // ← FIXED: Use "address" not "address_hash"
       if (!nftAddress || !KEKTECH_CONTRACT_ADDRESS) return !nftAddress // Include NFTs without address in 'others'
       return nftAddress.toLowerCase() !== KEKTECH_CONTRACT_ADDRESS.toLowerCase()
     })
