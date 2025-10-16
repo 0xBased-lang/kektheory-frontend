@@ -71,14 +71,10 @@ export function TechTokenCard({
       </div>
 
       {/* Quick Info */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
         <div className="bg-gray-900/60 rounded-xl p-4 border border-gray-800">
           <div className="text-xs text-gray-400 mb-1">Token Symbol</div>
           <div className="text-lg font-bold text-white">{TECH_TOKEN.symbol}</div>
-        </div>
-        <div className="bg-gray-900/60 rounded-xl p-4 border border-gray-800">
-          <div className="text-xs text-gray-400 mb-1">Decimals</div>
-          <div className="text-lg font-bold text-white">{TECH_TOKEN.decimals}</div>
         </div>
         <div className="bg-gray-900/60 rounded-xl p-4 border border-gray-800">
           <div className="text-xs text-gray-400 mb-1">Contract</div>
@@ -98,25 +94,6 @@ export function TechTokenCard({
         >
           🔍 View on Explorer
         </Link>
-
-        {hasBalance && (
-          <>
-            <button
-              disabled
-              className="flex-1 min-w-[200px] px-6 py-3 rounded-xl bg-gray-800/50 text-gray-500 font-bold cursor-not-allowed text-center font-fredoka opacity-50"
-              title="Coming soon"
-            >
-              💸 Send (Coming Soon)
-            </button>
-            <button
-              disabled
-              className="flex-1 min-w-[200px] px-6 py-3 rounded-xl bg-gray-800/50 text-gray-500 font-bold cursor-not-allowed text-center font-fredoka opacity-50"
-              title="Coming soon"
-            >
-              🔄 Swap (Coming Soon)
-            </button>
-          </>
-        )}
       </div>
 
       {!hasBalance && (
