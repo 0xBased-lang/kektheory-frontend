@@ -56,7 +56,7 @@ export function VoucherSection({
     return (
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-purple-400 mb-6 font-fredoka flex items-center gap-2">
-          🎫 Your 𝕂Ǝ𝕂TECH Vouchers
+          Your 𝕂Ǝ𝕂TECH Vouchers
           <span className="text-gray-500 text-lg">(0)</span>
         </h2>
 
@@ -95,7 +95,7 @@ export function VoucherSection({
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-purple-400 font-fredoka flex items-center gap-2">
-          🎫 Your 𝕂Ǝ𝕂TECH Vouchers
+          Your 𝕂Ǝ𝕂TECH Vouchers
           <span className="text-purple-300 text-lg">({totalVouchers})</span>
         </h2>
         <Link
@@ -109,7 +109,7 @@ export function VoucherSection({
       </div>
 
       {/* Voucher Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
         {vouchers.map((voucher) => {
           const owned = voucher.balanceNumber > 0
           const gradient = getRarityGradient(voucher.rarity)
@@ -127,10 +127,11 @@ export function VoucherSection({
                   : 'bg-gray-900/30 border-gray-800/50 opacity-50'
               }`}
             >
-              {/* Voucher Icon/Image & Badge */}
-              <div className="flex items-start justify-between mb-3">
+              {/* Voucher Image & Badge */}
+              <div className="flex flex-col sm:flex-row gap-4 mb-4">
+                {/* Large Image */}
                 {mediaUrl ? (
-                  <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-black/20">
+                  <div className="relative w-full sm:w-48 h-48 rounded-lg overflow-hidden bg-black/20 flex-shrink-0">
                     {/* GIFs can be displayed as images with unoptimized flag */}
                     <Image
                       src={mediaUrl}
@@ -141,35 +142,43 @@ export function VoucherSection({
                     />
                   </div>
                 ) : (
-                  <div className="text-5xl">{voucher.icon}</div>
-                )}
-                {owned ? (
-                  <div className={`px-3 py-1 rounded-lg bg-gradient-to-r ${gradient} text-white text-xs font-bold`}>
-                    ×{voucher.balanceNumber}
-                  </div>
-                ) : (
-                  <div className="px-3 py-1 rounded-lg bg-gray-800 text-gray-500 text-xs font-bold">
-                    Not Owned
+                  <div className="w-full sm:w-48 h-48 flex items-center justify-center bg-black/20 rounded-lg">
+                    <div className="text-7xl">{voucher.icon}</div>
                   </div>
                 )}
-              </div>
 
-              {/* Voucher Info */}
-              <h3 className="font-bold text-white text-lg mb-2 font-fredoka">
-                {metadata?.name || voucher.name}
-              </h3>
-              <p className="text-sm text-gray-400 mb-3 line-clamp-2">
-                {metadata?.description || voucher.description}
-              </p>
+                {/* Voucher Details */}
+                <div className="flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-start justify-between mb-3">
+                      <h3 className="font-bold text-white text-xl mb-2 font-fredoka">
+                        {metadata?.name || voucher.name}
+                      </h3>
+                      {owned ? (
+                        <div className={`px-3 py-1 rounded-lg bg-gradient-to-r ${gradient} text-white text-sm font-bold flex-shrink-0`}>
+                          ×{voucher.balanceNumber}
+                        </div>
+                      ) : (
+                        <div className="px-3 py-1 rounded-lg bg-gray-800 text-gray-500 text-sm font-bold flex-shrink-0">
+                          Not Owned
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-400 mb-4">
+                      {metadata?.description || voucher.description}
+                    </p>
+                  </div>
 
-              {/* Rarity Badge */}
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-500 uppercase tracking-wider">
-                  {voucher.rarity}
-                </span>
-                <span className="text-xs text-gray-600 font-mono">
-                  ID: {voucher.id}
-                </span>
+                  {/* Rarity & ID Badge */}
+                  <div className="flex items-center justify-between pt-3 border-t border-gray-800/50">
+                    <span className={`text-sm font-bold uppercase tracking-wider bg-gradient-to-r ${gradient} bg-clip-text text-transparent`}>
+                      {voucher.rarity}
+                    </span>
+                    <span className="text-xs text-gray-600 font-mono">
+                      ID: {voucher.id}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           )
@@ -181,7 +190,7 @@ export function VoucherSection({
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
             <h3 className="text-lg font-bold text-purple-400 mb-2 font-fredoka">
-              📊 Voucher Summary
+              𝕂Ǝ𝕂TV Summary
             </h3>
             <p className="text-gray-300">
               You own <span className="font-bold text-white">{totalVouchers}</span> voucher
