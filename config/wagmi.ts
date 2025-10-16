@@ -1,4 +1,5 @@
 import { http, cookieStorage, createConfig, createStorage } from 'wagmi'
+import { mainnet } from 'wagmi/chains'
 import { basedChain } from './chains'
 import { walletConnect, injected, coinbaseWallet } from 'wagmi/connectors'
 
@@ -110,7 +111,7 @@ const createConnectors = () => {
 
 // Create Wagmi configuration with error boundaries
 export const config = createConfig({
-  chains: [basedChain],
+  chains: [basedChain, mainnet],
   connectors: createConnectors(),
   storage: createStorage({
     storage: cookieStorage,
@@ -119,6 +120,7 @@ export const config = createConfig({
   syncConnectedChain: true,
   transports: {
     [basedChain.id]: http(),
+    [mainnet.id]: http(),
   },
 })
 

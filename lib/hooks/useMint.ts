@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, useChainId, useSwitchChain } from 'wagmi'
 import { KEKTECH_MAIN } from '@/config/contracts'
+import { basedChain } from '@/config/chains'
 
 /**
  * Custom hook for minting KEKTECH NFTs
@@ -13,6 +14,8 @@ import { KEKTECH_MAIN } from '@/config/contracts'
  */
 export function useMint() {
   const { address, isConnected } = useAccount()
+  const chainId = useChainId()
+  const { switchChainAsync } = useSwitchChain()
   const [mintAmount, setMintAmount] = useState(1)
 
   // Write contract hook
@@ -47,16 +50,23 @@ export function useMint() {
     }
 
     try {
+      // Auto-switch to BasedAI Chain if on wrong network
+      if (chainId !== basedChain.id) {
+        console.log(`Switching from chain ${chainId} to BasedAI chain ${basedChain.id}`)
+        await switchChainAsync({ chainId: basedChain.id })
+      }
+
       // Calculate total cost (using reference price)
       const totalCost = BigInt(mintAmount) * KEKTECH_MAIN.referenceMintPrice
 
-      // Execute mint transaction
+      // Execute mint transaction with explicit chain ID
       writeContract({
         address: KEKTECH_MAIN.address,
         abi: KEKTECH_MAIN.abi,
         functionName: 'mint',
         args: [BigInt(mintAmount)],
         value: totalCost,
+        chainId: basedChain.id,
       })
     } catch (error) {
       console.error('Mint error:', error)
