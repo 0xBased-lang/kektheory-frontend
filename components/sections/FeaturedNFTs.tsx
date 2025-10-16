@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
+// Force rebuild - Featured NFTs section with rotating images
+
 interface NFTData {
   tokenId: string
   name: string
