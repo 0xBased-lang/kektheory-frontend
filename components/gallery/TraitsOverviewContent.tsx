@@ -11,7 +11,7 @@ export function TraitsOverviewContent() {
   return (
     <div className="space-y-6">
       <div className="text-center max-w-2xl mx-auto">
-        <h3 className="text-2xl font-bold text-purple-400 mb-3 font-fredoka">𝕂Ǝ𝕂丅ᵉ匚🅷 Trait Rarities</h3>
+        <h3 className="text-2xl font-bold text-purple-400 mb-3 font-fredoka">Trait Rarities</h3>
         <p className="text-gray-400">
           Explore the rarity distribution of traits across the 𝕂Ǝ𝕂TECH collection.
           Switch to Filter tab to find NFTs with specific traits.
