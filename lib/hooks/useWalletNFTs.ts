@@ -21,7 +21,7 @@ export interface NFTItem {
   token: {
     name: string
     symbol: string
-    address_hash: string
+    address: string  // ← FIXED: API returns "address", not "address_hash"
     type: string
   }
   token_type: string

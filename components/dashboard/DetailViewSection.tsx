@@ -65,24 +65,22 @@ export function DetailViewSection({
   // Filter to get only non-KEKTECH NFTs
   const otherNFTs = useMemo(() => {
     return nfts.filter((nft) => {
-      const nftAddress = nft?.token?.address_hash
+      const nftAddress = nft?.token?.address  // ← FIXED: Use "address" not "address_hash"
       if (!nftAddress || !KEKTECH_CONTRACT_ADDRESS) return true
 
       const isKektech = nftAddress.toLowerCase() === KEKTECH_CONTRACT_ADDRESS.toLowerCase()
 
-      // Debug logging to diagnose categorization issue
-      if (process.env.NODE_ENV === 'development') {
-        console.log('🔍 NFT Contract Check:', {
-          nftId: nft.id,
-          nftName: nft.metadata?.name || nft.token?.name,
-          nftAddress: nftAddress,
-          kektechAddress: KEKTECH_CONTRACT_ADDRESS,
-          nftAddressLower: nftAddress.toLowerCase(),
-          kektechAddressLower: KEKTECH_CONTRACT_ADDRESS.toLowerCase(),
-          isKektech,
-          willShowInOtherNFTs: !isKektech
-        })
-      }
+      // Debug logging to diagnose categorization issue (ALWAYS ENABLED FOR DIAGNOSIS)
+      console.log('🔍 NFT Contract Check:', {
+        nftId: nft.id,
+        nftName: nft.metadata?.name || nft.token?.name,
+        nftAddress: nftAddress,
+        kektechAddress: KEKTECH_CONTRACT_ADDRESS,
+        nftAddressLower: nftAddress.toLowerCase(),
+        kektechAddressLower: KEKTECH_CONTRACT_ADDRESS.toLowerCase(),
+        isKektech,
+        willShowInOtherNFTs: !isKektech
+      })
 
       return !isKektech
     })
