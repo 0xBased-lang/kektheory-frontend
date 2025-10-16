@@ -80,7 +80,7 @@ export function PortfolioOverview({
             }
           `}
         >
-          <span>TƎCH</span>
+          <span>TECH</span>
           <span className="text-sm opacity-75">{techBalanceCompact}</span>
         </button>
 
@@ -97,7 +97,7 @@ export function PortfolioOverview({
         >
           <span>𝕂Ǝ𝕂TV</span>
           <span className="text-sm opacity-75">
-            {totalVouchers}{uniqueVoucherTypes > 0 && ` (${uniqueVoucherTypes})`}
+            {totalVouchers}{uniqueVoucherTypes > 1 && ` (${uniqueVoucherTypes})`}
           </span>
         </button>
 
