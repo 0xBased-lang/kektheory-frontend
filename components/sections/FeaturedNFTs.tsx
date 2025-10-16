@@ -110,14 +110,14 @@ export function FeaturedNFTs() {
     <section className="bg-gradient-to-b from-gray-900 to-gray-950 py-16 sm:py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-white sm:text-4xl mb-4">
-            Featured <span className="text-kek-green">NFTs</span>
+          <h2 className="text-3xl font-bold text-white sm:text-4xl mb-4 font-fredoka">
+            Featured <span className="text-[#06b6d4]">NFTs</span>
           </h2>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto font-fredoka">
             Discover some of our most unique and sought-after pieces from the KEKTECH collection
           </p>
           {!isLoading && allNFTs.length > 6 && (
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-gray-500 mt-2 font-fredoka">
               🔄 Rotating through {allNFTs.length} minted NFTs
             </p>
           )}
@@ -165,10 +165,10 @@ export function FeaturedNFTs() {
 
                     {/* NFT Info */}
                     <div className="p-3">
-                      <h3 className="font-semibold text-white text-sm mb-1 truncate">
+                      <h3 className="font-semibold text-[#06b6d4] text-sm mb-1 truncate font-fredoka">
                         {nft.name}
                       </h3>
-                      <p className={`text-xs ${rarityInfo.color} font-medium`}>
+                      <p className={`text-xs ${rarityInfo.color} font-medium font-fredoka`}>
                         {rarityInfo.tier}
                       </p>
                     </div>
@@ -183,7 +183,7 @@ export function FeaturedNFTs() {
         <div className="text-center mt-12">
           <Link
             href="/gallery"
-            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-kek-green to-kek-cyan text-black font-semibold rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-kek-green/30 hover:scale-105"
+            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-kek-green to-kek-cyan text-black font-semibold rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-kek-green/30 hover:scale-105 font-fredoka"
           >
             View Full Collection
             <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
