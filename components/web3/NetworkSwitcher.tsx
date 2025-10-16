@@ -112,10 +112,11 @@ export function NetworkSwitcher({
       <button
         onClick={handleSwitchNetwork}
         disabled={isPending}
-        className="flex items-center gap-2 px-3 py-2 bg-yellow-500/10 border border-yellow-500/50 rounded-lg hover:bg-yellow-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#3fb8bd]/10 to-[#3fb8bd]/5 border border-[#3fb8bd]/40 rounded-lg hover:from-[#3fb8bd]/20 hover:to-[#3fb8bd]/10 hover:border-[#3fb8bd]/60 hover:shadow-lg hover:shadow-[#3fb8bd]/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-fredoka"
+        title={`Switch from ${currentChainName} to BasedAI Network`}
       >
-        <Network className="w-4 h-4 text-yellow-500" />
-        <span className="text-sm font-medium text-yellow-500">
+        <Network className="w-4 h-4 text-[#3fb8bd]" />
+        <span className="text-sm font-medium text-[#3fb8bd]">
           {isPending ? 'Switching...' : 'Switch Network'}
         </span>
       </button>
