@@ -80,13 +80,12 @@ function NFTDetailPageContent() {
             <div className="grid gap-8 lg:grid-cols-2">
               {/* Left Column - Image */}
               <div className="group relative overflow-hidden rounded-xl border-2 border-[#3fb8bd]/30 bg-gradient-to-br from-gray-900 to-gray-950 shadow-2xl transition-all hover:border-[#3fb8bd] hover:shadow-[#3fb8bd]/20">
-                <div className="relative w-full overflow-hidden">
+                <div className="relative w-full aspect-square">
                   <Image
                     src={nft.imageUrl}
                     alt={nft.name}
-                    width={800}
-                    height={800}
-                    className="w-full h-auto object-contain"
+                    fill
+                    className="object-contain"
                     sizes="(max-width: 768px) 100vw, 50vw"
                     unoptimized
                   />
@@ -118,7 +117,7 @@ function NFTDetailPageContent() {
                         height={20}
                         className="h-5 w-5 object-contain"
                       />
-                      Marketplace
+                      Aftermint
                     </a>
                     <a
                       href={`https://explorer.bf1337.org/token/0x40B6184b901334C0A88f528c1A0a1de7a77490f1/instance/${nft.tokenId}`}
@@ -126,9 +125,13 @@ function NFTDetailPageContent() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 rounded-lg border border-[#4ecca7]/30 bg-[#4ecca7]/10 px-4 py-2 font-fredoka text-sm text-[#4ecca7] transition-all hover:border-[#4ecca7] hover:bg-[#4ecca7]/20"
                     >
-                      <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                      </svg>
+                      <Image
+                        src="/explorer-logo.svg"
+                        alt="Explorer"
+                        width={20}
+                        height={20}
+                        className="h-5 w-5 object-contain"
+                      />
                       Explorer
                     </a>
                   </div>
@@ -175,7 +178,7 @@ function NFTDetailPageContent() {
                           <div className="mb-2 text-xs font-bold uppercase tracking-wider text-[#3fb8bd]">
                             {attr.trait_type}
                           </div>
-                          <div className="font-fredoka mb-2 text-lg font-semibold capitalize text-[#4ecca7]">
+                          <div className="font-fredoka mb-2 text-lg font-semibold capitalize text-gray-300">
                             {String(attr.value).replace(/_/g, ' ')}
                           </div>
                         </div>
