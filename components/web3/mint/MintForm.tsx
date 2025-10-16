@@ -217,11 +217,11 @@ export function MintForm() {
       <div className="mb-6 rounded-lg bg-gray-50 p-4 dark:bg-gray-800">
         <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
           <span>Price per NFT:</span>
-          <span className="font-semibold">0.001 ETH</span>
+          <span className="font-semibold">18,369 BASED</span>
         </div>
         <div className="mt-2 flex justify-between text-lg font-bold text-gray-900 dark:text-white">
           <span>Total Cost:</span>
-          <span>{(0.001 * mintAmount).toFixed(3)} ETH</span>
+          <span>{(18369 * mintAmount).toLocaleString()} BASED</span>
         </div>
       </div>
 

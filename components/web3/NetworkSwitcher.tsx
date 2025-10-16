@@ -30,6 +30,16 @@ export function NetworkSwitcher({
 
   const isWrongNetwork = isConnected && currentChainId !== basedChain.id
 
+  // Debug logging
+  console.log('🌐 NetworkSwitcher Debug:', {
+    isConnected,
+    currentChainId,
+    basedChainId: basedChain.id,
+    isWrongNetwork,
+    inline,
+    showWhenDisconnected
+  })
+
   // Auto-hide error after 5 seconds
   useEffect(() => {
     if (error) {
