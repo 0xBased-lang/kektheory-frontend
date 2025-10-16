@@ -92,8 +92,8 @@ export function Footer() {
                 <Image
                   src="/images/x.webp"
                   alt="X (Twitter)"
-                  width={24}
-                  height={24}
+                  width={32}
+                  height={32}
                   className="opacity-70 group-hover:opacity-100 transition-opacity duration-300"
                 />
               </a>
@@ -109,8 +109,8 @@ export function Footer() {
                 <Image
                   src="/images/telegram.webp"
                   alt="Telegram"
-                  width={24}
-                  height={24}
+                  width={32}
+                  height={32}
                   className="opacity-70 group-hover:opacity-100 transition-opacity duration-300"
                 />
               </a>
