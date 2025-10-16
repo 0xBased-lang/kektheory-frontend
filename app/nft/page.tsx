@@ -209,7 +209,7 @@ function NFTDetailPageContent() {
                             </div>
                             {percentage && (
                               <div className="text-xs font-semibold text-purple-400">
-                                {percentage} have this trait
+                                {percentage}
                               </div>
                             )}
                           </div>
