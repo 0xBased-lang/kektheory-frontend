@@ -38,7 +38,7 @@ export function Footer() {
           </div>
 
           {/* External Links with Icons */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             {/* Explorer */}
             <a
               href="https://explorer.bf1337.org"
@@ -47,12 +47,12 @@ export function Footer() {
               className="group"
               aria-label="BF Explorer"
             >
-              <div className="w-8 h-8 rounded-lg overflow-hidden bg-gray-900 border border-gray-800 group-hover:border-[#3fb8bd] transition-all duration-300 group-hover:scale-110">
+              <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-900 border border-gray-800 group-hover:border-[#3fb8bd] transition-all duration-300 group-hover:scale-110">
                 <Image
                   src="/images/bf.png"
                   alt="Explorer"
-                  width={32}
-                  height={32}
+                  width={40}
+                  height={40}
                   className="object-contain"
                 />
               </div>
@@ -66,12 +66,12 @@ export function Footer() {
               className="group"
               aria-label="Aftermint Marketplace"
             >
-              <div className="w-8 h-8 rounded-lg overflow-hidden bg-gray-900 border border-gray-800 group-hover:border-[#4ecca7] transition-all duration-300 group-hover:scale-110">
+              <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-900 border border-gray-800 group-hover:border-[#4ecca7] transition-all duration-300 group-hover:scale-110">
                 <Image
                   src="/aftermint-logo.avif"
                   alt="Aftermint"
-                  width={32}
-                  height={32}
+                  width={40}
+                  height={40}
                   className="object-contain"
                 />
               </div>
@@ -82,27 +82,29 @@ export function Footer() {
               href="https://mainnet.basedaibridge.com/rpc/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-gray-600 dark:text-gray-400 hover:text-[#06b6d4] transition-colors"
+              className="group"
               aria-label="RPC Endpoint"
             >
-              RPC
+              <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-900 border border-gray-800 group-hover:border-[#06b6d4] transition-all duration-300 group-hover:scale-110 flex items-center justify-center">
+                <span className="text-xs font-semibold text-gray-400 group-hover:text-[#06b6d4] transition-colors">RPC</span>
+              </div>
             </a>
           </div>
 
           {/* Social Icons */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <a
               href="https://x.com/KektechNFT"
               target="_blank"
               rel="noopener noreferrer"
-              className="group w-9 h-9 flex items-center justify-center rounded-full bg-gray-900 border-2 border-gray-800 hover:border-[#3fb8bd] transition-all duration-300 hover:scale-110"
+              className="group w-10 h-10 flex items-center justify-center rounded-full bg-gray-900 border-2 border-gray-800 hover:border-[#3fb8bd] transition-all duration-300 hover:scale-110"
               aria-label="X (Twitter)"
             >
               <Image
                 src="/images/x.webp"
                 alt="X"
-                width={20}
-                height={20}
+                width={24}
+                height={24}
                 className="opacity-70 group-hover:opacity-100 transition-opacity"
               />
             </a>
@@ -111,14 +113,14 @@ export function Footer() {
               href="https://t.me/KEKTECH"
               target="_blank"
               rel="noopener noreferrer"
-              className="group w-9 h-9 flex items-center justify-center rounded-full bg-gray-900 border-2 border-gray-800 hover:border-[#4ecca7] transition-all duration-300 hover:scale-110"
+              className="group w-10 h-10 flex items-center justify-center rounded-full bg-gray-900 border-2 border-gray-800 hover:border-[#4ecca7] transition-all duration-300 hover:scale-110"
               aria-label="Telegram"
             >
               <Image
                 src="/images/telegram.webp"
                 alt="Telegram"
-                width={20}
-                height={20}
+                width={24}
+                height={24}
                 className="opacity-70 group-hover:opacity-100 transition-opacity"
               />
             </a>
