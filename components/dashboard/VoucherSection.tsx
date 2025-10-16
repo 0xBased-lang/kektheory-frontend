@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { VoucherBalance } from '@/lib/hooks/useVoucherBalance'
 import { KEKTECH_VOUCHERS } from '@/config/contracts'
+import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
 
 interface VoucherSectionProps {
   vouchers: VoucherBalance[]
@@ -25,7 +26,10 @@ export function VoucherSection({
   isLoading,
   explorerUrl,
 }: VoucherSectionProps) {
-  if (isLoading) {
+  // Fetch metadata for all vouchers (includes GIF URLs)
+  const { metadataMap, loading: metadataLoading } = useAllVoucherMetadata()
+
+  if (isLoading || metadataLoading) {
     return (
       <div className="mb-8">
         <div className="flex items-center justify-between mb-6">
@@ -109,6 +113,10 @@ export function VoucherSection({
         {vouchers.map((voucher) => {
           const owned = voucher.balanceNumber > 0
           const gradient = getRarityGradient(voucher.rarity)
+          const metadata = metadataMap[voucher.id]
+
+          // Prefer animation_url (GIF/video) over static image
+          const mediaUrl = metadata?.animation_url || metadata?.image || voucher.imageUrl
 
           return (
             <div
@@ -121,14 +129,15 @@ export function VoucherSection({
             >
               {/* Voucher Icon/Image & Badge */}
               <div className="flex items-start justify-between mb-3">
-                {voucher.imageUrl ? (
+                {mediaUrl ? (
                   <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-black/20">
+                    {/* GIFs can be displayed as images with unoptimized flag */}
                     <Image
-                      src={voucher.imageUrl}
-                      alt={voucher.name}
+                      src={mediaUrl}
+                      alt={metadata?.name || voucher.name}
                       fill
                       className="object-contain"
-                      unoptimized
+                      unoptimized // Important for GIFs to animate
                     />
                   </div>
                 ) : (
@@ -147,10 +156,10 @@ export function VoucherSection({
 
               {/* Voucher Info */}
               <h3 className="font-bold text-white text-lg mb-2 font-fredoka">
-                {voucher.name}
+                {metadata?.name || voucher.name}
               </h3>
               <p className="text-sm text-gray-400 mb-3 line-clamp-2">
-                {voucher.description}
+                {metadata?.description || voucher.description}
               </p>
 
               {/* Rarity Badge */}
