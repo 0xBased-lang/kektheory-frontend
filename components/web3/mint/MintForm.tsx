@@ -1,20 +1,28 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useMint } from '@/lib/hooks/useMint'
 import { EXPLORER_URL } from '@/config/constants'
+import { CooldownTracker } from '@/lib/validation'
 
 /**
  * MintForm Component
  *
- * NFT minting interface with:
- * - Amount selector
+ * Enhanced NFT minting interface with:
+ * - Amount selector with validation
  * - Price calculation
  * - Transaction handling
  * - Loading states
  * - Error handling
  * - Success feedback
+ * - Rate limiting (client-side cooldown)
+ * - Input sanitization
  */
+
+// Client-side rate limiting: 60 seconds between mints
+const MINT_COOLDOWN_MS = 60 * 1000;
+const cooldownTracker = new CooldownTracker(MINT_COOLDOWN_MS);
+
 export function MintForm() {
   const {
     mintAmount,
@@ -30,23 +38,84 @@ export function MintForm() {
   } = useMint()
 
   const [localError, setLocalError] = useState<string | null>(null)
+  const [cooldownRemaining, setCooldownRemaining] = useState(0)
+  const [isValidating, setIsValidating] = useState(false)
 
-  // Handle mint button click
+  // Update cooldown timer
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const remaining = cooldownTracker.getRemainingTime()
+      setCooldownRemaining(remaining)
+    }, 100)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  // Validate amount input
+  const validateAmount = useCallback((value: number): string | null => {
+    if (isNaN(value)) {
+      return 'Please enter a valid number'
+    }
+    if (value < 1) {
+      return 'Amount must be at least 1'
+    }
+    if (value > maxMintPerTx) {
+      return `Maximum ${maxMintPerTx} NFTs per transaction`
+    }
+    if (!Number.isInteger(value)) {
+      return 'Amount must be a whole number'
+    }
+    return null
+  }, [maxMintPerTx])
+
+  // Handle mint button click with validation and rate limiting
   const handleMint = async () => {
     setLocalError(null)
+    setIsValidating(true)
+
     try {
+      // Check cooldown
+      if (!cooldownTracker.canAct()) {
+        const seconds = Math.ceil(cooldownTracker.getRemainingTime() / 1000)
+        throw new Error(`Please wait ${seconds} seconds before minting again`)
+      }
+
+      // Validate amount
+      const amountError = validateAmount(mintAmount)
+      if (amountError) {
+        throw new Error(amountError)
+      }
+
+      // Validate connection
+      if (!isConnected) {
+        throw new Error('Please connect your wallet first')
+      }
+
+      // Record action for rate limiting
+      cooldownTracker.recordAction()
+
+      // Execute mint
       await mint()
     } catch (err) {
       setLocalError(err instanceof Error ? err.message : 'Mint failed')
+      // Reset cooldown on error so user can retry
+      cooldownTracker.reset()
+    } finally {
+      setIsValidating(false)
     }
   }
 
-  // Handle amount change
+  // Handle amount change with validation
   const handleAmountChange = (value: number) => {
-    if (value >= 1 && value <= maxMintPerTx) {
-      setMintAmount(value)
-      setLocalError(null)
+    setLocalError(null)
+
+    const error = validateAmount(value)
+    if (error) {
+      setLocalError(error)
+      return
     }
+
+    setMintAmount(value)
   }
 
   // If not connected, show connect prompt
@@ -159,15 +228,31 @@ export function MintForm() {
       {/* Mint Button */}
       <button
         onClick={handleMint}
-        disabled={isWritePending || isConfirming}
+        disabled={
+          isWritePending ||
+          isConfirming ||
+          isValidating ||
+          cooldownRemaining > 0
+        }
         className="w-full rounded-lg bg-blue-600 px-6 py-3 text-lg font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isWritePending
           ? 'Waiting for approval...'
           : isConfirming
             ? 'Confirming transaction...'
-            : `Mint ${mintAmount} NFT${mintAmount > 1 ? 's' : ''}`}
+            : isValidating
+              ? 'Validating...'
+              : cooldownRemaining > 0
+                ? `Please wait ${Math.ceil(cooldownRemaining / 1000)}s...`
+                : `Mint ${mintAmount} NFT${mintAmount > 1 ? 's' : ''}`}
       </button>
+
+      {/* Cooldown Info */}
+      {cooldownRemaining > 0 && (
+        <p className="mt-2 text-center text-sm text-gray-500 dark:text-gray-400">
+          Rate limit: Please wait {Math.ceil(cooldownRemaining / 1000)} seconds before minting again
+        </p>
+      )}
 
       {/* Transaction Hash Display */}
       {hash && !isConfirmed && (
