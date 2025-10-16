@@ -10,12 +10,14 @@ import { BlurredTitleSection } from '@/components/ui/BlurredTitleSection'
 /**
  * Marketplace Page
  *
- * Unified marketplace with two tabs:
+ * Unified marketplace with four tabs:
  * - Mint: NFT minting interface
- * - Trade: KEKTV trading marketplace
+ * - Surprise: Surprise mechanics (coming soon)
+ * - KEKTV: KEKTV voucher trading marketplace
+ * - Limited Edition: Special limited edition items
  */
 export default function MarketplacePage() {
-  const [activeTab, setActiveTab] = useState<'mint' | 'trade'>('mint')
+  const [activeTab, setActiveTab] = useState<'mint' | 'surprise' | 'kektv' | 'limited'>('mint')
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -29,28 +31,56 @@ export default function MarketplacePage() {
             subtitle="Mint new NFTs or trade KEKTV vouchers"
           />
 
-          {/* Tab Navigation */}
+          {/* Tab Navigation - Dashboard Style */}
           <div className="mb-8 flex justify-center">
-            <div className="inline-flex rounded-xl bg-gray-900/60 p-1 border border-gray-800">
+            <div className="inline-flex gap-2 rounded-xl bg-gray-900/60 p-1 border border-gray-800">
               <button
                 onClick={() => setActiveTab('mint')}
-                className={`px-8 py-3 rounded-lg font-fredoka font-bold transition-all ${
-                  activeTab === 'mint'
-                    ? 'bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black'
-                    : 'text-gray-400 hover:text-white'
-                }`}
+                className={`
+                  px-8 py-3 rounded-lg font-fredoka font-bold transition-all duration-200
+                  ${activeTab === 'mint'
+                    ? 'bg-[#3fb8bd] text-black shadow-lg shadow-[#3fb8bd]/20'
+                    : 'text-[#3fb8bd] hover:text-white hover:bg-gray-800/50'
+                  }
+                `}
               >
-                Mint
+                🎨 Mint
               </button>
               <button
-                onClick={() => setActiveTab('trade')}
-                className={`px-8 py-3 rounded-lg font-fredoka font-bold transition-all ${
-                  activeTab === 'trade'
-                    ? 'bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black'
-                    : 'text-gray-400 hover:text-white'
-                }`}
+                onClick={() => setActiveTab('surprise')}
+                className={`
+                  px-8 py-3 rounded-lg font-fredoka font-bold transition-all duration-200
+                  ${activeTab === 'surprise'
+                    ? 'bg-[#4ecca7] text-black shadow-lg shadow-[#4ecca7]/20'
+                    : 'text-[#4ecca7] hover:text-white hover:bg-gray-800/50'
+                  }
+                `}
               >
-                Trade
+                🎁 Surprise
+              </button>
+              <button
+                onClick={() => setActiveTab('kektv')}
+                className={`
+                  px-8 py-3 rounded-lg font-fredoka font-bold transition-all duration-200
+                  ${activeTab === 'kektv'
+                    ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/20'
+                    : 'text-purple-400 hover:text-white hover:bg-gray-800/50'
+                  }
+                `}
+              >
+                𝕂Ǝ𝕂TV
+              </button>
+              <button
+                onClick={() => setActiveTab('limited')}
+                className={`
+                  px-8 py-3 rounded-lg font-fredoka font-bold transition-all duration-200
+                  ${activeTab === 'limited'
+                    ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20'
+                    : 'text-orange-400 hover:text-white hover:bg-gray-800/50'
+                  }
+                `}
+              >
+                ⭐ Limited Edition
               </button>
             </div>
           </div>
@@ -58,7 +88,25 @@ export default function MarketplacePage() {
           {/* Tab Content */}
           <div className="mt-8">
             {activeTab === 'mint' && <MintTab />}
-            {activeTab === 'trade' && <TradeTab />}
+            {activeTab === 'surprise' && (
+              <div className="text-center py-24">
+                <div className="text-8xl mb-6">🎁</div>
+                <h2 className="text-3xl font-bold text-[#4ecca7] mb-4 font-fredoka">Surprise Mechanics</h2>
+                <p className="text-gray-400 max-w-md mx-auto">
+                  Exciting surprise features coming soon! Stay tuned for special mystery drops and unique mechanics.
+                </p>
+              </div>
+            )}
+            {activeTab === 'kektv' && <TradeTab />}
+            {activeTab === 'limited' && (
+              <div className="text-center py-24">
+                <div className="text-8xl mb-6">⭐</div>
+                <h2 className="text-3xl font-bold text-orange-400 mb-4 font-fredoka">Limited Edition</h2>
+                <p className="text-gray-400 max-w-md mx-auto">
+                  Exclusive limited edition NFTs and special collaborations. Check back soon for rare drops!
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </main>
