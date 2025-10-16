@@ -23,7 +23,24 @@ export function KektechNFTsOnly({ address }: KektechNFTsOnlyProps) {
     return nfts.filter((nft) => {
       const nftAddress = nft?.token?.address_hash
       if (!nftAddress || !KEKTECH_CONTRACT_ADDRESS) return false
-      return nftAddress.toLowerCase() === KEKTECH_CONTRACT_ADDRESS.toLowerCase()
+
+      const isKektech = nftAddress.toLowerCase() === KEKTECH_CONTRACT_ADDRESS.toLowerCase()
+
+      // Debug logging to diagnose categorization issue
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ KEKTECH NFT Check:', {
+          nftId: nft.id,
+          nftName: nft.metadata?.name || nft.token?.name,
+          nftAddress: nftAddress,
+          kektechAddress: KEKTECH_CONTRACT_ADDRESS,
+          nftAddressLower: nftAddress.toLowerCase(),
+          kektechAddressLower: KEKTECH_CONTRACT_ADDRESS.toLowerCase(),
+          isKektech,
+          willShowInKektechSection: isKektech
+        })
+      }
+
+      return isKektech
     })
   }, [nfts])
 

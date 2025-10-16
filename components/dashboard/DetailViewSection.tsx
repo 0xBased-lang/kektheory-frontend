@@ -67,7 +67,24 @@ export function DetailViewSection({
     return nfts.filter((nft) => {
       const nftAddress = nft?.token?.address_hash
       if (!nftAddress || !KEKTECH_CONTRACT_ADDRESS) return true
-      return nftAddress.toLowerCase() !== KEKTECH_CONTRACT_ADDRESS.toLowerCase()
+
+      const isKektech = nftAddress.toLowerCase() === KEKTECH_CONTRACT_ADDRESS.toLowerCase()
+
+      // Debug logging to diagnose categorization issue
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔍 NFT Contract Check:', {
+          nftId: nft.id,
+          nftName: nft.metadata?.name || nft.token?.name,
+          nftAddress: nftAddress,
+          kektechAddress: KEKTECH_CONTRACT_ADDRESS,
+          nftAddressLower: nftAddress.toLowerCase(),
+          kektechAddressLower: KEKTECH_CONTRACT_ADDRESS.toLowerCase(),
+          isKektech,
+          willShowInOtherNFTs: !isKektech
+        })
+      }
+
+      return !isKektech
     })
   }, [nfts])
 
@@ -287,10 +304,10 @@ export function DetailViewSection({
         {otherNFTs.length > 0 && (
           <div className="mt-8 bg-gray-900/60 rounded-xl border border-gray-800 p-6">
             <h3 className="text-xl font-bold text-[#3fb8bd] mb-4 font-fredoka">
-              🎨 Other NFTs on Base Network
+              🎨 Other NFTs on Based Network
             </h3>
             <p className="text-sm text-gray-400 mb-4">
-              Your collection of {otherNFTs.length} NFT{otherNFTs.length !== 1 ? 's' : ''} from various Base collections
+              Your collection of {otherNFTs.length} NFT{otherNFTs.length !== 1 ? 's' : ''} from various Based collections
             </p>
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
               {otherNFTs.map((nft) => (
