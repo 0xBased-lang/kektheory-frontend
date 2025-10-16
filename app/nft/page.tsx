@@ -123,10 +123,13 @@ function NFTDetailPageContent() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 rounded-lg border border-[#4ecca7]/30 bg-[#4ecca7]/10 px-4 py-2 font-fredoka text-sm text-[#4ecca7] transition-all hover:border-[#4ecca7] hover:bg-[#4ecca7]/20"
                     >
-                      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                        <path d="M8 12L11 15L16 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
+                      <Image
+                        src="/images/bf.png"
+                        alt="BasedFun Explorer"
+                        width={20}
+                        height={20}
+                        className="h-5 w-5 object-contain"
+                      />
                       Explorer
                     </a>
                   </div>
