@@ -169,13 +169,13 @@ export function MintForm() {
             href={`${EXPLORER_URL}/tx/${hash}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-700"
+            className="inline-block rounded-lg bg-[#3fb8bd] px-4 py-2 text-sm font-medium text-black transition-colors hover:bg-[#3fb8bd]/80"
           >
             View Transaction ↗
           </a>
           <button
             onClick={() => window.location.reload()}
-            className="ml-2 inline-block rounded-lg border border-green-600 px-4 py-2 text-sm font-medium text-green-600 transition-colors hover:bg-green-50 dark:hover:bg-green-900/30"
+            className="ml-2 inline-block rounded-lg border-2 border-[#3fb8bd] px-4 py-2 text-sm font-medium text-[#3fb8bd] transition-colors hover:bg-[#3fb8bd]/10"
           >
             Mint More
           </button>
