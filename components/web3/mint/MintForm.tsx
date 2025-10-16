@@ -5,6 +5,7 @@ import { useMint } from '@/lib/hooks/useMint'
 import { EXPLORER_URL } from '@/config/constants'
 import { CooldownTracker } from '@/lib/validation'
 import { NetworkSwitcher } from '@/components/web3/NetworkSwitcher'
+import { NetworkCurrencyWarning } from '@/components/web3/NetworkCurrencyWarning'
 import { useNetworkValidation } from '@/lib/hooks/useNetworkValidation'
 
 /**
@@ -180,6 +181,9 @@ export function MintForm() {
       <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">
         Mint KEKTECH NFTs
       </h2>
+
+      {/* Network Currency Warning */}
+      <NetworkCurrencyWarning />
 
       {/* Amount Selector */}
       <div className="mb-6">
