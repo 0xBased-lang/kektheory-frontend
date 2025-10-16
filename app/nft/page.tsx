@@ -79,17 +79,15 @@ function NFTDetailPageContent() {
           {nft && !loading && !error && (
             <div className="grid gap-8 lg:grid-cols-2">
               {/* Left Column - Image */}
-              <div className="group relative overflow-hidden rounded-xl border-2 border-[#3fb8bd]/30 bg-gradient-to-br from-gray-900 to-gray-950 shadow-2xl transition-all hover:border-[#3fb8bd] hover:shadow-[#3fb8bd]/20">
-                <div className="relative w-full aspect-square">
-                  <Image
-                    src={nft.imageUrl}
-                    alt={nft.name}
-                    fill
-                    className="object-contain"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    unoptimized
-                  />
-                </div>
+              <div className="group relative aspect-square overflow-hidden rounded-xl border-2 border-[#3fb8bd]/30 bg-gradient-to-br from-gray-900 to-gray-950 shadow-2xl transition-all hover:border-[#3fb8bd] hover:shadow-[#3fb8bd]/20">
+                <Image
+                  src={nft.imageUrl}
+                  alt={nft.name}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  unoptimized
+                />
               </div>
 
               {/* Right Column - Details */}
@@ -125,13 +123,10 @@ function NFTDetailPageContent() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 rounded-lg border border-[#4ecca7]/30 bg-[#4ecca7]/10 px-4 py-2 font-fredoka text-sm text-[#4ecca7] transition-all hover:border-[#4ecca7] hover:bg-[#4ecca7]/20"
                     >
-                      <Image
-                        src="/explorer-logo.svg"
-                        alt="Explorer"
-                        width={20}
-                        height={20}
-                        className="h-5 w-5 object-contain"
-                      />
+                      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                        <path d="M8 12L11 15L16 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
                       Explorer
                     </a>
                   </div>
