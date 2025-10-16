@@ -44,7 +44,7 @@ export default function MarketplacePage() {
                   }
                 `}
               >
-                🎨 Mint
+                Mint
               </button>
               <button
                 onClick={() => setActiveTab('surprise')}
@@ -56,7 +56,7 @@ export default function MarketplacePage() {
                   }
                 `}
               >
-                🎁 Surprise
+                Surprise
               </button>
               <button
                 onClick={() => setActiveTab('kektv')}
@@ -80,7 +80,7 @@ export default function MarketplacePage() {
                   }
                 `}
               >
-                ⭐ Limited Edition
+                Limited Edition
               </button>
             </div>
           </div>

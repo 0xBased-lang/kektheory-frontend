@@ -32,7 +32,7 @@ export function GalleryTabs({ children }: GalleryTabsProps) {
               }
             `}
           >
-            🏆 Ranking
+            Ranking
           </button>
           <button
             onClick={() => setActiveTab('filter')}
@@ -44,7 +44,7 @@ export function GalleryTabs({ children }: GalleryTabsProps) {
               }
             `}
           >
-            🔍 Filter
+            Filter
           </button>
           <button
             onClick={() => setActiveTab('traits')}
@@ -56,7 +56,7 @@ export function GalleryTabs({ children }: GalleryTabsProps) {
               }
             `}
           >
-            🐸 Traits
+            Traits
           </button>
         </div>
       </div>
