@@ -169,13 +169,13 @@ export function VoucherSection({
                     </p>
                   </div>
 
-                  {/* Rarity & ID Badge */}
+                  {/* Token ID Badge */}
                   <div className="flex items-center justify-between pt-3 border-t border-gray-800/50">
-                    <span className={`text-sm font-bold uppercase tracking-wider bg-gradient-to-r ${gradient} bg-clip-text text-transparent`}>
-                      {voucher.rarity}
+                    <span className="text-sm text-gray-400">
+                      Token ID
                     </span>
-                    <span className="text-xs text-gray-600 font-mono">
-                      ID: {voucher.id}
+                    <span className="text-sm font-bold text-white font-mono">
+                      #{voucher.id}
                     </span>
                   </div>
                 </div>
