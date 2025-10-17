@@ -174,7 +174,7 @@ export function FeaturedNFTs() {
         }
 
         .animate-scroll-horizontal {
-          animation: scroll-horizontal 60s linear infinite;
+          animation: scroll-horizontal 180s linear infinite;
         }
 
         .animate-scroll-horizontal:hover {
