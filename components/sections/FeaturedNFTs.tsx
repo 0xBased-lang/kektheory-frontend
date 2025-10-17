@@ -81,8 +81,8 @@ export function FeaturedNFTs() {
     <section className="bg-gradient-to-b from-gray-900 to-gray-950 py-16 sm:py-24 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-white sm:text-4xl mb-4 font-fredoka">
-            Featured <span className="text-[#3fb8bd]">NFTs</span>
+          <h2 className="text-3xl font-bold text-[#3fb8bd] sm:text-4xl mb-4 font-fredoka">
+            Featured NFTs
           </h2>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto font-fredoka">
             Discover some of our most unique and sought-after pieces from the KEKTECH collection
