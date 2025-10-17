@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 /**
- * Individual NFT Data API with Metadata
+ * Individual NFT Data API - Simplified Direct Backend Call
  *
- * Security: Only returns data for minted NFTs
- * Performance: Individual caching for each NFT
+ * Security: Backend enforces minted-only NFTs (checks blockchain totalSupply)
+ * Performance: Single API call, 60-second cache
+ * Architecture: Frontend proxies to backend (single source of truth)
  *
  * This endpoint serves the NFT detail page with complete metadata
  */
@@ -17,22 +18,6 @@ interface NFTAttribute {
   rarity?: number
 }
 
-interface NFTComplete {
-  rank: number
-  tokenId: string
-  name: string
-  rarityScore: number
-  imageUrl: string
-  description: string
-  attributes: NFTAttribute[]
-  metadata: {
-    name: string
-    description: string
-    image: string
-    attributes: NFTAttribute[]
-  }
-}
-
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ tokenId: string }> }
@@ -40,84 +25,61 @@ export async function GET(
   const { tokenId } = await params
 
   try {
-    // 1. First verify NFT is minted by checking rankings
-    const rankingsResponse = await fetch('https://api.kektech.xyz/rankings', {
-      cache: 'force-cache',
-      next: { revalidate: 300 } // 5 minutes
-    })
-
-    if (!rankingsResponse.ok) {
-      throw new Error('Failed to verify NFT')
-    }
-
-    const { nfts } = await rankingsResponse.json()
-
-    // Find the NFT in rankings (only minted NFTs are here)
-    const rankingData = nfts.find((nft: { tokenId: string }) => nft.tokenId === tokenId)
-
-    if (!rankingData) {
-      // NFT not found in rankings = not minted or doesn't exist
-      return NextResponse.json(
-        { error: 'NFT not found or not yet minted' },
-        { status: 404 }
-      )
-    }
-
-    // 2. Fetch metadata for this specific NFT
-    let metadata = null
-    let attributes: NFTAttribute[] = []
-
-    try {
-      const metadataResponse = await fetch(
-        `https://api.kektech.xyz/api/metadata/${tokenId}`,
-        {
-          cache: 'force-cache',
-          next: { revalidate: 3600 } // 1 hour cache
-        }
-      )
-
-      if (metadataResponse.ok) {
-        metadata = await metadataResponse.json()
-        attributes = metadata.attributes || []
-
-        // Calculate rarity percentages
-        attributes = attributes.map(attr => {
-          // You could enhance this with actual rarity calculation
-          // For now, we'll add placeholder rarity
-          return {
-            ...attr,
-            rarity: calculateRarity(attr.value, attr.trait_type)
-          }
-        })
+    // Direct call to backend - it handles ALL logic:
+    // - Checks blockchain totalSupply (only minted NFTs allowed)
+    // - Loads metadata from files
+    // - Adds ranking data
+    // - Returns combined response OR 404 for unminted NFTs
+    const response = await fetch(
+      `https://api.kektech.xyz/api/nft/${tokenId}`,
+      {
+        next: { revalidate: 60 }, // Refresh every minute
       }
-    } catch (error) {
-      console.error(`Failed to fetch metadata for token ${tokenId}:`, error)
+    )
+
+    // Backend returns 404 for unminted NFTs - pass it through
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({
+        error: 'NFT not found or not yet minted'
+      }))
+      return NextResponse.json(errorData, { status: response.status })
     }
 
-    // 3. Build complete NFT response
-    const nftComplete: NFTComplete = {
-      ...rankingData,
-      description: metadata?.description || "4200 𝕂Ǝ𝕂丅ᵉ匚🅷 Artifacts: digital masterpieces blending tech and meme fun, hand-drawn by 𝔹enzo𝔹ert & Princess 𝔹u𝔹𝔹legum. An homage to OG Pepecoin 🐸👑",
+    // Get data from backend (already includes rank, metadata, etc.)
+    const nftData = await response.json()
+
+    // Add rarity percentages to attributes
+    const attributes = nftData.attributes?.map((attr: NFTAttribute) => ({
+      ...attr,
+      rarity: calculateRarity(attr.value, attr.trait_type)
+    })) || []
+
+    // Build response with frontend-specific structure
+    const nftComplete = {
+      tokenId: nftData.tokenId,
+      name: nftData.name,
+      rarityScore: nftData.rarityScore,
+      rank: nftData.rank,
+      imageUrl: `https://api.kektech.xyz/api/image/${tokenId}`,
+      description: nftData.description,
       attributes,
       metadata: {
-        name: rankingData.name,
-        description: metadata?.description || "4200 𝕂Ǝ𝕂丅ᵉ匚🅷 Artifacts: digital masterpieces blending tech and meme fun, hand-drawn by 𝔹enzo𝔹ert & Princess 𝔹u𝔹𝔹legum. An homage to OG Pepecoin 🐸👑",
-        image: rankingData.imageUrl,
+        name: nftData.name,
+        description: nftData.description,
+        image: nftData.image,
         attributes
       }
     }
 
-    // Return with cache headers
     return NextResponse.json(nftComplete, {
       headers: {
-        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
         'X-Token-Id': tokenId,
-        'X-Has-Traits': String(attributes.length > 0)
       }
     })
 
   } catch (error) {
-    console.error('API Error:', error)
+    console.error('Frontend API Error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch NFT data' },
       { status: 500 }
