@@ -45,13 +45,13 @@ export function EnhancedHero() {
           {/* CTA Buttons */}
           <div className="mb-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
             {/* Primary CTA */}
-            <LinkButton href="/mint" variant="primary" size="lg" leftIcon="🚀">
+            <LinkButton href="/mint" variant="primary" size="lg">
               Start Minting
             </LinkButton>
 
             {/* Secondary CTA */}
-            <LinkButton href="/gallery" variant="secondary" size="lg" leftIcon="🎨">
-              View Gallery
+            <LinkButton href="/gallery" variant="secondary" size="lg">
+              Explore Gallery
             </LinkButton>
           </div>
 

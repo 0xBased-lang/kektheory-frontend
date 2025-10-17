@@ -20,11 +20,11 @@ export default function ButtonsDemoPage() {
           {/* Page Header */}
           <div className="mb-16 text-center">
             <h1 className="font-fredoka text-4xl font-bold text-[#3fb8bd] sm:text-5xl mb-4">
-              🎨 Button Design System
+              Button Design System
             </h1>
             <p className="text-lg text-gray-300 max-w-3xl mx-auto">
-              Unified button components for a harmonious and elegant KEKTECH experience.
-              All buttons use consistent spacing, animations, and brand colors.
+              Clean, exclusive button design for the KEKTECH platform.
+              Only 3 variants: Primary, Secondary, and Ghost - professional and refined.
             </p>
           </div>
 
@@ -32,14 +32,13 @@ export default function ButtonsDemoPage() {
           <section className="mb-16">
             <h2 className="font-fredoka text-3xl font-bold text-[#4ecca7] mb-8">Button Variants</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Primary */}
               <div className="bg-gray-900/60 rounded-xl border border-gray-800 p-6">
                 <h3 className="font-fredoka text-xl font-bold text-[#3fb8bd] mb-4">Primary</h3>
-                <p className="text-gray-400 text-sm mb-4">Main CTAs and important actions</p>
+                <p className="text-gray-400 text-sm mb-4">Main CTAs - gradient fill with subtle shadow</p>
                 <div className="space-y-4">
-                  <Button variant="primary">Click Me</Button>
-                  <Button variant="primary" leftIcon="🚀">With Icon</Button>
+                  <Button variant="primary">Primary Action</Button>
                   <Button variant="primary" isLoading>Loading...</Button>
                 </div>
               </div>
@@ -47,54 +46,20 @@ export default function ButtonsDemoPage() {
               {/* Secondary */}
               <div className="bg-gray-900/60 rounded-xl border border-gray-800 p-6">
                 <h3 className="font-fredoka text-xl font-bold text-[#3fb8bd] mb-4">Secondary</h3>
-                <p className="text-gray-400 text-sm mb-4">Secondary actions and alternatives</p>
+                <p className="text-gray-400 text-sm mb-4">Alternative actions - outlined with hover effect</p>
                 <div className="space-y-4">
-                  <Button variant="secondary">Click Me</Button>
-                  <Button variant="secondary" leftIcon="🎨">With Icon</Button>
+                  <Button variant="secondary">Secondary Action</Button>
                   <Button variant="secondary" isLoading>Loading...</Button>
-                </div>
-              </div>
-
-              {/* Gradient Border */}
-              <div className="bg-gray-900/60 rounded-xl border border-gray-800 p-6">
-                <h3 className="font-fredoka text-xl font-bold text-[#3fb8bd] mb-4">Gradient Border</h3>
-                <p className="text-gray-400 text-sm mb-4">Premium features and special actions</p>
-                <div className="space-y-4">
-                  <Button variant="gradient-border">Click Me</Button>
-                  <Button variant="gradient-border" leftIcon="💎">Premium</Button>
-                </div>
-              </div>
-
-              {/* Outline */}
-              <div className="bg-gray-900/60 rounded-xl border border-gray-800 p-6">
-                <h3 className="font-fredoka text-xl font-bold text-[#3fb8bd] mb-4">Outline</h3>
-                <p className="text-gray-400 text-sm mb-4">Subtle tertiary actions</p>
-                <div className="space-y-4">
-                  <Button variant="outline">Click Me</Button>
-                  <Button variant="outline" leftIcon="📋">Details</Button>
-                  <Button variant="outline" isLoading>Loading...</Button>
                 </div>
               </div>
 
               {/* Ghost */}
               <div className="bg-gray-900/60 rounded-xl border border-gray-800 p-6">
                 <h3 className="font-fredoka text-xl font-bold text-[#3fb8bd] mb-4">Ghost</h3>
-                <p className="text-gray-400 text-sm mb-4">Minimal interactions</p>
+                <p className="text-gray-400 text-sm mb-4">Minimal style - subtle interactions</p>
                 <div className="space-y-4">
-                  <Button variant="ghost">Click Me</Button>
-                  <Button variant="ghost" leftIcon="ℹ️">Info</Button>
+                  <Button variant="ghost">Ghost Action</Button>
                   <Button variant="ghost" isLoading>Loading...</Button>
-                </div>
-              </div>
-
-              {/* Danger */}
-              <div className="bg-gray-900/60 rounded-xl border border-gray-800 p-6">
-                <h3 className="font-fredoka text-xl font-bold text-[#3fb8bd] mb-4">Danger</h3>
-                <p className="text-gray-400 text-sm mb-4">Destructive actions</p>
-                <div className="space-y-4">
-                  <Button variant="danger">Delete</Button>
-                  <Button variant="danger" leftIcon="🗑️">Remove</Button>
-                  <Button variant="danger" isLoading>Deleting...</Button>
                 </div>
               </div>
             </div>
@@ -109,28 +74,6 @@ export default function ButtonsDemoPage() {
                 <Button variant="primary" size="sm">Small</Button>
                 <Button variant="primary" size="md">Medium (Default)</Button>
                 <Button variant="primary" size="lg">Large</Button>
-                <Button variant="primary" size="xl">Extra Large</Button>
-              </div>
-            </div>
-          </section>
-
-          {/* Button with Icons */}
-          <section className="mb-16">
-            <h2 className="font-fredoka text-3xl font-bold text-[#4ecca7] mb-8">Buttons with Icons</h2>
-
-            <div className="bg-gray-900/60 rounded-xl border border-gray-800 p-8">
-              <div className="flex flex-wrap gap-4">
-                <Button variant="primary" leftIcon="🚀">Left Icon</Button>
-                <Button variant="secondary" rightIcon={
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                }>
-                  Right Arrow
-                </Button>
-                <Button variant="primary" leftIcon="💰" rightIcon="✨">
-                  Both Icons
-                </Button>
               </div>
             </div>
           </section>
@@ -142,12 +85,12 @@ export default function ButtonsDemoPage() {
             <div className="bg-gray-900/60 rounded-xl border border-gray-800 p-8">
               <div className="flex flex-wrap gap-4">
                 <LinkButton href="/gallery" variant="primary">
-                  Internal Link
+                  Primary Link
                 </LinkButton>
                 <LinkButton href="/mint" variant="secondary">
-                  Another Page
+                  Secondary Link
                 </LinkButton>
-                <LinkButton href="https://twitter.com" variant="outline" external>
+                <LinkButton href="https://twitter.com" variant="ghost" external>
                   External Link
                 </LinkButton>
               </div>
@@ -166,9 +109,6 @@ export default function ButtonsDemoPage() {
                 <Button variant="secondary" fullWidth>
                   Full Width Secondary
                 </Button>
-                <Button variant="gradient-border" fullWidth leftIcon="💎">
-                  Full Width Premium
-                </Button>
               </div>
             </div>
           </section>
@@ -181,8 +121,7 @@ export default function ButtonsDemoPage() {
               <div className="flex flex-wrap gap-4">
                 <Button variant="primary" disabled>Primary Disabled</Button>
                 <Button variant="secondary" disabled>Secondary Disabled</Button>
-                <Button variant="outline" disabled>Outline Disabled</Button>
-                <Button variant="danger" disabled>Danger Disabled</Button>
+                <Button variant="ghost" disabled>Ghost Disabled</Button>
               </div>
             </div>
           </section>
@@ -195,23 +134,23 @@ export default function ButtonsDemoPage() {
             <div className="bg-gray-900/60 rounded-xl border border-gray-800 p-8 mb-8">
               <h3 className="font-fredoka text-xl font-bold text-[#3fb8bd] mb-4">Hero Section CTAs</h3>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <LinkButton href="/mint" variant="primary" size="lg" leftIcon="🚀">
+                <LinkButton href="/mint" variant="primary" size="lg">
                   Start Minting
                 </LinkButton>
-                <LinkButton href="/gallery" variant="secondary" size="lg" leftIcon="🎨">
-                  View Gallery
+                <LinkButton href="/gallery" variant="secondary" size="lg">
+                  Explore Gallery
                 </LinkButton>
               </div>
             </div>
 
-            {/* Premium Feature Example */}
+            {/* Page CTAs Example */}
             <div className="bg-gray-900/60 rounded-xl border border-gray-800 p-8">
-              <h3 className="font-fredoka text-xl font-bold text-[#3fb8bd] mb-4">Premium Features</h3>
+              <h3 className="font-fredoka text-xl font-bold text-[#3fb8bd] mb-4">Rewards Page CTAs</h3>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <LinkButton href="/mint" variant="gradient-border" size="lg">
+                <LinkButton href="/mint" variant="primary" size="lg">
                   Mint 𝕂Ǝ𝕂TECH NFTs
                 </LinkButton>
-                <LinkButton href="/gallery" variant="gradient-border" size="lg">
+                <LinkButton href="/gallery" variant="secondary" size="lg">
                   Browse Gallery
                 </LinkButton>
               </div>

@@ -130,10 +130,10 @@ export default function RewardsPage() {
               The more 𝕂Ǝ𝕂TECH NFTs you hold, and the rarer they are, the more rewards you&apos;ll earn every day. Join our community and start building your token portfolio!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <LinkButton href="/mint" variant="gradient-border" size="lg">
+              <LinkButton href="/mint" variant="primary" size="lg">
                 Mint 𝕂Ǝ𝕂TECH NFTs
               </LinkButton>
-              <LinkButton href="/gallery" variant="gradient-border" size="lg">
+              <LinkButton href="/gallery" variant="secondary" size="lg">
                 Browse Gallery
               </LinkButton>
             </div>

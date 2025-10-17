@@ -2,42 +2,29 @@ import { forwardRef, ButtonHTMLAttributes, AnchorHTMLAttributes } from 'react'
 import Link from 'next/link'
 import { cva, type VariantProps } from 'class-variance-authority'
 
-// Unified button variants using class-variance-authority for consistency
+// Refined button system - exclusive, clean, professional
 const buttonVariants = cva(
-  // Base styles - shared across all buttons
-  'inline-flex items-center justify-center gap-2 font-fredoka font-bold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#3fb8bd]/50 focus:ring-offset-2 focus:ring-offset-gray-950',
+  // Base styles - minimal and elegant
+  'inline-flex items-center justify-center gap-2 font-fredoka font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#3fb8bd]/30 focus:ring-offset-2 focus:ring-offset-gray-950',
   {
     variants: {
       variant: {
-        // Primary: Solid gradient fill - main CTAs
+        // Primary: Clean gradient fill - professional and exclusive
         primary:
-          'bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black shadow-lg shadow-[#3fb8bd]/30 hover:shadow-xl hover:shadow-[#3fb8bd]/40 hover:scale-105',
+          'bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black shadow-md hover:shadow-lg hover:shadow-[#3fb8bd]/20 hover:opacity-90',
 
-        // Secondary: Outlined with gradient border - secondary actions
+        // Secondary: Elegant outline - refined alternative
         secondary:
-          'border-2 border-[#3fb8bd] bg-transparent text-[#3fb8bd] hover:bg-[#3fb8bd]/10 hover:scale-105',
+          'border-2 border-[#3fb8bd]/60 bg-transparent text-[#3fb8bd] hover:border-[#3fb8bd] hover:bg-[#3fb8bd]/5 hover:shadow-md hover:shadow-[#3fb8bd]/10',
 
-        // Outline: Subtle outline - tertiary actions
-        outline:
-          'border border-gray-700 bg-transparent text-gray-300 hover:border-[#3fb8bd]/50 hover:text-[#3fb8bd] hover:bg-[#3fb8bd]/5',
-
-        // Ghost: Minimal style - subtle interactions
+        // Ghost: Minimal and subtle
         ghost:
-          'bg-transparent text-gray-300 hover:bg-gray-800/50 hover:text-[#3fb8bd]',
-
-        // Gradient Border: Special effect with inner fill - premium features
-        'gradient-border':
-          'relative overflow-hidden bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] p-[2px] shadow-lg shadow-[#3fb8bd]/50 hover:shadow-2xl hover:shadow-[#3fb8bd]/70 hover:scale-105',
-
-        // Danger: Warning/destructive actions
-        danger:
-          'bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-600/30 hover:shadow-xl hover:shadow-red-600/40',
+          'bg-transparent text-gray-300 hover:bg-gray-800/30 hover:text-[#3fb8bd]',
       },
       size: {
-        sm: 'px-4 py-2 text-sm rounded-lg',
-        md: 'px-6 py-3 text-base rounded-xl',
-        lg: 'px-8 py-4 text-lg rounded-xl',
-        xl: 'px-10 py-5 text-xl rounded-2xl',
+        sm: 'px-5 py-2.5 text-sm rounded-lg',
+        md: 'px-8 py-3 text-base rounded-lg',
+        lg: 'px-10 py-3.5 text-base rounded-lg',
       },
       fullWidth: {
         true: 'w-full',
@@ -70,7 +57,7 @@ export interface LinkButtonProps
   external?: boolean
 }
 
-// Standard Button Component
+// Standard Button Component - Clean and simple
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
@@ -87,34 +74,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const isGradientBorder = variant === 'gradient-border'
-
-    if (isGradientBorder) {
-      return (
-        <button
-          ref={ref}
-          disabled={disabled || isLoading}
-          className={buttonVariants({ variant, size, fullWidth, className })}
-          {...props}
-        >
-          <span className="relative flex items-center justify-center gap-2 rounded-[10px] bg-gray-900 px-8 py-4 transition-all group-hover:bg-transparent w-full">
-            {isLoading ? (
-              <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-              </svg>
-            ) : (
-              <>
-                {leftIcon}
-                {children}
-                {rightIcon}
-              </>
-            )}
-          </span>
-        </button>
-      )
-    }
-
     return (
       <button
         ref={ref}
@@ -141,7 +100,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
 Button.displayName = 'Button'
 
-// Link Button Component (for Next.js Link)
+// Link Button Component (for Next.js Link) - Clean implementation
 export const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
   (
     {
@@ -158,28 +117,15 @@ export const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
     },
     ref
   ) => {
-    const isGradientBorder = variant === 'gradient-border'
+    const content = (
+      <>
+        {leftIcon}
+        {children}
+        {rightIcon}
+      </>
+    )
 
     if (external) {
-      if (isGradientBorder) {
-        return (
-          <a
-            ref={ref}
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={buttonVariants({ variant, size, fullWidth, className })}
-            {...props}
-          >
-            <span className="relative flex items-center justify-center gap-2 rounded-[10px] bg-gray-900 px-8 py-4 transition-all group-hover:bg-transparent w-full">
-              {leftIcon}
-              {children}
-              {rightIcon}
-            </span>
-          </a>
-        )
-      }
-
       return (
         <a
           ref={ref}
@@ -189,27 +135,8 @@ export const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
           className={buttonVariants({ variant, size, fullWidth, className })}
           {...props}
         >
-          {leftIcon}
-          {children}
-          {rightIcon}
+          {content}
         </a>
-      )
-    }
-
-    if (isGradientBorder) {
-      return (
-        <Link
-          ref={ref}
-          href={href}
-          className={buttonVariants({ variant, size, fullWidth, className })}
-          {...props}
-        >
-          <span className="relative flex items-center justify-center gap-2 rounded-[10px] bg-gray-900 px-8 py-4 transition-all group-hover:bg-transparent w-full">
-            {leftIcon}
-            {children}
-            {rightIcon}
-          </span>
-        </Link>
       )
     }
 
@@ -220,10 +147,8 @@ export const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
         className={buttonVariants({ variant, size, fullWidth, className })}
         {...props}
       >
-        {leftIcon}
-        {children}
-        {rightIcon}
-      </ Link>
+        {content}
+      </Link>
     )
   }
 )
