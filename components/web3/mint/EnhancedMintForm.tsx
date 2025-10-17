@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useMint } from '@/lib/hooks/useMint'
+import { useMintedNFTs } from '@/lib/hooks/useMintedNFTs'
 import { EXPLORER_URL } from '@/config/constants'
 import { getTotalSupply, CONTRACTS } from '@/lib/blockchain/kektv'
 import Image from 'next/image'
@@ -29,6 +30,9 @@ export function EnhancedMintForm() {
     mint,
     maxMintPerTx,
   } = useMint()
+
+  // Fetch minted NFTs after successful mint
+  const { mintedNFTs, isLoading: isLoadingNFTs, error: nftError } = useMintedNFTs(hash, isConfirmed)
 
   const [localError, setLocalError] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
@@ -134,6 +138,68 @@ export function EnhancedMintForm() {
           <p className="mb-6 text-xl text-gray-300">
             Successfully minted <span className="font-bold text-kek-green">{mintAmount}</span> KEKTECH NFT{mintAmount > 1 ? 's' : ''}!
           </p>
+
+          {/* Minted NFTs Display */}
+          {isLoadingNFTs ? (
+            <div className="mb-6">
+              <div className="mb-3 text-sm text-gray-400">Loading your NFTs...</div>
+              <div className={`grid gap-4 ${mintAmount === 1 ? 'grid-cols-1 max-w-xs mx-auto' : mintAmount === 2 ? 'grid-cols-2' : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3'}`}>
+                {[...Array(Math.min(mintAmount, 3))].map((_, i) => (
+                  <div key={i} className="animate-pulse">
+                    <div className="aspect-square rounded-xl bg-gray-700/50 border-2 border-kek-cyan/30" />
+                    <div className="mt-2 h-4 rounded bg-gray-700/50" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : mintedNFTs.length > 0 ? (
+            <div className="mb-6">
+              <div className="mb-4 text-sm font-semibold text-kek-cyan">Your Minted NFTs:</div>
+              <div className={`grid gap-4 ${mintedNFTs.length === 1 ? 'grid-cols-1 max-w-xs mx-auto' : mintedNFTs.length === 2 ? 'grid-cols-2' : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3'}`}>
+                {mintedNFTs.map((nft) => (
+                  <div key={nft.tokenId} className="group relative">
+                    <div className="relative aspect-square overflow-hidden rounded-xl border-2 border-kek-cyan/50 shadow-lg shadow-kek-cyan/20 transition-all hover:border-kek-green hover:shadow-kek-green/40 hover:scale-105">
+                      {nft.imageUrl ? (
+                        <Image
+                          src={nft.imageUrl}
+                          alt={nft.name}
+                          width={300}
+                          height={300}
+                          className="w-full h-full object-cover"
+                          unoptimized
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-kek-green/20 to-kek-purple/20 flex items-center justify-center">
+                          <span className="text-4xl">🎨</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="mt-2 text-sm font-semibold text-white">{nft.name}</div>
+                    {nft.rank && (
+                      <div className="text-xs text-kek-cyan">Rank #{nft.rank}</div>
+                    )}
+                    {nft.rarityScore && (
+                      <div className="text-xs text-gray-400">Rarity: {nft.rarityScore.toFixed(2)}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {mintAmount > 3 && (
+                <div className="mt-3 text-xs text-gray-400">
+                  + {mintAmount - 3} more NFT{mintAmount - 3 > 1 ? 's' : ''} minted
+                </div>
+              )}
+            </div>
+          ) : nftError ? (
+            <div className="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 p-4">
+              <div className="text-sm text-red-400">
+                ⚠️ {nftError}
+              </div>
+              <div className="mt-2 text-xs text-gray-400">
+                Your NFTs were minted successfully. Check your wallet or the marketplace.
+              </div>
+            </div>
+          ) : null}
 
           <div className="mb-6 rounded-xl border border-kek-green/20 bg-black/40 p-4 backdrop-blur-sm">
             <div className="text-sm text-gray-400">Transaction Hash</div>
