@@ -22,12 +22,15 @@ function normalizeString(str: string): string {
 }
 
 /**
- * Get rarity percentage for a trait with bulletproof fuzzy matching
+ * Get rarity percentage for a trait with precise matching
  *
  * Handles:
  * - Case insensitivity (BasedAI vs basedai)
  * - Spaces vs underscores (Easter Eggs vs easter_eggs)
- * - Typos and variations
+ * - Exact matches with normalization
+ *
+ * IMPORTANT: Does NOT do fuzzy/partial matching to avoid confusion
+ * between similar traits like "BasedAI" (Body) vs "based" (Eyes)
  *
  * @param traitStats - Live trait statistics from metadata
  * @param traitType - Trait category (e.g., "Background", "Body")
@@ -54,12 +57,13 @@ function getTraitPercentage(
 
   const category = traitStats[categoryKey]
 
-  // Strategy 1: Try exact match first (fastest)
+  // Strategy 1: Try exact match first (fastest, most accurate)
   if (category[value]) {
     return `${category[value].percentage}%`
   }
 
-  // Strategy 2: Try normalized match (handles case/space differences)
+  // Strategy 2: Try normalized EXACT match (handles case/space differences)
+  // This ensures "BasedAI" only matches "basedai" normalized, not "based"
   const valueKey = Object.keys(category).find(
     key => normalizeString(key) === normalizedValue
   )
@@ -68,20 +72,8 @@ function getTraitPercentage(
     return `${category[valueKey].percentage}%`
   }
 
-  // Strategy 3: Fuzzy match with partial matching (for typos)
-  // Find closest match by checking if normalized value contains or is contained
-  const fuzzyMatch = Object.keys(category).find(key => {
-    const normalizedKey = normalizeString(key)
-    return (
-      normalizedKey.includes(normalizedValue) ||
-      normalizedValue.includes(normalizedKey)
-    )
-  })
-
-  if (fuzzyMatch && category[fuzzyMatch]) {
-    return `${category[fuzzyMatch].percentage}%`
-  }
-
+  // No match found - return empty string
+  // This prevents false matches between similar traits
   return ''
 }
 
