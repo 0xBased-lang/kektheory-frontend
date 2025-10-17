@@ -72,9 +72,11 @@ export default function Homepage() {
       <FeaturedNFTs />
 
       {/* Roadmap Section */}
-      <section id="roadmap" className="py-20 border-t border-gray-800">
+      <section id="roadmap" className="bg-gradient-to-b from-gray-900 to-gray-950 py-20 border-t border-gray-800">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-[#3fb8bd] text-center mb-12 font-fredoka">ROADMAP</h2>
+          <h2 className="text-4xl font-bold text-white text-center mb-12 font-fredoka">
+            ROAD<span className="text-[#3fb8bd]">MAP</span>
+          </h2>
 
           {/* Visual Roadmap Image */}
           <div className="max-w-5xl mx-auto mb-12">
@@ -153,9 +155,11 @@ export default function Homepage() {
       </section>
 
       {/* About Us Section */}
-      <section id="about" className="py-20 border-t border-gray-800">
+      <section id="about" className="bg-gradient-to-b from-gray-900 to-gray-950 py-20 border-t border-gray-800">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-[#3fb8bd] text-center mb-16 font-fredoka">About Us</h2>
+          <h2 className="text-4xl font-bold text-white text-center mb-16 font-fredoka">
+            About <span className="text-[#3fb8bd]">Us</span>
+          </h2>
 
           {/* First Row: Text Left, Image Right */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
@@ -207,7 +211,9 @@ export default function Homepage() {
 
           {/* Community Journey */}
           <div className="max-w-4xl mx-auto text-center">
-            <h3 className="text-2xl font-bold text-[#3fb8bd] mb-6 font-fredoka">Community Journey</h3>
+            <h3 className="text-2xl font-bold text-white mb-6 font-fredoka">
+              Community <span className="text-[#3fb8bd]">Journey</span>
+            </h3>
             <p className="text-gray-300 leading-relaxed mb-8">
               We&apos;re committed to engaging with our community at every step. We value your feedback and will adapt our vision to create the best experience for our holders. Above all, we&apos;re dedicated to our highest utility: spreading dank Pepe art throughout the space, bringing creative joy to the broader crypto community. 🐸🎨🔥 We strongly believe in collaborations and will pursue partnerships with other $Based NFT communities to create opportunities that strengthen the entire ecosystem.
             </p>
