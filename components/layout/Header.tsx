@@ -159,28 +159,41 @@ export function Header() {
 
       {/* Mobile Slide-Out Menu - Highest z-index to appear above everything */}
       <div
-        className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-black border-l border-[#3fb8bd]/20 z-[110] transform transition-transform duration-300 ease-in-out md:hidden ${
+        className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] border-l border-[#3fb8bd]/20 z-[110] transform transition-transform duration-300 ease-in-out md:hidden flex flex-col ${
           mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
+        style={{
+          backgroundColor: 'rgba(0, 0, 0, 0.98)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)'
+        }}
       >
-        {/* Mobile Menu Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-800">
+        {/* Mobile Menu Header - Fixed at top */}
+        <div className="flex-shrink-0 flex items-center justify-between p-6 border-b border-gray-800" style={{ backgroundColor: 'rgba(0, 0, 0, 0.98)' }}>
           <h2 className="font-fredoka text-xl font-bold text-[#3fb8bd]">Menu</h2>
           <button
             onClick={closeMobileMenu}
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-900/60 border border-gray-800 hover:border-[#3fb8bd] transition-colors"
+            type="button"
+            className="w-12 h-12 flex items-center justify-center rounded-lg bg-gray-900 border-2 border-gray-800 hover:border-[#3fb8bd] hover:bg-gray-800 active:scale-95 transition-all relative z-[120] touch-manipulation"
             aria-label="Close menu"
+            style={{ pointerEvents: 'auto' }}
           >
-            <span className="text-[#3fb8bd] text-xl">×</span>
+            <span className="text-[#3fb8bd] text-3xl font-bold leading-none select-none">×</span>
           </button>
         </div>
 
-        {/* Mobile Navigation Links */}
-        <nav className="flex flex-col p-6 space-y-4">
+        {/* Mobile Navigation Links - Scrollable content */}
+        <nav
+          className="flex-1 flex flex-col p-6 space-y-4 overflow-y-auto overscroll-contain"
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.98)',
+            WebkitOverflowScrolling: 'touch'
+          }}
+        >
           <Link
             href="/marketplace"
             onClick={closeMobileMenu}
-            className={`font-fredoka text-lg font-medium py-3 px-4 rounded-lg transition-colors ${
+            className={`font-fredoka text-lg font-medium py-4 px-4 rounded-lg transition-colors touch-manipulation ${
               pathname === '/marketplace'
                 ? 'bg-[#3fb8bd]/20 text-[#3fb8bd] font-bold'
                 : 'text-gray-300 hover:bg-gray-900/60 hover:text-[#3fb8bd]'
@@ -191,7 +204,7 @@ export function Header() {
           <Link
             href="/dashboard"
             onClick={closeMobileMenu}
-            className={`font-fredoka text-lg font-medium py-3 px-4 rounded-lg transition-colors ${
+            className={`font-fredoka text-lg font-medium py-4 px-4 rounded-lg transition-colors touch-manipulation ${
               pathname === '/dashboard'
                 ? 'bg-[#3fb8bd]/20 text-[#3fb8bd] font-bold'
                 : 'text-gray-300 hover:bg-gray-900/60 hover:text-[#3fb8bd]'
@@ -202,7 +215,7 @@ export function Header() {
           <Link
             href="/gallery"
             onClick={closeMobileMenu}
-            className={`font-fredoka text-lg font-medium py-3 px-4 rounded-lg transition-colors ${
+            className={`font-fredoka text-lg font-medium py-4 px-4 rounded-lg transition-colors touch-manipulation ${
               pathname === '/gallery'
                 ? 'bg-[#3fb8bd]/20 text-[#3fb8bd] font-bold'
                 : 'text-gray-300 hover:bg-gray-900/60 hover:text-[#3fb8bd]'
@@ -213,7 +226,7 @@ export function Header() {
           <Link
             href="/rewards"
             onClick={closeMobileMenu}
-            className={`font-fredoka text-lg font-medium py-3 px-4 rounded-lg transition-colors ${
+            className={`font-fredoka text-lg font-medium py-4 px-4 rounded-lg transition-colors touch-manipulation ${
               pathname === '/rewards'
                 ? 'bg-[#3fb8bd]/20 text-[#3fb8bd] font-bold'
                 : 'text-gray-300 hover:bg-gray-900/60 hover:text-[#3fb8bd]'
@@ -224,7 +237,7 @@ export function Header() {
           <Link
             href="/#roadmap"
             onClick={closeMobileMenu}
-            className={`font-fredoka text-lg font-medium py-3 px-4 rounded-lg transition-colors ${
+            className={`font-fredoka text-lg font-medium py-4 px-4 rounded-lg transition-colors touch-manipulation ${
               pathname === '/' && typeof window !== 'undefined' && window.location.hash === '#roadmap'
                 ? 'bg-[#3fb8bd]/20 text-[#3fb8bd] font-bold'
                 : 'text-gray-300 hover:bg-gray-900/60 hover:text-[#3fb8bd]'
@@ -235,7 +248,7 @@ export function Header() {
           <Link
             href="/#about"
             onClick={closeMobileMenu}
-            className={`font-fredoka text-lg font-medium py-3 px-4 rounded-lg transition-colors ${
+            className={`font-fredoka text-lg font-medium py-4 px-4 rounded-lg transition-colors touch-manipulation ${
               pathname === '/' && typeof window !== 'undefined' && window.location.hash === '#about'
                 ? 'bg-[#3fb8bd]/20 text-[#3fb8bd] font-bold'
                 : 'text-gray-300 hover:bg-gray-900/60 hover:text-[#3fb8bd]'
@@ -243,10 +256,13 @@ export function Header() {
           >
             About Us
           </Link>
+
+          {/* Add spacing at bottom to ensure last items are visible */}
+          <div className="h-32" />
         </nav>
 
-        {/* Mobile Menu Footer: Wallet Connection */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-800 space-y-3">
+        {/* Mobile Menu Footer: Wallet Connection - Fixed at bottom with proper flex layout */}
+        <div className="flex-shrink-0 p-6 border-t border-gray-800 space-y-3" style={{ backgroundColor: 'rgba(0, 0, 0, 0.98)' }}>
           <NetworkSwitcher inline />
           <ConnectButton />
         </div>
