@@ -103,7 +103,7 @@ export default function MarketplacePage() {
                 <div className="text-8xl mb-6">⭐</div>
                 <h2 className="text-3xl font-bold text-[#ffd700] mb-4 font-fredoka">Limited Edition</h2>
                 <p className="text-gray-400 max-w-md mx-auto">
-                  Exclusive limited edition NFTs and special collaborations. Check back soon for rare drops!
+                  Exclusive limited edition NFTs. Check back soon for rare drops!
                 </p>
               </div>
             )}
