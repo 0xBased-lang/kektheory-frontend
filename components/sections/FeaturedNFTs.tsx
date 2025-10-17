@@ -30,15 +30,6 @@ function getRandomNFTs(nfts: NFTData[], count: number): NFTData[] {
   return shuffled.slice(0, count)
 }
 
-// Get rarity tier and color based on score
-function getRarityInfo(score: number): { tier: string; color: string } {
-  if (score >= 90) return { tier: 'Legendary', color: 'text-orange-400' }
-  if (score >= 75) return { tier: 'Epic', color: 'text-purple-400' }
-  if (score >= 55) return { tier: 'Rare', color: 'text-blue-400' }
-  if (score >= 35) return { tier: 'Uncommon', color: 'text-green-400' }
-  return { tier: 'Common', color: 'text-gray-400' }
-}
-
 export function FeaturedNFTs() {
   const [allNFTs, setAllNFTs] = useState<NFTData[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -107,10 +98,7 @@ export function FeaturedNFTs() {
           <div className="relative mb-12">
             <div className="flex overflow-hidden">
               <div className="flex gap-4 lg:gap-6 animate-scroll-horizontal">
-                {scrollNFTs.map((nft, index) => {
-                  const rarityInfo = getRarityInfo(nft.rarityScore)
-
-                  return (
+                {scrollNFTs.map((nft, index) => (
                     <Link
                       key={`${nft.tokenId}-${index}`}
                       href={`/gallery`}
@@ -132,17 +120,13 @@ export function FeaturedNFTs() {
 
                         {/* NFT Info */}
                         <div className="p-3">
-                          <h3 className="font-semibold text-[#3fb8bd] text-sm mb-1 truncate font-fredoka">
+                          <h3 className="font-semibold text-[#3fb8bd] text-sm truncate font-fredoka">
                             {nft.name}
                           </h3>
-                          <p className={`text-xs ${rarityInfo.color} font-medium font-fredoka`}>
-                            {rarityInfo.tier}
-                          </p>
                         </div>
                       </div>
                     </Link>
-                  )
-                })}
+                ))}
               </div>
             </div>
           </div>
