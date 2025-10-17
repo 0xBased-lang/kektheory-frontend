@@ -3,6 +3,7 @@
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { BlurredTitleSection } from '@/components/ui/BlurredTitleSection'
+import { LinkButton } from '@/components/ui/Button'
 
 /**
  * Rewards Page
@@ -129,26 +130,12 @@ export default function RewardsPage() {
               The more 𝕂Ǝ𝕂TECH NFTs you hold, and the rarer they are, the more rewards you&apos;ll earn every day. Join our community and start building your token portfolio!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="/mint"
-                className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] p-[2px] shadow-lg shadow-[#3fb8bd]/50 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-[#3fb8bd]/70"
-              >
-                <div className="relative rounded-[10px] bg-gray-900 px-8 py-4 transition-all group-hover:bg-transparent">
-                  <span className="text-lg font-bold text-[#3fb8bd] group-hover:text-black font-fredoka">
-                    Mint 𝕂Ǝ𝕂TECH NFTs
-                  </span>
-                </div>
-              </a>
-              <a
-                href="/gallery"
-                className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] p-[2px] shadow-lg shadow-[#3fb8bd]/50 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-[#3fb8bd]/70"
-              >
-                <div className="relative rounded-[10px] bg-gray-900 px-8 py-4 transition-all group-hover:bg-transparent">
-                  <span className="text-lg font-bold text-[#3fb8bd] group-hover:text-black font-fredoka">
-                    Browse Gallery
-                  </span>
-                </div>
-              </a>
+              <LinkButton href="/mint" variant="gradient-border" size="lg">
+                Mint 𝕂Ǝ𝕂TECH NFTs
+              </LinkButton>
+              <LinkButton href="/gallery" variant="gradient-border" size="lg">
+                Browse Gallery
+              </LinkButton>
             </div>
           </div>
         </div>

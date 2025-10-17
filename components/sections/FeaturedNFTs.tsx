@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { LinkButton } from '@/components/ui/Button'
 import { fetchRankingsWithFallback } from '@/lib/api/kektech-rankings'
 
 // Featured NFTs section with rotating images from live API
@@ -134,15 +135,18 @@ export function FeaturedNFTs() {
 
         {/* View All Button */}
         <div className="text-center mt-12">
-          <Link
+          <LinkButton
             href="/gallery"
-            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black font-semibold rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-[#3fb8bd]/30 hover:scale-105 font-fredoka"
+            variant="primary"
+            size="md"
+            rightIcon={
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            }
           >
             View Full Collection
-            <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
+          </LinkButton>
         </div>
       </div>
 

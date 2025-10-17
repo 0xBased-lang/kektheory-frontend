@@ -1,7 +1,7 @@
 'use client'
 
-import Link from 'next/link'
 import Image from 'next/image'
+import { LinkButton } from '@/components/ui/Button'
 
 /**
  * Simplified Hero Component
@@ -45,20 +45,14 @@ export function EnhancedHero() {
           {/* CTA Buttons */}
           <div className="mb-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
             {/* Primary CTA */}
-            <Link
-              href="/mint"
-              className="rounded-xl bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] px-8 py-4 font-fredoka text-lg font-bold text-black shadow-lg transition-all hover:scale-105 hover:shadow-xl"
-            >
-              🚀 Start Minting
-            </Link>
+            <LinkButton href="/mint" variant="primary" size="lg" leftIcon="🚀">
+              Start Minting
+            </LinkButton>
 
             {/* Secondary CTA */}
-            <Link
-              href="/gallery"
-              className="rounded-xl border-2 border-[#3fb8bd] bg-transparent px-8 py-4 font-fredoka text-lg font-bold text-[#3fb8bd] shadow-lg transition-all hover:scale-105 hover:bg-[#3fb8bd]/10"
-            >
-              🎨 View Gallery
-            </Link>
+            <LinkButton href="/gallery" variant="secondary" size="lg" leftIcon="🎨">
+              View Gallery
+            </LinkButton>
           </div>
 
           {/* Single Stat - Total Supply Only */}
