@@ -155,11 +155,9 @@ export default function Homepage() {
       </section>
 
       {/* About Us Section */}
-      <section id="about" className="bg-gradient-to-b from-gray-900 to-gray-950 py-20 border-t border-gray-800">
+      <section id="about" className="py-20 border-t border-gray-800">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-white text-center mb-16 font-fredoka">
-            About <span className="text-[#3fb8bd]">Us</span>
-          </h2>
+          <h2 className="text-4xl font-bold text-[#3fb8bd] text-center mb-16 font-fredoka">About Us</h2>
 
           {/* First Row: Text Left, Image Right */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
@@ -209,9 +207,14 @@ export default function Homepage() {
             </div>
           </div>
 
-          {/* Community Journey */}
+        </div>
+      </section>
+
+      {/* Community Journey Section */}
+      <section className="bg-gradient-to-b from-gray-900 to-gray-950 py-20 border-t border-gray-800">
+        <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <h3 className="text-2xl font-bold text-white mb-6 font-fredoka">
+            <h3 className="text-3xl font-bold text-white mb-6 font-fredoka">
               Community <span className="text-[#3fb8bd]">Journey</span>
             </h3>
             <p className="text-gray-300 leading-relaxed mb-8">
