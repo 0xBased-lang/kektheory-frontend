@@ -171,7 +171,12 @@ export function useStaticMetadata(): UseStaticMetadataResult {
 }
 
 /**
- * Get single NFT by token ID from static metadata
+ * Get single NFT by token ID with dynamic fallback
+ *
+ * HYBRID SYSTEM:
+ * 1. First tries static file (fast, <50ms)
+ * 2. If not found → Falls back to live API (for new mints)
+ * 3. Ensures ALL NFTs work (old + newly minted)
  *
  * @param tokenId - Token ID to search for
  * @returns CompleteNFT or null if not found
@@ -181,9 +186,54 @@ export function useStaticNFT(tokenId: string): {
   isLoading: boolean
   error: Error | null
 } {
-  const { data, isLoading, error } = useStaticMetadata()
+  const { data, isLoading: staticLoading, error: staticError } = useStaticMetadata()
+  const [dynamicNft, setDynamicNft] = useState<CompleteNFT | null>(null)
+  const [dynamicLoading, setDynamicLoading] = useState(false)
+  const [dynamicError, setDynamicError] = useState<Error | null>(null)
 
-  const nft = data?.find(n => n.tokenId === tokenId) || null
+  // Try static file first
+  const staticNft = data?.find(n => n.tokenId === tokenId) || null
+
+  // If not found in static file AND static file finished loading, try live API
+  useEffect(() => {
+    if (staticLoading || staticNft || !tokenId || !data) {
+      return // Still loading static, or already found, or no data
+    }
+
+    // NFT not found in static file - fetch from live API
+    const fetchDynamic = async () => {
+      setDynamicLoading(true)
+      setDynamicError(null)
+
+      try {
+        const response = await fetch(`/api/nft/${tokenId}`)
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error(`NFT #${tokenId} not found or not yet minted`)
+          }
+          throw new Error(`Failed to fetch NFT: ${response.statusText}`)
+        }
+
+        const nftData: CompleteNFT = await response.json()
+        setDynamicNft(nftData)
+      } catch (err) {
+        console.error(`Failed to fetch dynamic NFT ${tokenId}:`, err)
+        setDynamicError(
+          err instanceof Error ? err : new Error('Failed to fetch NFT')
+        )
+      } finally {
+        setDynamicLoading(false)
+      }
+    }
+
+    fetchDynamic()
+  }, [tokenId, staticLoading, staticNft, data])
+
+  // Return static NFT if found, otherwise dynamic NFT
+  const nft = staticNft || dynamicNft
+  const isLoading = staticLoading || dynamicLoading
+  const error = staticError || dynamicError
 
   return { nft, isLoading, error }
 }
