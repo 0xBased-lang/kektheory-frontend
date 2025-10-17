@@ -6,32 +6,83 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
-import { useStaticNFT } from '@/lib/hooks/useStaticMetadata'
+import { useStaticNFT, type TraitStats } from '@/lib/hooks/useStaticMetadata'
 
 /**
- * Trait rarity percentages from collection data
+ * Normalize string for fuzzy matching
+ * - Removes spaces, underscores, dashes
+ * - Converts to lowercase
+ * - Handles special characters
  */
-const traitPercentages: Record<string, Record<string, string>> = {
-  background: { psychedelic: '1.45%', crypto_wallstreet: '3.45%', creature_cloud: '3.62%', circus: '3.81%', darkside: '4.10%', touch_grass: '4.17%', void: '14.93%', harmony: '15.50%', astral: '15.52%', UV: '16.62%', shining: '16.83%' },
-  body: { rare_diablo: '0.21%', RIP: '1.33%', 'x-ray': '3.07%', diablo: '10.19%', basedAI: '10.31%', ghastly: '29.60%', normie: '45.29%' },
-  tattoo: { kekity_kek: '3.74%', iron_mike: '5.05%', '1337': '9.88%', '420': '9.88%', kekistan: '10.02%', none: '61.43%' },
-  style: { rare_demonic: '7.00%', demonic: '7.00%', rare_goth: '16.60%', goth: '16.60%', rare_pierced: '17.02%', pierced: '17.02%', none: '59.38%' },
-  clothes: { kekius: '0.71%', wizard: '1.60%', kexico: '3.81%', kexico_short: '3.88%', mac_kek: '4.36%', OG_Pepecoin: '4.43%', brain_owner: '7.24%', green: '7.31%', trippy_hippie: '7.31%', game_over: '7.33%', nutmeg: '7.33%', chad: '7.38%', dark: '7.40%', worker: '7.43%', hodler: '7.48%', hot_nacho: '7.50%', jeet: '7.50%' },
-  tools: { rare_golden_tickets: '1.02%', golden_tickets: '1.02%', rare_coal: '3.10%', coal: '3.10%', rare_sorcerer: '3.45%', sorcerer: '3.45%', rare_OG_reverse: '6.31%', OG_reverse: '6.31%', rare_pepepaint: '6.31%', pepepaint: '6.31%', rare_pokemon: '12.81%', pokemon: '12.81%', rare_scythe: '13.02%', scythe: '13.02%', rare_blunt: '13.05%', blunt: '13.05%', rare_bamboo: '13.07%', bamboo: '13.07%', rare_reward: '13.14%', reward: '13.14%', rare_flipper: '13.17%', flipper: '13.17%' },
-  eyes: { diabolic: '1.88%', based: '7.69%', wrecked: '11.40%', baked: '11.76%', blue: '15.67%', cyan: '16.12%', confused: '16.17%', straight: '16.24%', none: '3.07%' },
-  glasses: { rare_patched: '0.57%', patched: '0.57%', rare_AIagent: '6.98%', AIagent: '6.98%', rare_radioactive: '12.02%', radioactive: '12.02%', rare_pixel: '13.10%', pixel: '13.10%', none: '67.33%' },
-  hat: { maximus: '0.52%', basedgod: '1.40%', magic: '1.81%', mad_scientist: '3.38%', punk: '3.43%', orange: '3.52%', holy: '4.19%', haunted: '4.45%', fast_food: '4.55%', pirate: '5.26%', gigabrain: '6.36%', headband: '6.62%', curly: '8.31%', chonk: '9.76%', none: '36.43%' },
-  special: { spyware: '4.45%', rare_whitebeard: '4.79%', whitebeard: '4.79%', rare_hairy: '18.24%', hairy: '18.24%', honk: '21.10%', none: '51.43%' },
-  'easter eggs': { 'personalized trait': '0.07%', 'free tattoo lifetime pass': '0.21%', 'golden ticket boost': '1.02%', 'early bird': '2.45%', 'limited edition free mint': '10.00%', none: '86.24%' }
+function normalizeString(str: string): string {
+  return str
+    .toLowerCase()
+    .replace(/[\s_-]+/g, '') // Remove spaces, underscores, dashes
+    .replace(/[^a-z0-9]/g, '') // Remove special chars except alphanumeric
 }
 
 /**
- * Get rarity percentage for a trait
+ * Get rarity percentage for a trait with bulletproof fuzzy matching
+ *
+ * Handles:
+ * - Case insensitivity (BasedAI vs basedai)
+ * - Spaces vs underscores (Easter Eggs vs easter_eggs)
+ * - Typos and variations
+ *
+ * @param traitStats - Live trait statistics from metadata
+ * @param traitType - Trait category (e.g., "Background", "Body")
+ * @param value - Trait value (e.g., "BasedAI", "none")
+ * @returns Formatted percentage string or empty string if not found
  */
-function getTraitPercentage(traitType: string, value: string): string {
-  const categoryKey = traitType.toLowerCase().replace(/ /g, '_')
-  const valueKey = value.toLowerCase().replace(/ /g, '_')
-  return traitPercentages[categoryKey]?.[valueKey] || ''
+function getTraitPercentage(
+  traitStats: TraitStats | null,
+  traitType: string,
+  value: string
+): string {
+  if (!traitStats) return ''
+
+  // Normalize inputs for flexible matching
+  const normalizedType = normalizeString(traitType)
+  const normalizedValue = normalizeString(value)
+
+  // Find matching category (case-insensitive, space-insensitive)
+  const categoryKey = Object.keys(traitStats).find(
+    key => normalizeString(key) === normalizedType
+  )
+
+  if (!categoryKey) return ''
+
+  const category = traitStats[categoryKey]
+
+  // Strategy 1: Try exact match first (fastest)
+  if (category[value]) {
+    return `${category[value].percentage}%`
+  }
+
+  // Strategy 2: Try normalized match (handles case/space differences)
+  const valueKey = Object.keys(category).find(
+    key => normalizeString(key) === normalizedValue
+  )
+
+  if (valueKey && category[valueKey]) {
+    return `${category[valueKey].percentage}%`
+  }
+
+  // Strategy 3: Fuzzy match with partial matching (for typos)
+  // Find closest match by checking if normalized value contains or is contained
+  const fuzzyMatch = Object.keys(category).find(key => {
+    const normalizedKey = normalizeString(key)
+    return (
+      normalizedKey.includes(normalizedValue) ||
+      normalizedValue.includes(normalizedKey)
+    )
+  })
+
+  if (fuzzyMatch && category[fuzzyMatch]) {
+    return `${category[fuzzyMatch].percentage}%`
+  }
+
+  return ''
 }
 
 /**
@@ -46,8 +97,8 @@ function NFTDetailPageContent() {
   const searchParams = useSearchParams()
   const tokenId = searchParams.get('id') || ''
 
-  // Load NFT from static metadata (instant!)
-  const { nft, isLoading: loading, error: fetchError } = useStaticNFT(tokenId)
+  // Load NFT and trait statistics from static metadata (instant!)
+  const { nft, traitStats, isLoading: loading, error: fetchError } = useStaticNFT(tokenId)
 
   const error = !tokenId ? 'No token ID provided' : fetchError?.message || null
 
@@ -195,7 +246,7 @@ function NFTDetailPageContent() {
                     </h2>
                     <div className="grid gap-4 sm:grid-cols-2">
                       {nft.attributes.map((attr, index) => {
-                        const percentage = getTraitPercentage(attr.trait_type, String(attr.value))
+                        const percentage = getTraitPercentage(traitStats, attr.trait_type, String(attr.value))
                         return (
                           <div
                             key={index}

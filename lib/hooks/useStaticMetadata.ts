@@ -185,8 +185,9 @@ export function useStaticNFT(tokenId: string): {
   nft: CompleteNFT | null
   isLoading: boolean
   error: Error | null
+  traitStats: TraitStats | null
 } {
-  const { data, isLoading: staticLoading, error: staticError } = useStaticMetadata()
+  const { data, traitStats, isLoading: staticLoading, error: staticError } = useStaticMetadata()
   const [dynamicNft, setDynamicNft] = useState<CompleteNFT | null>(null)
   const [dynamicLoading, setDynamicLoading] = useState(false)
   const [dynamicError, setDynamicError] = useState<Error | null>(null)
@@ -235,5 +236,5 @@ export function useStaticNFT(tokenId: string): {
   const isLoading = staticLoading || dynamicLoading
   const error = staticError || dynamicError
 
-  return { nft, isLoading, error }
+  return { nft, isLoading, error, traitStats }
 }
