@@ -107,8 +107,8 @@ export function PortfolioOverview({
           className={`
             px-6 py-3 rounded-lg font-fredoka font-bold transition-all duration-200 flex items-center gap-2
             ${activeSection === 'assets'
-              ? 'bg-[#3fb8bd] text-black shadow-lg shadow-[#3fb8bd]/20'
-              : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
+              ? 'bg-[#ffd700] text-black shadow-lg shadow-[#ffd700]/20'
+              : 'text-[#ffd700] hover:text-white hover:bg-gray-800/50'
             }
           `}
         >
