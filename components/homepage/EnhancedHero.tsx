@@ -39,7 +39,9 @@ export function EnhancedHero() {
             : digital masterpieces blending tech and meme fun, hand-drawn by{' '}
             <span className="font-bold text-[#4ecca7]">𝔹enzo𝔹ert & Princess 𝔹u𝔹𝔹legum</span>
             . An homage to{' '}
-            <span className="font-bold text-[#3fb8bd]">OG Pepecoin 🐸👑</span>
+            <span className="font-bold text-[#3fb8bd]">
+              OG Pepecoin <span className="whitespace-nowrap">🐸👑</span>
+            </span>
           </p>
 
           {/* CTA Buttons */}
