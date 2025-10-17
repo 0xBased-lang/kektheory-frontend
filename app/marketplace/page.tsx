@@ -75,8 +75,8 @@ export default function MarketplacePage() {
                 className={`
                   px-8 py-3 rounded-lg font-fredoka font-bold transition-all duration-200
                   ${activeTab === 'limited'
-                    ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20'
-                    : 'text-orange-400 hover:text-white hover:bg-gray-800/50'
+                    ? 'bg-[#ffd700] text-black shadow-lg shadow-[#ffd700]/20'
+                    : 'text-[#ffd700] hover:text-white hover:bg-gray-800/50'
                   }
                 `}
               >
@@ -101,7 +101,7 @@ export default function MarketplacePage() {
             {activeTab === 'limited' && (
               <div className="text-center py-24">
                 <div className="text-8xl mb-6">⭐</div>
-                <h2 className="text-3xl font-bold text-orange-400 mb-4 font-fredoka">Limited Edition</h2>
+                <h2 className="text-3xl font-bold text-[#ffd700] mb-4 font-fredoka">Limited Edition</h2>
                 <p className="text-gray-400 max-w-md mx-auto">
                   Exclusive limited edition NFTs and special collaborations. Check back soon for rare drops!
                 </p>
