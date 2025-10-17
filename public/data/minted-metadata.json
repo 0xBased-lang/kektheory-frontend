@@ -1,6 +1,6 @@
 {
-  "generated": "2025-10-13T13:08:07.576Z",
-  "totalSupply": 2470,
+  "generated": "2025-10-17T15:06:01.086Z",
+  "totalSupply": 2474,
   "nfts": [
     {
       "rank": 1,
@@ -3709,6 +3709,59 @@
         {
           "trait_type": "Easter Eggs",
           "value": "limited edition free mint"
+        }
+      ]
+    },
+    {
+      "rank": 133,
+      "tokenId": "2472",
+      "name": "𝕂Ǝ𝕂TECH#2472 The Uv Ape",
+      "rarityScore": 44.55,
+      "imageUrl": "https://api.kektech.xyz/api/image/2472",
+      "attributes": [
+        {
+          "trait_type": "Background",
+          "value": "UV"
+        },
+        {
+          "trait_type": "Body",
+          "value": "diablo"
+        },
+        {
+          "trait_type": "Tattoo",
+          "value": "420"
+        },
+        {
+          "trait_type": "Style",
+          "value": "goth"
+        },
+        {
+          "trait_type": "Clothes",
+          "value": "green"
+        },
+        {
+          "trait_type": "Tools",
+          "value": "OG_reverse"
+        },
+        {
+          "trait_type": "Eyes",
+          "value": "baked"
+        },
+        {
+          "trait_type": "Glasses",
+          "value": "pixel"
+        },
+        {
+          "trait_type": "Hat",
+          "value": "punk"
+        },
+        {
+          "trait_type": "Special",
+          "value": "rare_whitebeard"
+        },
+        {
+          "trait_type": "Easter Eggs",
+          "value": "none"
         }
       ]
     },
@@ -16531,6 +16584,59 @@
         {
           "trait_type": "Special",
           "value": "none"
+        },
+        {
+          "trait_type": "Easter Eggs",
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "rank": 501,
+      "tokenId": "2470",
+      "name": "𝕂Ǝ𝕂TECH#2470 Wagmi to the Moon 🦄",
+      "rarityScore": 39.06,
+      "imageUrl": "https://api.kektech.xyz/api/image/2470",
+      "attributes": [
+        {
+          "trait_type": "Background",
+          "value": "UV"
+        },
+        {
+          "trait_type": "Body",
+          "value": "BasedAI"
+        },
+        {
+          "trait_type": "Tattoo",
+          "value": "420"
+        },
+        {
+          "trait_type": "Style",
+          "value": "pierced"
+        },
+        {
+          "trait_type": "Clothes",
+          "value": "brain_owner"
+        },
+        {
+          "trait_type": "Tools",
+          "value": "pokemon"
+        },
+        {
+          "trait_type": "Eyes",
+          "value": "cyan"
+        },
+        {
+          "trait_type": "Glasses",
+          "value": "radioactive"
+        },
+        {
+          "trait_type": "Hat",
+          "value": "headband"
+        },
+        {
+          "trait_type": "Special",
+          "value": "rare_hairy"
         },
         {
           "trait_type": "Easter Eggs",
@@ -30470,6 +30576,59 @@
         {
           "trait_type": "Special",
           "value": "honk"
+        },
+        {
+          "trait_type": "Easter Eggs",
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "rank": 951,
+      "tokenId": "2473",
+      "name": "𝕂Ǝ𝕂TECH#2473 Basedgod Trader 💫",
+      "rarityScore": 36.36,
+      "imageUrl": "https://api.kektech.xyz/api/image/2473",
+      "attributes": [
+        {
+          "trait_type": "Background",
+          "value": "shining"
+        },
+        {
+          "trait_type": "Body",
+          "value": "BasedAI"
+        },
+        {
+          "trait_type": "Tattoo",
+          "value": "none"
+        },
+        {
+          "trait_type": "Style",
+          "value": "none"
+        },
+        {
+          "trait_type": "Clothes",
+          "value": "mac_kek"
+        },
+        {
+          "trait_type": "Tools",
+          "value": "flipper"
+        },
+        {
+          "trait_type": "Eyes",
+          "value": "cyan"
+        },
+        {
+          "trait_type": "Glasses",
+          "value": "none"
+        },
+        {
+          "trait_type": "Hat",
+          "value": "basedgod"
+        },
+        {
+          "trait_type": "Special",
+          "value": "none"
         },
         {
           "trait_type": "Easter Eggs",
@@ -51242,6 +51401,59 @@
         {
           "trait_type": "Hat",
           "value": "haunted"
+        },
+        {
+          "trait_type": "Special",
+          "value": "honk"
+        },
+        {
+          "trait_type": "Easter Eggs",
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "rank": 1632,
+      "tokenId": "2471",
+      "name": "𝕂Ǝ𝕂TECH#2471 The Frenly Coal 🏆",
+      "rarityScore": 33.84,
+      "imageUrl": "https://api.kektech.xyz/api/image/2471",
+      "attributes": [
+        {
+          "trait_type": "Background",
+          "value": "UV"
+        },
+        {
+          "trait_type": "Body",
+          "value": "normie"
+        },
+        {
+          "trait_type": "Tattoo",
+          "value": "none"
+        },
+        {
+          "trait_type": "Style",
+          "value": "none"
+        },
+        {
+          "trait_type": "Clothes",
+          "value": "kexico_short"
+        },
+        {
+          "trait_type": "Tools",
+          "value": "coal"
+        },
+        {
+          "trait_type": "Eyes",
+          "value": "wrecked"
+        },
+        {
+          "trait_type": "Glasses",
+          "value": "none"
+        },
+        {
+          "trait_type": "Hat",
+          "value": "magic"
         },
         {
           "trait_type": "Special",
@@ -130921,15 +131133,15 @@
       },
       "creature_cloud": {
         "count": 103,
-        "percentage": "4.17"
+        "percentage": "4.16"
       },
       "darkside": {
         "count": 107,
-        "percentage": "4.33"
+        "percentage": "4.32"
       },
       "touch_grass": {
         "count": 99,
-        "percentage": "4.01"
+        "percentage": "4.00"
       },
       "psychedelic": {
         "count": 29,
@@ -130937,27 +131149,27 @@
       },
       "circus": {
         "count": 94,
-        "percentage": "3.81"
+        "percentage": "3.80"
       },
       "shining": {
-        "count": 396,
-        "percentage": "16.03"
+        "count": 397,
+        "percentage": "16.05"
       },
       "astral": {
         "count": 376,
-        "percentage": "15.22"
+        "percentage": "15.20"
       },
       "harmony": {
         "count": 379,
-        "percentage": "15.34"
+        "percentage": "15.32"
       },
       "UV": {
-        "count": 434,
-        "percentage": "17.57"
+        "count": 437,
+        "percentage": "17.66"
       },
       "void": {
         "count": 363,
-        "percentage": "14.70"
+        "percentage": "14.67"
       }
     },
     "Body": {
@@ -130966,20 +131178,20 @@
         "percentage": "0.24"
       },
       "diablo": {
-        "count": 259,
-        "percentage": "10.49"
+        "count": 260,
+        "percentage": "10.51"
       },
       "normie": {
-        "count": 1103,
-        "percentage": "44.66"
+        "count": 1104,
+        "percentage": "44.62"
       },
       "BasedAI": {
-        "count": 264,
-        "percentage": "10.69"
+        "count": 266,
+        "percentage": "10.75"
       },
       "ghastly": {
         "count": 718,
-        "percentage": "29.07"
+        "percentage": "29.02"
       },
       "x-ray": {
         "count": 87,
@@ -130987,59 +131199,59 @@
       },
       "RIP": {
         "count": 33,
-        "percentage": "1.34"
+        "percentage": "1.33"
       }
     },
     "Tattoo": {
       "420": {
-        "count": 242,
-        "percentage": "9.80"
+        "count": 244,
+        "percentage": "9.86"
       },
       "1337": {
         "count": 246,
-        "percentage": "9.96"
+        "percentage": "9.94"
       },
       "kekity_kek": {
         "count": 92,
         "percentage": "3.72"
       },
       "none": {
-        "count": 1525,
-        "percentage": "61.74"
+        "count": 1527,
+        "percentage": "61.72"
       },
       "iron_mike": {
         "count": 127,
-        "percentage": "5.14"
+        "percentage": "5.13"
       },
       "kekistan": {
         "count": 238,
-        "percentage": "9.64"
+        "percentage": "9.62"
       }
     },
     "Style": {
       "pierced": {
-        "count": 385,
-        "percentage": "15.59"
+        "count": 386,
+        "percentage": "15.60"
       },
       "goth": {
-        "count": 401,
-        "percentage": "16.23"
+        "count": 402,
+        "percentage": "16.25"
       },
       "demonic": {
         "count": 160,
-        "percentage": "6.48"
+        "percentage": "6.47"
       },
       "rare_goth": {
         "count": 34,
-        "percentage": "1.38"
+        "percentage": "1.37"
       },
       "rare_demonic": {
         "count": 2,
         "percentage": "0.08"
       },
       "none": {
-        "count": 1458,
-        "percentage": "59.03"
+        "count": 1460,
+        "percentage": "59.01"
       },
       "rare_pierced": {
         "count": 30,
@@ -131053,63 +131265,63 @@
       },
       "wizard": {
         "count": 34,
-        "percentage": "1.38"
+        "percentage": "1.37"
       },
       "mac_kek": {
-        "count": 112,
-        "percentage": "4.53"
+        "count": 113,
+        "percentage": "4.57"
       },
       "hot_nacho": {
         "count": 191,
-        "percentage": "7.73"
+        "percentage": "7.72"
       },
       "OG_Pepecoin": {
         "count": 100,
-        "percentage": "4.05"
+        "percentage": "4.04"
       },
       "game_over": {
         "count": 177,
-        "percentage": "7.17"
+        "percentage": "7.15"
       },
       "trippy_hippie": {
         "count": 190,
-        "percentage": "7.69"
+        "percentage": "7.68"
       },
       "jeet": {
         "count": 191,
-        "percentage": "7.73"
+        "percentage": "7.72"
       },
       "dark": {
         "count": 177,
-        "percentage": "7.17"
+        "percentage": "7.15"
       },
       "chad": {
         "count": 178,
-        "percentage": "7.21"
+        "percentage": "7.19"
       },
       "green": {
-        "count": 197,
-        "percentage": "7.98"
+        "count": 198,
+        "percentage": "8.00"
       },
       "brain_owner": {
-        "count": 186,
-        "percentage": "7.53"
+        "count": 187,
+        "percentage": "7.56"
       },
       "kexico_short": {
-        "count": 100,
-        "percentage": "4.05"
+        "count": 101,
+        "percentage": "4.08"
       },
       "nutmeg": {
         "count": 179,
-        "percentage": "7.25"
+        "percentage": "7.24"
       },
       "worker": {
         "count": 175,
-        "percentage": "7.09"
+        "percentage": "7.07"
       },
       "hodler": {
         "count": 174,
-        "percentage": "7.04"
+        "percentage": "7.03"
       },
       "kexico": {
         "count": 89,
@@ -131123,39 +131335,39 @@
       },
       "sorcerer": {
         "count": 79,
-        "percentage": "3.20"
+        "percentage": "3.19"
       },
       "flipper": {
-        "count": 321,
-        "percentage": "13.00"
+        "count": 322,
+        "percentage": "13.02"
       },
       "pepepaint": {
         "count": 149,
-        "percentage": "6.03"
+        "percentage": "6.02"
       },
       "coal": {
-        "count": 73,
-        "percentage": "2.96"
+        "count": 74,
+        "percentage": "2.99"
       },
       "golden_tickets": {
         "count": 25,
         "percentage": "1.01"
       },
       "pokemon": {
-        "count": 318,
-        "percentage": "12.87"
+        "count": 319,
+        "percentage": "12.89"
       },
       "rare_blunt": {
         "count": 10,
         "percentage": "0.40"
       },
       "OG_reverse": {
-        "count": 159,
-        "percentage": "6.44"
+        "count": 160,
+        "percentage": "6.47"
       },
       "rare_pokemon": {
         "count": 11,
-        "percentage": "0.45"
+        "percentage": "0.44"
       },
       "rare_reward": {
         "count": 14,
@@ -131163,11 +131375,11 @@
       },
       "rare_flipper": {
         "count": 11,
-        "percentage": "0.45"
+        "percentage": "0.44"
       },
       "scythe": {
         "count": 281,
-        "percentage": "11.38"
+        "percentage": "11.36"
       },
       "rare_scythe": {
         "count": 13,
@@ -131175,7 +131387,7 @@
       },
       "bamboo": {
         "count": 312,
-        "percentage": "12.63"
+        "percentage": "12.61"
       },
       "rare_bamboo": {
         "count": 18,
@@ -131183,7 +131395,7 @@
       },
       "blunt": {
         "count": 313,
-        "percentage": "12.67"
+        "percentage": "12.65"
       },
       "rare_OG_reverse": {
         "count": 6,
@@ -131191,7 +131403,7 @@
       },
       "reward": {
         "count": 316,
-        "percentage": "12.79"
+        "percentage": "12.77"
       },
       "rare_pepepaint": {
         "count": 1,
@@ -131205,7 +131417,7 @@
     "Eyes": {
       "based": {
         "count": 234,
-        "percentage": "9.47"
+        "percentage": "9.46"
       },
       "diabolic": {
         "count": 42,
@@ -131213,53 +131425,53 @@
       },
       "blue": {
         "count": 346,
-        "percentage": "14.01"
+        "percentage": "13.99"
       },
       "baked": {
-        "count": 305,
-        "percentage": "12.35"
+        "count": 306,
+        "percentage": "12.37"
       },
       "none": {
         "count": 87,
         "percentage": "3.52"
       },
       "cyan": {
-        "count": 391,
-        "percentage": "15.83"
+        "count": 393,
+        "percentage": "15.89"
       },
       "straight": {
         "count": 393,
-        "percentage": "15.91"
+        "percentage": "15.89"
       },
       "wrecked": {
-        "count": 275,
-        "percentage": "11.13"
+        "count": 276,
+        "percentage": "11.16"
       },
       "confused": {
         "count": 397,
-        "percentage": "16.07"
+        "percentage": "16.05"
       }
     },
     "Glasses": {
       "patched": {
         "count": 11,
-        "percentage": "0.45"
+        "percentage": "0.44"
       },
       "none": {
-        "count": 1655,
-        "percentage": "67.00"
+        "count": 1657,
+        "percentage": "66.98"
       },
       "radioactive": {
-        "count": 305,
-        "percentage": "12.35"
+        "count": 306,
+        "percentage": "12.37"
       },
       "AIagent": {
         "count": 158,
-        "percentage": "6.40"
+        "percentage": "6.39"
       },
       "pixel": {
-        "count": 306,
-        "percentage": "12.39"
+        "count": 307,
+        "percentage": "12.41"
       },
       "rare_patched": {
         "count": 3,
@@ -131284,16 +131496,16 @@
         "percentage": "0.40"
       },
       "magic": {
-        "count": 35,
-        "percentage": "1.42"
+        "count": 36,
+        "percentage": "1.46"
       },
       "fast_food": {
         "count": 123,
-        "percentage": "4.98"
+        "percentage": "4.97"
       },
       "basedgod": {
-        "count": 38,
-        "percentage": "1.54"
+        "count": 39,
+        "percentage": "1.58"
       },
       "haunted": {
         "count": 92,
@@ -131304,28 +131516,28 @@
         "percentage": "4.49"
       },
       "punk": {
-        "count": 81,
-        "percentage": "3.28"
+        "count": 82,
+        "percentage": "3.31"
       },
       "none": {
         "count": 904,
-        "percentage": "36.60"
+        "percentage": "36.54"
       },
       "pirate": {
         "count": 122,
-        "percentage": "4.94"
+        "percentage": "4.93"
       },
       "mad_scientist": {
         "count": 81,
-        "percentage": "3.28"
+        "percentage": "3.27"
       },
       "curly": {
         "count": 201,
-        "percentage": "8.14"
+        "percentage": "8.12"
       },
       "gigabrain": {
         "count": 163,
-        "percentage": "6.60"
+        "percentage": "6.59"
       },
       "orange": {
         "count": 87,
@@ -131333,40 +131545,40 @@
       },
       "chonk": {
         "count": 254,
-        "percentage": "10.28"
+        "percentage": "10.27"
       },
       "headband": {
-        "count": 168,
-        "percentage": "6.80"
+        "count": 169,
+        "percentage": "6.83"
       }
     },
     "Special": {
       "none": {
-        "count": 1272,
-        "percentage": "51.50"
+        "count": 1273,
+        "percentage": "51.46"
       },
       "rare_whitebeard": {
-        "count": 36,
-        "percentage": "1.46"
+        "count": 37,
+        "percentage": "1.50"
       },
       "spyware": {
         "count": 114,
-        "percentage": "4.62"
+        "percentage": "4.61"
       },
       "whitebeard": {
         "count": 88,
         "percentage": "3.56"
       },
       "rare_hairy": {
-        "count": 108,
-        "percentage": "4.37"
+        "count": 109,
+        "percentage": "4.41"
       },
       "hairy": {
         "count": 327,
-        "percentage": "13.24"
+        "percentage": "13.22"
       },
       "honk": {
-        "count": 525,
+        "count": 526,
         "percentage": "21.26"
       }
     },
@@ -131376,12 +131588,12 @@
         "percentage": "0.24"
       },
       "none": {
-        "count": 2131,
-        "percentage": "86.28"
+        "count": 2135,
+        "percentage": "86.30"
       },
       "limited edition free mint": {
         "count": 247,
-        "percentage": "10.00"
+        "percentage": "9.98"
       },
       "golden ticket boost": {
         "count": 25,
@@ -131393,7 +131605,7 @@
       },
       "early bird": {
         "count": 59,
-        "percentage": "2.39"
+        "percentage": "2.38"
       }
     }
   }

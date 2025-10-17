@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -10,9 +11,19 @@ import { NetworkSwitcher } from '@/components/web3/NetworkSwitcher'
  * Header Component
  *
  * Navigation bar with KEKTECH logo, navigation links, and wallet connection
+ * Includes mobile hamburger menu for responsive design
  */
 export function Header() {
   const pathname = usePathname()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen)
+  }
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false)
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[#3fb8bd]/20 bg-[#000000] backdrop-blur-sm">
@@ -31,7 +42,7 @@ export function Header() {
           />
         </Link>
 
-        {/* Navigation Links - Center/Right */}
+        {/* Desktop Navigation Links - Center/Right */}
         <nav className="hidden items-center space-x-4 md:flex lg:space-x-6">
           <Link
             href="/marketplace"
@@ -83,8 +94,139 @@ export function Header() {
           </Link>
         </nav>
 
-        {/* Wallet Connect & Network Switcher */}
+        {/* Right Side: Wallet Connect & Mobile Menu Button */}
         <div className="flex items-center gap-3">
+          {/* Desktop: Network Switcher + Connect Button */}
+          <div className="hidden md:flex items-center gap-3">
+            <NetworkSwitcher inline />
+            <ConnectButton />
+          </div>
+
+          {/* Mobile: Hamburger Menu Button */}
+          <button
+            onClick={toggleMobileMenu}
+            className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-lg bg-gray-900/60 border border-gray-800 hover:border-[#3fb8bd] transition-colors"
+            aria-label="Toggle mobile menu"
+            aria-expanded={mobileMenuOpen}
+          >
+            <span
+              className={`block w-6 h-0.5 bg-[#3fb8bd] transition-all duration-300 ${
+                mobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''
+              }`}
+            />
+            <span
+              className={`block w-6 h-0.5 bg-[#3fb8bd] my-1 transition-all duration-300 ${
+                mobileMenuOpen ? 'opacity-0' : ''
+              }`}
+            />
+            <span
+              className={`block w-6 h-0.5 bg-[#3fb8bd] transition-all duration-300 ${
+                mobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''
+              }`}
+            />
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 md:hidden"
+          onClick={closeMobileMenu}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Mobile Slide-Out Menu */}
+      <div
+        className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-black border-l border-[#3fb8bd]/20 z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
+          mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        {/* Mobile Menu Header */}
+        <div className="flex items-center justify-between p-6 border-b border-gray-800">
+          <h2 className="font-fredoka text-xl font-bold text-[#3fb8bd]">Menu</h2>
+          <button
+            onClick={closeMobileMenu}
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-900/60 border border-gray-800 hover:border-[#3fb8bd] transition-colors"
+            aria-label="Close menu"
+          >
+            <span className="text-[#3fb8bd] text-xl">×</span>
+          </button>
+        </div>
+
+        {/* Mobile Navigation Links */}
+        <nav className="flex flex-col p-6 space-y-4">
+          <Link
+            href="/marketplace"
+            onClick={closeMobileMenu}
+            className={`font-fredoka text-lg font-medium py-3 px-4 rounded-lg transition-colors ${
+              pathname === '/marketplace'
+                ? 'bg-[#3fb8bd]/20 text-[#3fb8bd] font-bold'
+                : 'text-gray-300 hover:bg-gray-900/60 hover:text-[#3fb8bd]'
+            }`}
+          >
+            Marketplace
+          </Link>
+          <Link
+            href="/dashboard"
+            onClick={closeMobileMenu}
+            className={`font-fredoka text-lg font-medium py-3 px-4 rounded-lg transition-colors ${
+              pathname === '/dashboard'
+                ? 'bg-[#3fb8bd]/20 text-[#3fb8bd] font-bold'
+                : 'text-gray-300 hover:bg-gray-900/60 hover:text-[#3fb8bd]'
+            }`}
+          >
+            Dashboard
+          </Link>
+          <Link
+            href="/gallery"
+            onClick={closeMobileMenu}
+            className={`font-fredoka text-lg font-medium py-3 px-4 rounded-lg transition-colors ${
+              pathname === '/gallery'
+                ? 'bg-[#3fb8bd]/20 text-[#3fb8bd] font-bold'
+                : 'text-gray-300 hover:bg-gray-900/60 hover:text-[#3fb8bd]'
+            }`}
+          >
+            Gallery
+          </Link>
+          <Link
+            href="/rewards"
+            onClick={closeMobileMenu}
+            className={`font-fredoka text-lg font-medium py-3 px-4 rounded-lg transition-colors ${
+              pathname === '/rewards'
+                ? 'bg-[#3fb8bd]/20 text-[#3fb8bd] font-bold'
+                : 'text-gray-300 hover:bg-gray-900/60 hover:text-[#3fb8bd]'
+            }`}
+          >
+            Rewards
+          </Link>
+          <Link
+            href="/#roadmap"
+            onClick={closeMobileMenu}
+            className={`font-fredoka text-lg font-medium py-3 px-4 rounded-lg transition-colors ${
+              pathname === '/' && typeof window !== 'undefined' && window.location.hash === '#roadmap'
+                ? 'bg-[#3fb8bd]/20 text-[#3fb8bd] font-bold'
+                : 'text-gray-300 hover:bg-gray-900/60 hover:text-[#3fb8bd]'
+            }`}
+          >
+            Roadmap
+          </Link>
+          <Link
+            href="/#about"
+            onClick={closeMobileMenu}
+            className={`font-fredoka text-lg font-medium py-3 px-4 rounded-lg transition-colors ${
+              pathname === '/' && typeof window !== 'undefined' && window.location.hash === '#about'
+                ? 'bg-[#3fb8bd]/20 text-[#3fb8bd] font-bold'
+                : 'text-gray-300 hover:bg-gray-900/60 hover:text-[#3fb8bd]'
+            }`}
+          >
+            About Us
+          </Link>
+        </nav>
+
+        {/* Mobile Menu Footer: Wallet Connection */}
+        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-800 space-y-3">
           <NetworkSwitcher inline />
           <ConnectButton />
         </div>
