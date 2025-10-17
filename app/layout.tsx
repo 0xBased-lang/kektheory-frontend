@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono, Fredoka } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
@@ -35,6 +35,13 @@ export const metadata: Metadata = {
     title: 'KEKTECH NFT Collection',
     description: 'Mint your KEKTECH NFT on the $BASED Chain',
   },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
 }
 
 export default function RootLayout({

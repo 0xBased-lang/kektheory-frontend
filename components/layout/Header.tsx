@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -24,6 +24,26 @@ export function Header() {
   const closeMobileMenu = () => {
     setMobileMenuOpen(false)
   }
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+      document.body.style.position = 'fixed'
+      document.body.style.width = '100%'
+    } else {
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.width = ''
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.width = ''
+    }
+  }, [mobileMenuOpen])
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[#3fb8bd]/20 bg-[#000000] backdrop-blur-sm">
@@ -128,18 +148,18 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Overlay - Ultra-high z-index to guarantee top layer */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] md:hidden"
           onClick={closeMobileMenu}
           aria-hidden="true"
         />
       )}
 
-      {/* Mobile Slide-Out Menu */}
+      {/* Mobile Slide-Out Menu - Highest z-index to appear above everything */}
       <div
-        className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-black border-l border-[#3fb8bd]/20 z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
+        className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-black border-l border-[#3fb8bd]/20 z-[110] transform transition-transform duration-300 ease-in-out md:hidden ${
           mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
