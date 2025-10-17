@@ -3,24 +3,15 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { fetchRankingsWithFallback } from '@/lib/api/kektech-rankings'
 
-// Force rebuild - Featured NFTs section with rotating images
+// Featured NFTs section with rotating images from live API
 
 interface NFTData {
   tokenId: string
   name: string
   imageUrl: string
   rarityScore: number
-}
-
-interface RankingsAPIResponse {
-  nfts: Array<{
-    rank: number
-    tokenId: string
-    name: string
-    rarityScore: number
-    imageUrl: string
-  }>
 }
 
 // Fallback NFTs in case API fails
@@ -54,15 +45,13 @@ export function FeaturedNFTs() {
   const [isLoading, setIsLoading] = useState(true)
   const [fadeOut, setFadeOut] = useState(false)
 
-  // Fetch all minted NFTs from API
+  // Fetch all minted NFTs from API with automatic fallback
   useEffect(() => {
     async function fetchNFTs() {
       try {
-        // Use Next.js API proxy to avoid CORS issues
-        const response = await fetch('/api/rankings')
-        if (!response.ok) throw new Error('Failed to fetch NFTs')
-
-        const data: RankingsAPIResponse = await response.json()
+        // Use the same robust API client as the gallery
+        // Includes: retry logic, exponential backoff, automatic fallback to mock data
+        const data = await fetchRankingsWithFallback(2471)
 
         // Transform rankings data to our format
         const nfts: NFTData[] = data.nfts.map((nft) => ({
@@ -78,11 +67,12 @@ export function FeaturedNFTs() {
         if (nfts.length >= 6) {
           setDisplayedNFTs(getRandomNFTs(nfts, 6))
         }
-        setIsLoading(false)
       } catch (error) {
+        // This should rarely happen since fetchRankingsWithFallback has built-in fallback
         console.error('Error fetching NFTs:', error)
-        // Use fallback NFTs on error
         setDisplayedNFTs(FALLBACK_NFTS)
+        setAllNFTs(FALLBACK_NFTS) // ← CRITICAL: Set allNFTs so rotation works!
+      } finally {
         setIsLoading(false)
       }
     }
