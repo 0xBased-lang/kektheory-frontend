@@ -70,28 +70,6 @@ export default function RewardsPage() {
                 <p className="text-gray-300">
                   Rarer NFTs earn higher multipliers! Mythic and Legendary NFTs receive significantly higher token rewards, making rarity truly valuable.
                 </p>
-                <div className="mt-4 space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-purple-400">Mythic:</span>
-                    <span className="font-bold">5.0x</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-yellow-400">Legendary:</span>
-                    <span className="font-bold">3.0x</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-green-400">Epic:</span>
-                    <span className="font-bold">2.0x</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-red-400">Rare:</span>
-                    <span className="font-bold">1.5x</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-blue-400">Common:</span>
-                    <span className="font-bold">1.0x</span>
-                  </div>
-                </div>
                 </div>
               </div>
 
@@ -105,24 +83,6 @@ export default function RewardsPage() {
                 <p className="text-gray-300">
                   Hold multiple 𝕂Ǝ𝕂TECH NFTs to unlock stacking bonuses! The more NFTs you hold, the higher your multiplier gets.
                 </p>
-                <div className="mt-4 space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span>1 NFT:</span>
-                    <span className="font-bold">1.0x</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>2-5 NFTs:</span>
-                    <span className="font-bold">1.2x</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>6-10 NFTs:</span>
-                    <span className="font-bold">1.5x</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>11+ NFTs:</span>
-                    <span className="font-bold">2.0x</span>
-                  </div>
-                </div>
                 </div>
               </div>
             </div>
@@ -138,20 +98,20 @@ export default function RewardsPage() {
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
                 <div className="relative">
                 <div>
-                  <h3 className="font-fredoka text-xl font-bold text-[#3fb8bd] mb-3">What Are 𝕂Ǝ𝕂TECH Tokens?</h3>
+                  <h3 className="font-fredoka text-xl font-bold text-[#3fb8bd] mb-3">What Are TECH Tokens?</h3>
                   <p className="text-gray-300">
-                    𝕂Ǝ𝕂TECH tokens power the ecosystem and enable future upgrades. Tokens will be used for NFT customization, trait upgrades, and participation in special events.
+                    TECH tokens power the ecosystem and enable future upgrades. Tokens will be used for NFT customization, trait upgrades, and participation in special events.
                   </p>
                 </div>
 
-                <div>
+                <div className="mt-8">
                   <h3 className="font-fredoka text-xl font-bold text-[#4ecca7] mb-3">Token Airdrop</h3>
                   <p className="text-gray-300">
                     Early supporters and existing holders will receive a token airdrop with multipliers based on holding duration and NFT rarity. Snapshots are taken periodically to reward loyal community members.
                   </p>
                 </div>
 
-                <div>
+                <div className="mt-8">
                   <h3 className="font-fredoka text-xl font-bold text-[#a855f7] mb-3">Future Utility</h3>
                   <p className="text-gray-300">
                     Tokens will unlock NFT upgrade paths, allow trait customization, and grant access to exclusive features. The gamified upgrade system lets you shape your unique Pepe PFP using earned rewards.
