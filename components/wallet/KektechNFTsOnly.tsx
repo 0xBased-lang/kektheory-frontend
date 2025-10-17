@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useWalletNFTs } from '@/lib/hooks/useWalletNFTs'
+import { useStaticMetadata } from '@/lib/hooks/useStaticMetadata'
 import { KEKTECH_CONTRACT_ADDRESS } from '@/config/constants'
 
 interface KektechNFTsOnlyProps {
@@ -17,11 +18,12 @@ interface KektechNFTsOnlyProps {
  */
 export function KektechNFTsOnly({ address }: KektechNFTsOnlyProps) {
   const { nfts, loading, error, retry } = useWalletNFTs(address)
+  const { data: staticMetadata, isLoading: metadataLoading } = useStaticMetadata()
 
-  // Filter to show ONLY KEKTECH NFTs
+  // Filter to show ONLY KEKTECH NFTs and merge with static metadata for images
   const kektechNFTs = useMemo(() => {
-    return nfts.filter((nft) => {
-      const nftAddress = nft?.token?.address  // ← FIXED: Use "address" not "address_hash"
+    const filteredNFTs = nfts.filter((nft) => {
+      const nftAddress = nft?.token?.address
       if (!nftAddress || !KEKTECH_CONTRACT_ADDRESS) return false
 
       const isKektech = nftAddress.toLowerCase() === KEKTECH_CONTRACT_ADDRESS.toLowerCase()
@@ -40,10 +42,27 @@ export function KektechNFTsOnly({ address }: KektechNFTsOnlyProps) {
 
       return isKektech
     })
-  }, [nfts])
 
-  // Loading state
-  if (loading) {
+    // Merge with static metadata to get images
+    return filteredNFTs.map(nft => {
+      const staticNFT = staticMetadata?.find(s => s.tokenId === nft.id)
+
+      return {
+        ...nft,
+        // Use static metadata image if available (fallback to API image)
+        image_url: staticNFT?.imageUrl || nft.image_url,
+        metadata: {
+          ...nft.metadata,
+          name: staticNFT?.name || nft.metadata?.name,
+          image_url: staticNFT?.imageUrl || nft.metadata?.image_url,
+          attributes: staticNFT?.attributes || nft.metadata?.attributes || []
+        }
+      }
+    })
+  }, [nfts, staticMetadata])
+
+  // Loading state (wait for both API and metadata)
+  if (loading || metadataLoading) {
     return (
       <div className="text-center py-12">
         <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#3fb8bd]"></div>

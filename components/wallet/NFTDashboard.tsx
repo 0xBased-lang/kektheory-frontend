@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useWalletNFTs } from '@/lib/hooks/useWalletNFTs'
+import { useStaticMetadata } from '@/lib/hooks/useStaticMetadata'
 import { KEKTECH_CONTRACT_ADDRESS } from '@/config/constants'
 
 interface NFTDashboardProps {
@@ -17,24 +18,42 @@ interface NFTDashboardProps {
  */
 export function NFTDashboard({ address }: NFTDashboardProps) {
   const { nfts, loading, error, retry } = useWalletNFTs(address)
+  const { data: staticMetadata, isLoading: metadataLoading } = useStaticMetadata()
 
-  // Separate KEKTECH NFTs from other NFTs
+  // Separate KEKTECH NFTs from other NFTs and merge with static metadata
   const { kektechNFTs, otherNFTs } = useMemo(() => {
     const kektech = nfts.filter((nft) => {
-      const nftAddress = nft?.token?.address  // ← FIXED: Use "address" not "address_hash"
+      const nftAddress = nft?.token?.address
       if (!nftAddress || !KEKTECH_CONTRACT_ADDRESS) return false
       return nftAddress.toLowerCase() === KEKTECH_CONTRACT_ADDRESS.toLowerCase()
     })
     const others = nfts.filter((nft) => {
-      const nftAddress = nft?.token?.address  // ← FIXED: Use "address" not "address_hash"
+      const nftAddress = nft?.token?.address
       if (!nftAddress || !KEKTECH_CONTRACT_ADDRESS) return true
       return nftAddress.toLowerCase() !== KEKTECH_CONTRACT_ADDRESS.toLowerCase()
     })
-    return { kektechNFTs: kektech, otherNFTs: others }
-  }, [nfts])
 
-  // Loading state
-  if (loading) {
+    // Merge KEKTECH NFTs with static metadata for images
+    const kektechWithImages = kektech.map(nft => {
+      const staticNFT = staticMetadata?.find(s => s.tokenId === nft.id)
+
+      return {
+        ...nft,
+        image_url: staticNFT?.imageUrl || nft.image_url,
+        metadata: {
+          ...nft.metadata,
+          name: staticNFT?.name || nft.metadata?.name,
+          image_url: staticNFT?.imageUrl || nft.metadata?.image_url,
+          attributes: staticNFT?.attributes || nft.metadata?.attributes || []
+        }
+      }
+    })
+
+    return { kektechNFTs: kektechWithImages, otherNFTs: others }
+  }, [nfts, staticMetadata])
+
+  // Loading state (wait for both API and metadata)
+  if (loading || metadataLoading) {
     return (
       <div className="text-center py-12">
         <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#3fb8bd]"></div>
