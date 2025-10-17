@@ -77,7 +77,7 @@ export function TierRankingWidget() {
               name: 'Legendary',
               minted: tierCounts.Legendary,
               total: tierTotals.Legendary,
-              color: '#ffd700', // Gold
+              color: '#daa520', // Goldenrod (softer gold)
             },
             {
               name: 'Epic',

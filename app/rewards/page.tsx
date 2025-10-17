@@ -33,8 +33,8 @@ export default function RewardsPage() {
             <p className="text-xl text-gray-300 mb-6 max-w-2xl mx-auto">
               We&apos;ve successfully distributed $TECH token airdrops to all eligible 𝕂Ǝ𝕂TECH NFT holders! 🎉
             </p>
-            <div className="inline-block px-6 py-3 rounded-xl bg-[#ffd700]/20 border border-[#ffd700]/50 mb-6">
-              <span className="text-2xl font-bold text-[#ffd700]">Claiming System: Coming Soon</span>
+            <div className="inline-block px-6 py-3 rounded-xl bg-[#daa520]/20 border border-[#daa520]/50 mb-6">
+              <span className="text-2xl font-bold text-[#daa520]">Claiming System: Coming Soon</span>
             </div>
             <p className="text-gray-400 max-w-xl mx-auto">
               The rewards claiming interface is currently under development. Check back soon to claim your tokens and start earning daily rewards! 🚀
