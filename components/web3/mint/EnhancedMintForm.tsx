@@ -128,7 +128,6 @@ export function EnhancedMintForm() {
         )}
 
         <div className="relative">
-          <div className="mb-6 animate-pulse-glow text-8xl">🎉</div>
           <h3 className="mb-3 bg-gradient-to-r from-kek-green via-kek-cyan to-kek-purple bg-clip-text text-3xl font-black text-transparent">
             Mint Successful!
           </h3>
@@ -152,7 +151,7 @@ export function EnhancedMintForm() {
             </a>
             <button
               onClick={() => window.location.reload()}
-              className="rounded-lg border-2 border-kek-purple bg-transparent px-6 py-3 font-semibold text-kek-purple transition-all hover:bg-kek-purple/10"
+              className="rounded-lg bg-purple-500 px-6 py-3 font-semibold text-white shadow-lg shadow-purple-500/20 transition-all hover:bg-purple-600 hover:scale-105"
             >
               Mint More
             </button>

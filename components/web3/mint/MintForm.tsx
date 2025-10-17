@@ -162,10 +162,9 @@ export function MintForm() {
         {/* NFT Images or Loading State */}
         {nftsLoading ? (
           <div className="mb-4">
-            <div className="text-5xl animate-pulse">🎉</div>
-            <p className="mt-2 text-sm text-green-600 dark:text-green-400">
-              Loading your NFT{mintAmount > 1 ? 's' : ''}...
-            </p>
+            <div className="w-full max-w-xs mx-auto aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg border-2 border-[#3fb8bd] flex items-center justify-center animate-pulse">
+              <span className="text-gray-400 dark:text-gray-500 text-sm">Loading your NFT{mintAmount > 1 ? 's' : ''}...</span>
+            </div>
           </div>
         ) : mintedNFTs.length > 0 ? (
           <div className="mb-4">
@@ -175,7 +174,7 @@ export function MintForm() {
               mintedNFTs.length === 2 ? 'grid-cols-2' :
               'grid-cols-3'
             }`}>
-              {mintedNFTs.map((nft) => (
+              {mintedNFTs.slice(0, 3).map((nft) => (
                 <div key={nft.tokenId} className="relative group">
                   {nft.imageUrl ? (
                     <img
@@ -201,9 +200,7 @@ export function MintForm() {
               </p>
             )}
           </div>
-        ) : (
-          <div className="mb-4 text-5xl">🎉</div>
-        )}
+        ) : null}
 
         <h3 className="mb-2 text-lg font-semibold text-green-900 dark:text-green-100">
           Mint Successful!
@@ -230,7 +227,7 @@ export function MintForm() {
           )}
           <button
             onClick={() => window.location.reload()}
-            className="ml-2 inline-block rounded-lg border-2 border-[#3fb8bd] px-4 py-2 text-sm font-medium text-[#3fb8bd] transition-colors hover:bg-[#3fb8bd]/10"
+            className="ml-2 inline-block rounded-lg bg-purple-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-600 shadow-lg shadow-purple-500/20"
           >
             Mint More
           </button>
