@@ -23,33 +23,6 @@ export function TradeTab() {
         </p>
       </div>
 
-      {/* Preview Info */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div className="bg-gray-900/60 rounded-xl border border-gray-800 p-6 text-center">
-          <div className="text-4xl mb-3">💰</div>
-          <h3 className="font-fredoka text-lg font-bold text-[#3fb8bd] mb-2">Buy & Sell</h3>
-          <p className="text-gray-400 text-sm">
-            Trade 𝕂Ǝ𝕂丅ᵉ匚🅷 vouchers at market prices with instant settlement
-          </p>
-        </div>
-
-        <div className="bg-gray-900/60 rounded-xl border border-gray-800 p-6 text-center">
-          <div className="text-4xl mb-3">📊</div>
-          <h3 className="font-fredoka text-lg font-bold text-[#3fb8bd] mb-2">Live Stats</h3>
-          <p className="text-gray-400 text-sm">
-            Real-time floor prices, volume, and holder statistics
-          </p>
-        </div>
-
-        <div className="bg-gray-900/60 rounded-xl border border-gray-800 p-6 text-center">
-          <div className="text-4xl mb-3">🔒</div>
-          <h3 className="font-fredoka text-lg font-bold text-[#3fb8bd] mb-2">Secure Trading</h3>
-          <p className="text-gray-400 text-sm">
-            On-chain escrow ensures safe and trustless transactions
-          </p>
-        </div>
-      </div>
-
       {/* CTA */}
       <div className="text-center">
         <a
