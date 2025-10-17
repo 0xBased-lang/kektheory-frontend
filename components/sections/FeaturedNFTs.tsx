@@ -58,8 +58,8 @@ export function FeaturedNFTs() {
   useEffect(() => {
     async function fetchNFTs() {
       try {
-        // Use rankings API directly - it's fast and has all the data we need
-        const response = await fetch('https://api.kektech.xyz/rankings')
+        // Use Next.js API proxy to avoid CORS issues
+        const response = await fetch('/api/rankings')
         if (!response.ok) throw new Error('Failed to fetch NFTs')
 
         const data: RankingsAPIResponse = await response.json()
