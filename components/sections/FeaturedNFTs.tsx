@@ -41,9 +41,7 @@ function getRarityInfo(score: number): { tier: string; color: string } {
 
 export function FeaturedNFTs() {
   const [allNFTs, setAllNFTs] = useState<NFTData[]>([])
-  const [displayedNFTs, setDisplayedNFTs] = useState<NFTData[]>(FALLBACK_NFTS)
   const [isLoading, setIsLoading] = useState(true)
-  const [fadeOut, setFadeOut] = useState(false)
 
   // Fetch all minted NFTs from API with automatic fallback
   useEffect(() => {
@@ -61,17 +59,13 @@ export function FeaturedNFTs() {
           rarityScore: nft.rarityScore
         }))
 
-        setAllNFTs(nfts)
-
-        // Set initial random selection
-        if (nfts.length >= 6) {
-          setDisplayedNFTs(getRandomNFTs(nfts, 6))
-        }
+        // Shuffle and set random selection for carousel
+        const shuffled = getRandomNFTs(nfts, 50) // Get 50 random NFTs for smooth infinite scroll
+        setAllNFTs(shuffled)
       } catch (error) {
         // This should rarely happen since fetchRankingsWithFallback has built-in fallback
         console.error('Error fetching NFTs:', error)
-        setDisplayedNFTs(FALLBACK_NFTS)
-        setAllNFTs(FALLBACK_NFTS) // ← CRITICAL: Set allNFTs so rotation works!
+        setAllNFTs(FALLBACK_NFTS)
       } finally {
         setIsLoading(false)
       }
@@ -80,49 +74,25 @@ export function FeaturedNFTs() {
     fetchNFTs()
   }, [])
 
-  // Rotate NFTs every 10 seconds
-  useEffect(() => {
-    if (allNFTs.length < 6) return
-
-    const rotationInterval = setInterval(() => {
-      // Fade out
-      setFadeOut(true)
-
-      // After fade out, change NFTs and fade back in
-      setTimeout(() => {
-        setDisplayedNFTs(getRandomNFTs(allNFTs, 6))
-        setFadeOut(false)
-      }, 300) // Match this with CSS transition duration
-    }, 10000) // Rotate every 10 seconds
-
-    return () => clearInterval(rotationInterval)
-  }, [allNFTs])
+  // Duplicate NFTs array for infinite scroll effect
+  const scrollNFTs = [...allNFTs, ...allNFTs]
 
   return (
-    <section className="bg-gradient-to-b from-gray-900 to-gray-950 py-16 sm:py-24">
+    <section className="bg-gradient-to-b from-gray-900 to-gray-950 py-16 sm:py-24 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-white sm:text-4xl mb-4 font-fredoka">
-            Featured <span className="text-[#06b6d4]">NFTs</span>
+            Featured <span className="text-[#3fb8bd]">NFTs</span>
           </h2>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto font-fredoka">
             Discover some of our most unique and sought-after pieces from the KEKTECH collection
           </p>
-          {!isLoading && allNFTs.length > 6 && (
-            <p className="text-sm text-gray-500 mt-2 font-fredoka">
-              🔄 Rotating through {allNFTs.length} minted NFTs
-            </p>
-          )}
         </div>
 
-        <div
-          className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6 transition-opacity duration-300 ${
-            fadeOut ? 'opacity-0' : 'opacity-100'
-          }`}
-        >
-          {isLoading ? (
-            // Loading skeleton
-            [...Array(6)].map((_, i) => (
+        {isLoading ? (
+          // Loading skeleton
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6">
+            {[...Array(6)].map((_, i) => (
               <div key={i} className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 animate-pulse">
                 <div className="aspect-square bg-gray-700" />
                 <div className="p-3">
@@ -130,52 +100,59 @@ export function FeaturedNFTs() {
                   <div className="h-3 bg-gray-700 rounded w-16" />
                 </div>
               </div>
-            ))
-          ) : (
-            displayedNFTs.map((nft) => {
-              const rarityInfo = getRarityInfo(nft.rarityScore)
+            ))}
+          </div>
+        ) : (
+          // Horizontal Scrolling Carousel
+          <div className="relative mb-12">
+            <div className="flex overflow-hidden">
+              <div className="flex gap-4 lg:gap-6 animate-scroll-horizontal">
+                {scrollNFTs.map((nft, index) => {
+                  const rarityInfo = getRarityInfo(nft.rarityScore)
 
-              return (
-                <Link
-                  key={nft.tokenId}
-                  href={`/gallery`}
-                  className="group block"
-                >
-                  <div className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 transition-all duration-300 hover:border-kek-green hover:shadow-lg hover:shadow-kek-green/20 hover:scale-105">
-                    {/* NFT Image */}
-                    <div className="aspect-square relative overflow-hidden">
-                      <Image
-                        src={nft.imageUrl}
-                        alt={nft.name}
-                        fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-110"
-                        sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 16vw"
-                      />
-                      {/* Overlay gradient */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    </div>
+                  return (
+                    <Link
+                      key={`${nft.tokenId}-${index}`}
+                      href={`/gallery`}
+                      className="group block flex-shrink-0 w-48 sm:w-56"
+                    >
+                      <div className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 transition-all duration-300 hover:border-[#3fb8bd] hover:shadow-lg hover:shadow-[#3fb8bd]/20 hover:scale-105">
+                        {/* NFT Image */}
+                        <div className="aspect-square relative overflow-hidden">
+                          <Image
+                            src={nft.imageUrl}
+                            alt={nft.name}
+                            fill
+                            className="object-cover transition-transform duration-300 group-hover:scale-110"
+                            sizes="224px"
+                          />
+                          {/* Overlay gradient */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        </div>
 
-                    {/* NFT Info */}
-                    <div className="p-3">
-                      <h3 className="font-semibold text-[#06b6d4] text-sm mb-1 truncate font-fredoka">
-                        {nft.name}
-                      </h3>
-                      <p className={`text-xs ${rarityInfo.color} font-medium font-fredoka`}>
-                        {rarityInfo.tier}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              )
-            })
-          )}
-        </div>
+                        {/* NFT Info */}
+                        <div className="p-3">
+                          <h3 className="font-semibold text-[#3fb8bd] text-sm mb-1 truncate font-fredoka">
+                            {nft.name}
+                          </h3>
+                          <p className={`text-xs ${rarityInfo.color} font-medium font-fredoka`}>
+                            {rarityInfo.tier}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* View All Button */}
         <div className="text-center mt-12">
           <Link
             href="/gallery"
-            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-kek-green to-kek-cyan text-black font-semibold rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-kek-green/30 hover:scale-105 font-fredoka"
+            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-[#3fb8bd] to-[#4ecca7] text-black font-semibold rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-[#3fb8bd]/30 hover:scale-105 font-fredoka"
           >
             View Full Collection
             <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -184,6 +161,26 @@ export function FeaturedNFTs() {
           </Link>
         </div>
       </div>
+
+      {/* CSS Animation for continuous horizontal scroll */}
+      <style jsx>{`
+        @keyframes scroll-horizontal {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+
+        .animate-scroll-horizontal {
+          animation: scroll-horizontal 60s linear infinite;
+        }
+
+        .animate-scroll-horizontal:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
     </section>
   )
 }
