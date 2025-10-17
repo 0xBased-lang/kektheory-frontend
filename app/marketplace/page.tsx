@@ -49,14 +49,14 @@ export default function MarketplacePage() {
               <button
                 onClick={() => setActiveTab('surprise')}
                 className={`
-                  px-8 py-3 rounded-lg font-fredoka font-bold transition-all duration-200
+                  px-8 py-3 rounded-lg font-fredoka font-bold transition-all duration-200 text-2xl
                   ${activeTab === 'surprise'
-                    ? 'bg-[#4ecca7] text-black shadow-lg shadow-[#4ecca7]/20'
-                    : 'text-[#4ecca7] hover:text-white hover:bg-gray-800/50'
+                    ? 'bg-[#4ecca7] shadow-lg shadow-[#4ecca7]/20'
+                    : 'hover:bg-gray-800/50'
                   }
                 `}
               >
-                Surprise
+                👀
               </button>
               <button
                 onClick={() => setActiveTab('kektv')}
@@ -90,10 +90,10 @@ export default function MarketplacePage() {
             {activeTab === 'mint' && <MintTab />}
             {activeTab === 'surprise' && (
               <div className="text-center py-24">
-                <div className="text-8xl mb-6">🎁</div>
+                <div className="text-8xl mb-6">👀</div>
                 <h2 className="text-3xl font-bold text-[#4ecca7] mb-4 font-fredoka">Surprise Mechanics</h2>
                 <p className="text-gray-400 max-w-md mx-auto">
-                  Exciting surprise features coming soon! Stay tuned for special mystery drops and unique mechanics.
+                  Exciting surprise features coming soon! Stay tuned
                 </p>
               </div>
             )}
