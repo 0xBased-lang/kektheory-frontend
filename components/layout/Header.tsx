@@ -169,24 +169,24 @@ export function Header() {
         }}
       >
         {/* Mobile Menu Header - Fixed at top */}
-        <div className="flex-shrink-0 flex items-center justify-between p-4 border-b border-gray-800" style={{ backgroundColor: 'rgba(0, 0, 0, 0.98)' }}>
-          <div className="flex-1 mr-3">
+        <div className="flex-shrink-0 flex items-center justify-between px-3 py-2 border-b border-gray-800" style={{ backgroundColor: 'rgba(0, 0, 0, 0.98)' }}>
+          <div className="flex-1 mr-2">
             <ConnectButton />
           </div>
           <button
             onClick={closeMobileMenu}
             type="button"
-            className="w-12 h-12 flex items-center justify-center rounded-lg bg-gray-900 border-2 border-gray-800 hover:border-[#3fb8bd] hover:bg-gray-800 active:scale-95 transition-all relative z-[120] touch-manipulation flex-shrink-0"
+            className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-900 border-2 border-gray-800 hover:border-[#3fb8bd] hover:bg-gray-800 active:scale-95 transition-all relative z-[120] touch-manipulation flex-shrink-0"
             aria-label="Close menu"
             style={{ pointerEvents: 'auto' }}
           >
-            <span className="text-[#3fb8bd] text-3xl font-bold leading-none select-none">×</span>
+            <span className="text-[#3fb8bd] text-2xl font-bold leading-none select-none">×</span>
           </button>
         </div>
 
         {/* Mobile Navigation Links - Scrollable content */}
         <nav
-          className="flex-1 flex flex-col p-5 space-y-3 overflow-y-auto overscroll-contain"
+          className="flex-1 flex flex-col px-4 py-3 space-y-2 overflow-y-auto overscroll-contain"
           style={{
             backgroundColor: 'rgba(0, 0, 0, 0.98)',
             WebkitOverflowScrolling: 'touch'
@@ -259,12 +259,10 @@ export function Header() {
             About Us
           </Link>
 
-          {/* Add spacing at bottom to ensure last items are visible */}
-          <div className="h-16" />
         </nav>
 
         {/* Mobile Menu Footer: Network Switcher - Fixed at bottom */}
-        <div className="flex-shrink-0 p-4 border-t border-gray-800" style={{ backgroundColor: 'rgba(0, 0, 0, 0.98)' }}>
+        <div className="flex-shrink-0 px-4 py-2 border-t border-gray-800" style={{ backgroundColor: 'rgba(0, 0, 0, 0.98)' }}>
           <NetworkSwitcher inline />
         </div>
       </div>
