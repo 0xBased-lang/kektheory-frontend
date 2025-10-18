@@ -325,7 +325,7 @@ export function EnhancedMintForm() {
               <div className="text-center">
                 <div className="text-4xl mb-2">🔌</div>
                 <div className="text-white font-bold text-lg">Connect Wallet to Mint</div>
-                <div className="text-gray-300 text-sm mt-1">Click "Connect Wallet" above</div>
+                <div className="text-gray-300 text-sm mt-1">Click &quot;Connect Wallet&quot; above</div>
               </div>
             </div>
           </div>
