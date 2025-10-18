@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useConnect } from 'wagmi'
 import { useMint } from '@/lib/hooks/useMint'
 import { useMintedNFTs } from '@/lib/hooks/useMintedNFTs'
 import { EXPLORER_URL } from '@/config/constants'
@@ -30,6 +31,9 @@ export function EnhancedMintForm() {
     mint,
     maxMintPerTx,
   } = useMint()
+
+  // Wallet connection
+  const { connectors, connect } = useConnect()
 
   // Fetch minted NFTs after successful mint
   const { mintedNFTs, isLoading: isLoadingNFTs, error: nftError } = useMintedNFTs(hash, isConfirmed)
@@ -85,6 +89,24 @@ export function EnhancedMintForm() {
     if (value >= 1 && value <= maxMintPerTx) {
       setMintAmount(value)
       setLocalError(null)
+    }
+  }
+
+  // Handle wallet connection
+  const handleConnectWallet = async () => {
+    try {
+      // Prioritize MetaMask/injected wallet
+      const connector = connectors.find(c =>
+        c.id === 'injected' ||
+        c.id === 'metaMask' ||
+        (c.name && c.name.toLowerCase().includes('metamask'))
+      ) || connectors[0]
+
+      if (connector) {
+        await connect({ connector })
+      }
+    } catch (error) {
+      console.error('Connection error:', error)
     }
   }
 
@@ -321,9 +343,12 @@ export function EnhancedMintForm() {
                 </span>
               </div>
             </button>
-            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/95 to-pink-900/95 rounded-xl backdrop-blur-sm">
+            <button
+              onClick={handleConnectWallet}
+              className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/95 to-pink-900/95 rounded-xl backdrop-blur-sm hover:from-purple-800/95 hover:to-pink-800/95 transition-all cursor-pointer"
+            >
               <div className="text-white font-bold text-xl">Connect Wallet to Mint</div>
-            </div>
+            </button>
           </div>
         ) : (
           <button
