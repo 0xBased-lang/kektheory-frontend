@@ -322,11 +322,7 @@ export function EnhancedMintForm() {
               </div>
             </button>
             <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/95 to-pink-900/95 rounded-xl backdrop-blur-sm">
-              <div className="text-center">
-                <div className="text-4xl mb-2">🔌</div>
-                <div className="text-white font-bold text-lg">Connect Wallet to Mint</div>
-                <div className="text-gray-300 text-sm mt-1">Click &quot;Connect Wallet&quot; above</div>
-              </div>
+              <div className="text-white font-bold text-xl">Connect Wallet to Mint</div>
             </div>
           </div>
         ) : (
