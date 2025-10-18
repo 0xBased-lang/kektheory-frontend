@@ -88,24 +88,7 @@ export function EnhancedMintForm() {
     }
   }
 
-  // Connect wallet prompt
-  if (!isConnected) {
-    return (
-      <div className="relative overflow-hidden rounded-2xl border-2 border-kek-green/30 bg-gradient-to-br from-gray-900 to-gray-800 p-10 text-center shadow-2xl">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,0,0.1),transparent_70%)]" />
-        <div className="relative">
-          <div className="mb-4 text-6xl">🔌</div>
-          <h3 className="mb-3 text-2xl font-bold text-white">Connect Your Wallet</h3>
-          <p className="mb-6 text-gray-300">
-            Please connect your wallet to start minting exclusive KEKTECH NFTs
-          </p>
-          <div className="inline-flex items-center space-x-2 rounded-lg border border-kek-green/20 bg-kek-green/10 px-4 py-2">
-            <span className="text-sm text-kek-green">Click &quot;Connect Wallet&quot; above</span>
-          </div>
-        </div>
-      </div>
-    )
-  }
+  // Don't block UI when wallet is not connected - show preview instead
 
   // Success state with confetti
   if (isConfirmed && hash) {
@@ -325,22 +308,44 @@ export function EnhancedMintForm() {
           </div>
         )}
 
-        {/* Mint Button */}
-        <button
-          onClick={handleMint}
-          disabled={isWritePending || isConfirming}
-          className="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-kek-green to-kek-cyan p-[2px] shadow-lg shadow-kek-green/50 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-kek-green/70 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
-        >
-          <div className="relative rounded-[10px] bg-gray-900 px-8 py-4 transition-all group-hover:bg-transparent">
-            <span className="text-lg font-black text-white group-hover:text-black">
-              {isWritePending
-                ? '⏳ Waiting for approval...'
-                : isConfirming
-                  ? '⚡ Confirming transaction...'
-                  : `🚀 Mint ${mintAmount} NFT${mintAmount > 1 ? 's' : ''}`}
-            </span>
+        {/* Mint Button - Show "Connect to Mint" overlay when not connected */}
+        {!isConnected ? (
+          <div className="relative">
+            <button
+              disabled
+              className="w-full overflow-hidden rounded-xl bg-gradient-to-r from-kek-green to-kek-cyan p-[2px] shadow-lg opacity-50"
+            >
+              <div className="rounded-[10px] bg-gray-900 px-8 py-4">
+                <span className="text-lg font-black text-white">
+                  🚀 Mint {mintAmount} NFT{mintAmount > 1 ? 's' : ''}
+                </span>
+              </div>
+            </button>
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/95 to-pink-900/95 rounded-xl backdrop-blur-sm">
+              <div className="text-center">
+                <div className="text-4xl mb-2">🔌</div>
+                <div className="text-white font-bold text-lg">Connect Wallet to Mint</div>
+                <div className="text-gray-300 text-sm mt-1">Click "Connect Wallet" above</div>
+              </div>
+            </div>
           </div>
-        </button>
+        ) : (
+          <button
+            onClick={handleMint}
+            disabled={isWritePending || isConfirming}
+            className="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-kek-green to-kek-cyan p-[2px] shadow-lg shadow-kek-green/50 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-kek-green/70 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
+          >
+            <div className="relative rounded-[10px] bg-gray-900 px-8 py-4 transition-all group-hover:bg-transparent">
+              <span className="text-lg font-black text-white group-hover:text-black">
+                {isWritePending
+                  ? '⏳ Waiting for approval...'
+                  : isConfirming
+                    ? '⚡ Confirming transaction...'
+                    : `🚀 Mint ${mintAmount} NFT${mintAmount > 1 ? 's' : ''}`}
+              </span>
+            </div>
+          </button>
+        )}
 
         {/* Transaction Hash */}
         {hash && !isConfirmed && (
