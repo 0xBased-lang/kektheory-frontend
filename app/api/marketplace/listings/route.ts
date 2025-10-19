@@ -72,6 +72,7 @@ export async function GET() {
     // V6 uses simple event signature (no platformFeeAmount)
     type VoucherSoldEvent = {
       args: { seller: string; buyer: string; tokenId: bigint; amount: bigint; totalPrice: bigint }
+      blockNumber: bigint
     }
     let soldEvents: VoucherSoldEvent[] = []
     try {
@@ -89,6 +90,7 @@ export async function GET() {
     // V6 uses simple event signature (no reason)
     type ListingCancelledEvent = {
       args: { seller: string; tokenId: bigint }
+      blockNumber: bigint
     }
     let cancelledEvents: ListingCancelledEvent[] = []
     try {
