@@ -51,42 +51,53 @@ export async function GET() {
 
     // 2. Fetch VoucherListed events
     // V6 uses simple event signature (no timestamp)
-    let listedEvents: any[] = []
+    type VoucherListedEvent = {
+      args: { seller: string; tokenId: bigint; amount: bigint; pricePerItem: bigint }
+      blockNumber: bigint
+      transactionHash: string
+    }
+    let listedEvents: VoucherListedEvent[] = []
     try {
       listedEvents = await publicClient.getLogs({
         address: KEKTV_MARKETPLACE_ADDRESS,
         event: parseAbiItem('event VoucherListed(address indexed seller, uint256 indexed tokenId, uint256 amount, uint256 pricePerItem)'),
         fromBlock: deploymentBlock,
         toBlock: currentBlock,
-      })
+      }) as VoucherListedEvent[]
     } catch (error) {
       console.warn('Failed to fetch VoucherListed events, using fallback:', error)
     }
 
     // 3. Fetch VoucherSold events (to filter out sold listings)
     // V6 uses simple event signature (no platformFeeAmount)
-    let soldEvents: any[] = []
+    type VoucherSoldEvent = {
+      args: { seller: string; buyer: string; tokenId: bigint; amount: bigint; totalPrice: bigint }
+    }
+    let soldEvents: VoucherSoldEvent[] = []
     try {
       soldEvents = await publicClient.getLogs({
         address: KEKTV_MARKETPLACE_ADDRESS,
         event: parseAbiItem('event VoucherSold(address indexed seller, address indexed buyer, uint256 indexed tokenId, uint256 amount, uint256 totalPrice)'),
         fromBlock: deploymentBlock,
         toBlock: currentBlock,
-      })
+      }) as VoucherSoldEvent[]
     } catch (error) {
       console.warn('Failed to fetch VoucherSold events:', error)
     }
 
     // 4. Fetch ListingCancelled events
     // V6 uses simple event signature (no reason)
-    let cancelledEvents: any[] = []
+    type ListingCancelledEvent = {
+      args: { seller: string; tokenId: bigint }
+    }
+    let cancelledEvents: ListingCancelledEvent[] = []
     try {
       cancelledEvents = await publicClient.getLogs({
         address: KEKTV_MARKETPLACE_ADDRESS,
         event: parseAbiItem('event ListingCancelled(address indexed seller, uint256 indexed tokenId)'),
         fromBlock: deploymentBlock,
         toBlock: currentBlock,
-      })
+      }) as ListingCancelledEvent[]
     } catch (error) {
       console.warn('Failed to fetch ListingCancelled events:', error)
     }
@@ -164,7 +175,7 @@ export async function GET() {
               })
             }
           }
-        } catch (error) {
+        } catch {
           // Silently skip - listing doesn't exist or error reading
           continue
         }
