@@ -64,16 +64,16 @@ export function TradeTab() {
       )}
 
       {/* Content */}
-      {!isConnected ? (
+      {view === 'browse' ? (
+        <BrowseListings />
+      ) : !isConnected ? (
         <div className="text-center py-24">
           <div className="text-8xl mb-6">🔌</div>
           <h3 className="text-2xl font-bold text-[#daa520] mb-4 font-fredoka">Connect Your Wallet</h3>
           <p className="text-gray-400 max-w-md mx-auto">
-            Connect your MetaMask wallet to browse and trade KEKTV vouchers
+            Connect your wallet to list your vouchers for sale
           </p>
         </div>
-      ) : view === 'browse' ? (
-        <BrowseListings />
       ) : (
         <ListVouchers />
       )}
@@ -85,7 +85,7 @@ export function TradeTab() {
  * Browse and buy voucher listings
  */
 function BrowseListings() {
-  const { address } = useAccount()
+  const { address, isConnected } = useAccount()
   const { listings, isLoading } = useKektvListings()
   const marketplace = useKektvMarketplace()
   const { metadataMap, loading: metadataLoading } = useAllVoucherMetadata()
@@ -196,16 +196,19 @@ function BrowseListings() {
               {/* Buy Button */}
               <button
                 onClick={() => handleBuy(listing)}
-                disabled={marketplace.isPending || listing.seller === address}
+                disabled={!isConnected || marketplace.isPending || listing.seller === address}
                 className={`
                   w-full mt-4 py-3 rounded-lg font-fredoka font-bold transition-all
-                  ${listing.seller === address
+                  ${!isConnected || listing.seller === address
                     ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
                     : 'bg-gradient-to-r from-[#daa520] to-yellow-600 text-black hover:scale-105 shadow-lg shadow-[#daa520]/20'
                   }
                 `}
               >
-                {listing.seller === address ? 'Your Listing' : marketplace.isPending ? 'Buying...' : '💰 Buy Now'}
+                {!isConnected ? '🔗 Connect Wallet to Buy' :
+                  listing.seller === address ? 'Your Listing' :
+                  marketplace.isPending ? 'Buying...' :
+                  '💰 Buy Now'}
               </button>
             </div>
           </div>
