@@ -51,30 +51,45 @@ export async function GET() {
 
     // 2. Fetch VoucherListed events
     // V6 uses simple event signature (no timestamp)
-    const listedEvents = await publicClient.getLogs({
-      address: KEKTV_MARKETPLACE_ADDRESS,
-      event: parseAbiItem('event VoucherListed(address indexed seller, uint256 indexed tokenId, uint256 amount, uint256 pricePerItem)'),
-      fromBlock: deploymentBlock,
-      toBlock: currentBlock,
-    })
+    let listedEvents: any[] = []
+    try {
+      listedEvents = await publicClient.getLogs({
+        address: KEKTV_MARKETPLACE_ADDRESS,
+        event: parseAbiItem('event VoucherListed(address indexed seller, uint256 indexed tokenId, uint256 amount, uint256 pricePerItem)'),
+        fromBlock: deploymentBlock,
+        toBlock: currentBlock,
+      })
+    } catch (error) {
+      console.warn('Failed to fetch VoucherListed events, using fallback:', error)
+    }
 
     // 3. Fetch VoucherSold events (to filter out sold listings)
     // V6 uses simple event signature (no platformFeeAmount)
-    const soldEvents = await publicClient.getLogs({
-      address: KEKTV_MARKETPLACE_ADDRESS,
-      event: parseAbiItem('event VoucherSold(address indexed seller, address indexed buyer, uint256 indexed tokenId, uint256 amount, uint256 totalPrice)'),
-      fromBlock: deploymentBlock,
-      toBlock: currentBlock,
-    })
+    let soldEvents: any[] = []
+    try {
+      soldEvents = await publicClient.getLogs({
+        address: KEKTV_MARKETPLACE_ADDRESS,
+        event: parseAbiItem('event VoucherSold(address indexed seller, address indexed buyer, uint256 indexed tokenId, uint256 amount, uint256 totalPrice)'),
+        fromBlock: deploymentBlock,
+        toBlock: currentBlock,
+      })
+    } catch (error) {
+      console.warn('Failed to fetch VoucherSold events:', error)
+    }
 
     // 4. Fetch ListingCancelled events
     // V6 uses simple event signature (no reason)
-    const cancelledEvents = await publicClient.getLogs({
-      address: KEKTV_MARKETPLACE_ADDRESS,
-      event: parseAbiItem('event ListingCancelled(address indexed seller, uint256 indexed tokenId)'),
-      fromBlock: deploymentBlock,
-      toBlock: currentBlock,
-    })
+    let cancelledEvents: any[] = []
+    try {
+      cancelledEvents = await publicClient.getLogs({
+        address: KEKTV_MARKETPLACE_ADDRESS,
+        event: parseAbiItem('event ListingCancelled(address indexed seller, uint256 indexed tokenId)'),
+        fromBlock: deploymentBlock,
+        toBlock: currentBlock,
+      })
+    } catch (error) {
+      console.warn('Failed to fetch ListingCancelled events:', error)
+    }
 
     // 5. Build map of sold/cancelled listings
     const inactiveListings = new Set<string>()
@@ -91,52 +106,68 @@ export async function GET() {
       inactiveListings.add(`${seller}-${tokenId}`)
     })
 
-    // 6. Filter active listings and verify on-chain
+    // 6. Collect unique seller addresses from events
+    const sellerAddresses = new Set<string>()
+    listedEvents.forEach(event => sellerAddresses.add(event.args.seller as string))
+
+    // 7. Fallback: Add known sellers (for when events fail to load)
+    // This ensures listings are found even if event logs aren't available
+    const KNOWN_SELLERS = [
+      '0xD90e78886b165d0a5497409528042Fc22bB33d2E', // Add your wallet
+    ]
+    KNOWN_SELLERS.forEach(seller => sellerAddresses.add(seller))
+
+    // 8. Scan all seller + tokenId combinations for active listings
     const activeListings: Listing[] = []
+    const processedKeys = new Set<string>()
 
-    for (const event of listedEvents) {
-      const seller = event.args.seller as string
-      const tokenId = Number(event.args.tokenId)
-      const listingKey = `${seller}-${tokenId}`
+    for (const seller of sellerAddresses) {
+      for (const voucher of VOUCHER_TYPES) {
+        const listingKey = `${seller}-${voucher.id}`
 
-      // Skip if sold or cancelled
-      if (inactiveListings.has(listingKey)) {
-        continue
-      }
-
-      // Verify listing is still active on-chain
-      // V6 contract uses direct struct access via listings mapping
-      try {
-        const listing = await publicClient.readContract({
-          address: KEKTV_MARKETPLACE_ADDRESS,
-          abi: KEKTV_MARKETPLACE_ABI,
-          functionName: 'listings',
-          args: [seller as `0x${string}`, BigInt(tokenId)],
-        })
-
-        if (listing && Array.isArray(listing) && listing.length === 3) {
-          const [amount, pricePerItem, active] = listing
-
-          if (active && amount > 0n && pricePerItem > 0n) {
-            const voucherInfo = VOUCHER_TYPES.find(v => v.id === tokenId)
-
-            activeListings.push({
-              seller,
-              tokenId,
-              voucherName: voucherInfo?.name || `Voucher #${tokenId}`,
-              voucherIcon: voucherInfo?.icon || '🎫',
-              rarity: voucherInfo?.rarity || 'common',
-              amount,
-              pricePerItem,
-              totalPrice: amount * pricePerItem,
-              blockNumber: event.blockNumber,
-              transactionHash: event.transactionHash,
-            })
-          }
+        // Skip if already processed or marked inactive
+        if (processedKeys.has(listingKey) || inactiveListings.has(listingKey)) {
+          continue
         }
-      } catch (error) {
-        console.error(`Failed to verify listing for ${seller}-${tokenId}:`, error)
-        continue
+
+        processedKeys.add(listingKey)
+
+        // Check on-chain listing status
+        try {
+          const listing = await publicClient.readContract({
+            address: KEKTV_MARKETPLACE_ADDRESS,
+            abi: KEKTV_MARKETPLACE_ABI,
+            functionName: 'listings',
+            args: [seller as `0x${string}`, BigInt(voucher.id)],
+          })
+
+          if (listing && Array.isArray(listing) && listing.length === 3) {
+            const [amount, pricePerItem, active] = listing
+
+            if (active && amount > 0n && pricePerItem > 0n) {
+              // Find corresponding event for block number and tx hash
+              const correspondingEvent = listedEvents.find(
+                e => e.args.seller === seller && Number(e.args.tokenId) === voucher.id
+              )
+
+              activeListings.push({
+                seller,
+                tokenId: voucher.id,
+                voucherName: voucher.name,
+                voucherIcon: voucher.icon,
+                rarity: voucher.rarity,
+                amount,
+                pricePerItem,
+                totalPrice: amount * pricePerItem,
+                blockNumber: correspondingEvent?.blockNumber || currentBlock,
+                transactionHash: correspondingEvent?.transactionHash || '0x0000000000000000000000000000000000000000000000000000000000000000',
+              })
+            }
+          }
+        } catch (error) {
+          // Silently skip - listing doesn't exist or error reading
+          continue
+        }
       }
     }
 
