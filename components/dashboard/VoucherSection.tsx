@@ -111,7 +111,7 @@ export function VoucherSection({
       {/* Voucher Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
         {vouchers
-          .filter((voucher) => voucher.id !== '0') // Exclude token ID 0 (test token)
+          .filter((voucher) => voucher.id !== 0) // Exclude token ID 0 (test token)
           .map((voucher) => {
           const owned = voucher.balanceNumber > 0
           const gradient = getRarityGradient(voucher.rarity)
