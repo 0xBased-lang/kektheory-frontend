@@ -110,7 +110,9 @@ export function VoucherSection({
 
       {/* Voucher Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-        {vouchers.map((voucher) => {
+        {vouchers
+          .filter((voucher) => voucher.id !== '0') // Exclude token ID 0 (test token)
+          .map((voucher) => {
           const owned = voucher.balanceNumber > 0
           const gradient = getRarityGradient(voucher.rarity)
           const metadata = metadataMap[voucher.id]
@@ -151,7 +153,7 @@ export function VoucherSection({
                 <div className="flex-1 flex flex-col justify-between">
                   <div>
                     <div className="flex items-start justify-between mb-3">
-                      <h3 className="font-bold text-white text-xl mb-2 font-fredoka">
+                      <h3 className="font-bold text-[#daa520] text-xl mb-2 font-fredoka">
                         {metadata?.name || voucher.name}
                       </h3>
                       {owned ? (
@@ -174,7 +176,7 @@ export function VoucherSection({
                     <span className="text-sm text-gray-400">
                       Token ID
                     </span>
-                    <span className="text-sm font-bold text-white font-mono">
+                    <span className="text-sm font-bold text-[#daa520] font-mono">
                       #{voucher.id}
                     </span>
                   </div>
