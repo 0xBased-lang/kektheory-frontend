@@ -125,7 +125,7 @@ export function TierWidget({ showTitle = true, compact = false }: TierWidgetProp
               <div className="text-xs text-gray-400">Remaining</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-white">{getPercentage(totalMinted, 4200)}%</div>
+              <div className="text-2xl font-bold text-[#daa520]">{getPercentage(totalMinted, 4200)}%</div>
               <div className="text-xs text-gray-400">Progress</div>
             </div>
           </div>

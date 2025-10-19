@@ -126,7 +126,7 @@ export function TraitsTabContent() {
       {viewMode === 'overview' ? (
         <div className="space-y-6">
           <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-[#3fb8bd] mb-3 font-fredoka">𝕂Ǝ𝕂丅ᵉ匚🅷 Traits</h3>
+            <h3 className="text-2xl font-bold text-[#daa520] mb-3 font-fredoka">𝕂Ǝ𝕂丅ᵉ匚🅷 Traits</h3>
             <p className="text-gray-400">
               Explore the rarity of traits across the 𝕂Ǝ𝕂TECH collection.
               Switch to Filter mode to find NFTs with specific traits.

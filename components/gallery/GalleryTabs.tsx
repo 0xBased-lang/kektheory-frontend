@@ -51,8 +51,8 @@ export function GalleryTabs({ children }: GalleryTabsProps) {
             className={`
               px-8 py-3 rounded-lg font-fredoka font-bold transition-all duration-200
               ${activeTab === 'traits'
-                ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/20'
-                : 'text-purple-400 hover:text-white hover:bg-gray-800/50'
+                ? 'bg-[#daa520] text-black shadow-lg shadow-[#daa520]/20'
+                : 'text-[#daa520] hover:text-white hover:bg-gray-800/50'
               }
             `}
           >
