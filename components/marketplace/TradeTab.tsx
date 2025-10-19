@@ -129,27 +129,13 @@ function BrowseListings() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg p-4 border border-[#daa520]/20">
-          <div className="text-gray-400 text-sm">Active Listings</div>
-          <div className="text-2xl font-bold text-[#daa520]">{listings.length}</div>
-        </div>
-        <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg p-4 border border-[#daa520]/20">
-          <div className="text-gray-400 text-sm">Cheapest Item</div>
-          <div className="text-2xl font-bold text-[#daa520]">
-            {Math.min(...listings.map(l => Number(l.pricePerItem) / 1e18)).toFixed(0)} BASED
-          </div>
-        </div>
-        <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg p-4 border border-[#daa520]/20">
-          <div className="text-gray-400 text-sm">Platform Fee</div>
-          <div className="text-2xl font-bold text-[#daa520]">2.5%</div>
-        </div>
-      </div>
-
-      {/* Listings Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div>
+      {/* Listings Grid - Responsive layout based on number of items */}
+      <div className={`grid gap-6 ${
+        listings.length === 1 ? 'grid-cols-1 max-w-md mx-auto' :
+        listings.length === 2 ? 'grid-cols-1 sm:grid-cols-2 max-w-4xl mx-auto' :
+        'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+      }`}>
         {listings.map((listing, index) => {
           const metadata = metadataMap[listing.tokenId]
           const mediaUrl = metadata?.animation_url || metadata?.image
@@ -182,14 +168,6 @@ function BrowseListings() {
                 <h3 className="text-xl font-bold text-[#daa520] font-fredoka">
                   {metadata?.name || listing.voucherName}
                 </h3>
-                <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold mt-2 bg-gradient-to-r ${
-                  listing.rarity === 'legendary' ? 'from-yellow-400 to-orange-500' :
-                  listing.rarity === 'epic' ? 'from-purple-500 to-pink-500' :
-                  listing.rarity === 'rare' ? 'from-blue-500 to-cyan-500' :
-                  'from-gray-500 to-gray-600'
-                } text-white`}>
-                  {listing.rarity.toUpperCase()}
-                </div>
               </div>
 
               {/* Listing Details */}
