@@ -123,10 +123,10 @@ export function DetailViewSection({
     )
   }
 
-  // Vouchers Section
+  // Vouchers Section - Changed to YELLOW
   if (activeSection === 'vouchers') {
     return (
-      <div className="relative bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl border border-purple-500/20 p-8 overflow-hidden">
+      <div className="relative bg-gradient-to-br from-yellow-500/10 to-yellow-600/10 rounded-2xl border border-yellow-500/20 p-8 overflow-hidden">
         {/* Checkered Background Pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,0,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
         <div className="relative">
@@ -197,13 +197,13 @@ export function DetailViewSection({
             </p>
           </button>
 
-          {/* Vouchers Summary - RIGHT - Clickable */}
+          {/* Vouchers Summary - RIGHT - Clickable - Changed to YELLOW */}
           <button
             onClick={() => onSectionChange('vouchers')}
-            className="bg-purple-500/10 rounded-xl border border-purple-500/20 p-6 hover:border-purple-500/40 hover:bg-purple-500/15 transition cursor-pointer text-left"
+            className="bg-yellow-500/10 rounded-xl border border-yellow-500/20 p-6 hover:border-yellow-500/40 hover:bg-yellow-500/15 transition cursor-pointer text-left"
           >
             <div className="text-4xl mb-4">🎫</div>
-            <h3 className="text-xl font-bold text-purple-400 mb-2 font-fredoka">
+            <h3 className="text-xl font-bold text-[#daa520] mb-2 font-fredoka">
               𝕂Ǝ𝕂TECH Vouchers
             </h3>
             <div className="text-3xl font-bold text-white mb-2">
@@ -259,7 +259,7 @@ export function DetailViewSection({
               </div>
             </button>
 
-            {/* 3rd: KEKTECH Vouchers - Clickable */}
+            {/* 3rd: KEKTECH Vouchers - Clickable - Changed to YELLOW */}
             <button
               onClick={() => onSectionChange('vouchers')}
               className="w-full flex items-center justify-between pb-4 border-b border-gray-800 hover:bg-gray-800/50 -mx-3 px-3 py-2 rounded-lg transition cursor-pointer"
@@ -272,7 +272,7 @@ export function DetailViewSection({
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-purple-400 font-bold">
+                <div className="text-[#daa520] font-bold">
                   {totalVouchers} Total
                 </div>
               </div>

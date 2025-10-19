@@ -55,7 +55,7 @@ export function VoucherSection({
   if (totalVouchers === 0) {
     return (
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-purple-400 mb-6 font-fredoka flex items-center gap-2">
+        <h2 className="text-2xl font-bold text-[#daa520] mb-6 font-fredoka flex items-center gap-2">
           Your 𝕂Ǝ𝕂TECH Vouchers
           <span className="text-gray-500 text-lg">(0)</span>
         </h2>
@@ -73,7 +73,7 @@ export function VoucherSection({
             href={explorerUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block px-6 py-3 rounded-xl bg-purple-500/20 text-purple-300 font-bold hover:bg-purple-500/30 transition font-fredoka"
+            className="inline-block px-6 py-3 rounded-xl bg-[#daa520]/20 text-[#daa520] font-bold hover:bg-[#daa520]/30 transition font-fredoka"
           >
             Learn More
           </Link>
@@ -94,15 +94,15 @@ export function VoucherSection({
     <div className="mb-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-purple-400 font-fredoka flex items-center gap-2">
+        <h2 className="text-2xl font-bold text-[#daa520] font-fredoka flex items-center gap-2">
           Your 𝕂Ǝ𝕂TECH Vouchers
-          <span className="text-purple-300 text-lg">({totalVouchers})</span>
+          <span className="text-[#daa520]/70 text-lg">({totalVouchers})</span>
         </h2>
         <Link
           href={explorerUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-4 py-2 rounded-xl bg-purple-500/20 text-purple-300 text-sm font-bold hover:bg-purple-500/30 transition"
+          className="px-4 py-2 rounded-xl bg-[#daa520]/20 text-[#daa520] text-sm font-bold hover:bg-[#daa520]/30 transition"
         >
           View Contract
         </Link>
@@ -123,7 +123,7 @@ export function VoucherSection({
               key={voucher.id}
               className={`rounded-xl border p-6 transition ${
                 owned
-                  ? `bg-gradient-to-br ${gradient}/10 border-${voucher.rarity === 'legendary' ? 'yellow' : voucher.rarity === 'epic' ? 'purple' : voucher.rarity === 'rare' ? 'blue' : 'gray'}-500/30 hover:border-${voucher.rarity === 'legendary' ? 'yellow' : voucher.rarity === 'epic' ? 'purple' : voucher.rarity === 'rare' ? 'blue' : 'gray'}-500/50`
+                  ? 'bg-gradient-to-br from-yellow-500/10 to-yellow-600/10 border-yellow-500/30 hover:border-yellow-500/50'
                   : 'bg-gray-900/30 border-gray-800/50 opacity-50'
               }`}
             >
@@ -186,10 +186,10 @@ export function VoucherSection({
       </div>
 
       {/* Summary Info */}
-      <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/20 p-6">
+      <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-xl border border-[#daa520]/20 p-6">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
-            <h3 className="text-lg font-bold text-purple-400 mb-2 font-fredoka">
+            <h3 className="text-lg font-bold text-[#daa520] mb-2 font-fredoka">
               𝕂Ǝ𝕂TV Summary
             </h3>
             <p className="text-gray-300">

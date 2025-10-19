@@ -84,14 +84,14 @@ export function PortfolioOverview({
           <span className="text-sm opacity-75">{techBalanceCompact}</span>
         </button>
 
-        {/* Vouchers Tab */}
+        {/* Vouchers Tab - Changed to YELLOW */}
         <button
           onClick={() => onSectionChange('vouchers')}
           className={`
             px-6 py-3 rounded-lg font-fredoka font-bold transition-all duration-200 flex items-center gap-2
             ${activeSection === 'vouchers'
-              ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/20'
-              : 'text-purple-400 hover:text-white hover:bg-gray-800/50'
+              ? 'bg-[#daa520] text-black shadow-lg shadow-[#daa520]/20'
+              : 'text-[#daa520] hover:text-white hover:bg-gray-800/50'
             }
           `}
         >
@@ -101,14 +101,14 @@ export function PortfolioOverview({
           </span>
         </button>
 
-        {/* Total Assets Tab */}
+        {/* Total Assets Tab - Changed to PURPLE */}
         <button
           onClick={() => onSectionChange('assets')}
           className={`
             px-6 py-3 rounded-lg font-fredoka font-bold transition-all duration-200 flex items-center gap-2
             ${activeSection === 'assets'
-              ? 'bg-[#daa520] text-black shadow-lg shadow-[#daa520]/20'
-              : 'text-[#daa520] hover:text-white hover:bg-gray-800/50'
+              ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/20'
+              : 'text-purple-400 hover:text-white hover:bg-gray-800/50'
             }
           `}
         >
