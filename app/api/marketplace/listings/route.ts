@@ -102,19 +102,48 @@ export async function GET() {
       console.warn('Failed to fetch ListingCancelled events:', error)
     }
 
-    // 5. Build map of sold/cancelled listings
-    const inactiveListings = new Set<string>()
+    // 5. Build maps of most recent event block numbers for each listing
+    // Key: seller-tokenId, Value: block number
+    const latestListedBlock = new Map<string, bigint>()
+    const latestSoldBlock = new Map<string, bigint>()
+    const latestCancelledBlock = new Map<string, bigint>()
+
+    listedEvents.forEach(event => {
+      const key = `${event.args.seller}-${event.args.tokenId}`
+      const currentBlock = latestListedBlock.get(key)
+      if (!currentBlock || event.blockNumber > currentBlock) {
+        latestListedBlock.set(key, event.blockNumber)
+      }
+    })
 
     soldEvents.forEach(event => {
-      const seller = event.args.seller
-      const tokenId = event.args.tokenId
-      inactiveListings.add(`${seller}-${tokenId}`)
+      const key = `${event.args.seller}-${event.args.tokenId}`
+      const currentBlock = latestSoldBlock.get(key)
+      if (!currentBlock || event.blockNumber > currentBlock) {
+        latestSoldBlock.set(key, event.blockNumber)
+      }
     })
 
     cancelledEvents.forEach(event => {
-      const seller = event.args.seller
-      const tokenId = event.args.tokenId
-      inactiveListings.add(`${seller}-${tokenId}`)
+      const key = `${event.args.seller}-${event.args.tokenId}`
+      const currentBlock = latestCancelledBlock.get(key)
+      if (!currentBlock || event.blockNumber > currentBlock) {
+        latestCancelledBlock.set(key, event.blockNumber)
+      }
+    })
+
+    // 5b. Determine which listings are actually inactive
+    // A listing is inactive if it was sold/cancelled AFTER it was listed
+    const inactiveListings = new Set<string>()
+
+    latestListedBlock.forEach((listedBlock, key) => {
+      const soldBlock = latestSoldBlock.get(key)
+      const cancelledBlock = latestCancelledBlock.get(key)
+
+      // If sold or cancelled after being listed, mark as inactive
+      if ((soldBlock && soldBlock > listedBlock) || (cancelledBlock && cancelledBlock > listedBlock)) {
+        inactiveListings.add(key)
+      }
     })
 
     // 6. Collect unique seller addresses from events
