@@ -87,7 +87,7 @@ export function YourOffers() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h3 className="text-xl font-bold text-[#daa520] font-fredoka">
-          Your Offers ({offerIds.length})
+          Your Active Offers
         </h3>
         <button
           onClick={() => refetch()}
@@ -108,6 +108,11 @@ export function YourOffers() {
           />
         ))}
       </div>
+
+      {/* Info message about cancelled offers */}
+      <p className="text-xs text-gray-500 text-center mt-4">
+        💡 Cancelled offers are automatically hidden from this list
+      </p>
     </div>
   )
 }
@@ -149,6 +154,11 @@ function YourOfferCard({
         <div className="h-32 bg-gray-800 rounded"></div>
       </div>
     )
+  }
+
+  // ✅ Filter out cancelled offers (active: false)
+  if (!offer.active) {
+    return null
   }
 
   return (
