@@ -1,17 +1,20 @@
 /**
  * User Activity Page
- * Comprehensive trading hub with actionable sections and history
+ * Comprehensive trading hub with NFT card-based layout
+ * Shows your listings, offers, and offers you can accept as visual cards
  */
 
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import Image from 'next/image'
 import { useAccount } from 'wagmi'
 import { useMyOfferHistory, useMyStats } from '@/lib/hooks/useOfferHistory'
 import { useKektvListings } from '@/lib/hooks/useKektvListings'
 import { useKektvOffers } from '@/lib/hooks/useKektvOffers'
 import { useKektvMarketplace } from '@/lib/hooks/useKektvMarketplace'
 import { useUserOffers, useReceivedOffers, useOfferDetails } from '@/lib/hooks/useKektvOffers'
+import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
 import { formatUnits } from 'ethers'
 import type { TradingEvent } from '@/lib/services/explorer-api'
 import { VOUCHER_NAMES } from '@/config/contracts/kektv-offers'
@@ -49,6 +52,7 @@ export function UserActivityPage() {
   const { listings, refetch: refetchListings } = useKektvListings(address)
   const { offerIds: madeOfferIds, refetch: refetchMade } = useUserOffers(address)
   const { offerIds: receivedOfferIds, refetch: refetchReceived } = useReceivedOffers(address)
+  const { metadataMap } = useAllVoucherMetadata()
 
   const handleRefresh = async () => {
     await Promise.all([refetchHistory(), refetchListings(), refetchMade(), refetchReceived()])
@@ -76,7 +80,7 @@ export function UserActivityPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
+    <div className="max-w-7xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-2">
         <div className="flex items-center justify-center gap-4">
@@ -100,24 +104,27 @@ export function UserActivityPage() {
         receivedOffersCount={receivedOfferIds.length}
       />
 
-      {/* Actionable Sections */}
-      <div className="space-y-6">
+      {/* Actionable Sections with NFT Cards */}
+      <div className="space-y-8">
         {/* 1. Offers You Can Accept */}
         <OffersYouCanAcceptSection
           offerIds={receivedOfferIds}
           onRefresh={handleRefresh}
+          metadataMap={metadataMap}
         />
 
         {/* 2. Your Offers (offers you made) */}
         <YourOffersSection
           offerIds={madeOfferIds}
           onRefresh={handleRefresh}
+          metadataMap={metadataMap}
         />
 
         {/* 3. Your Marketplace Listings */}
         <YourMarketplaceListingsSection
           listings={listings}
           onRefresh={handleRefresh}
+          metadataMap={metadataMap}
         />
       </div>
 
@@ -131,25 +138,27 @@ export function UserActivityPage() {
 }
 
 /**
- * Offers You Can Accept Section
+ * Offers You Can Accept Section - NFT Card Grid
  */
 function OffersYouCanAcceptSection({
   offerIds,
   onRefresh,
+  metadataMap,
 }: {
   offerIds: bigint[]
   onRefresh: () => void
+  metadataMap: ReturnType<typeof useAllVoucherMetadata>['metadataMap']
 }) {
   if (offerIds.length === 0) {
     return (
       <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
-        <h3 className="text-lg font-bold text-[#daa520] mb-4 font-fredoka">
+        <h3 className="text-xl font-bold text-[#daa520] mb-4 font-fredoka">
           ✨ Offers You Can Accept
         </h3>
-        <div className="text-center py-8">
-          <div className="text-4xl mb-2">💰</div>
-          <p className="text-gray-400">No offers to accept right now</p>
-          <p className="text-sm text-gray-500 mt-1">Offers on your vouchers will appear here</p>
+        <div className="text-center py-12">
+          <div className="text-6xl mb-4">💰</div>
+          <p className="text-lg text-gray-400">No offers to accept right now</p>
+          <p className="text-sm text-gray-500 mt-2">Offers on your vouchers will appear here as NFT cards</p>
         </div>
       </div>
     )
@@ -157,18 +166,19 @@ function OffersYouCanAcceptSection({
 
   return (
     <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
-      <h3 className="text-lg font-bold text-[#daa520] mb-4 font-fredoka">
+      <h3 className="text-xl font-bold text-[#daa520] mb-2 font-fredoka">
         ✨ Offers You Can Accept
       </h3>
-      <p className="text-sm text-gray-400 mb-4">
+      <p className="text-sm text-gray-400 mb-6">
         Found {offerIds.length} offer{offerIds.length !== 1 ? 's' : ''} you can accept
       </p>
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {offerIds.map((offerId) => (
-          <AcceptableOfferCard
+          <AcceptableOfferNFTCard
             key={offerId.toString()}
             offerId={offerId}
             onRefresh={onRefresh}
+            metadataMap={metadataMap}
           />
         ))}
       </div>
@@ -177,14 +187,16 @@ function OffersYouCanAcceptSection({
 }
 
 /**
- * Acceptable Offer Card (can be accepted)
+ * Acceptable Offer NFT Card - Full voucher card with image
  */
-function AcceptableOfferCard({
+function AcceptableOfferNFTCard({
   offerId,
   onRefresh,
+  metadataMap,
 }: {
   offerId: bigint
   onRefresh: () => void
+  metadataMap: ReturnType<typeof useAllVoucherMetadata>['metadataMap']
 }) {
   const { offer, isLoading } = useOfferDetails(offerId)
   const { acceptOffer, isPending } = useKektvOffers()
@@ -215,50 +227,87 @@ function AcceptableOfferCard({
 
   if (isLoading || !offer) {
     return (
-      <div className="bg-gray-800/50 rounded-lg border border-gray-700/50 p-4">
-        <div className="animate-pulse">Loading offer...</div>
+      <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border border-[#daa520]/20 p-6">
+        <div className="animate-pulse text-center text-gray-400">Loading offer...</div>
       </div>
     )
   }
 
+  const metadata = metadataMap[Number(offer.tokenId)]
+  const mediaUrl = metadata?.animation_url || metadata?.image
+  const voucherName = metadata?.name || getVoucherName(offer.tokenId)
   const pricePerItem = calculatePricePerItem(offer.offerPrice, offer.amount)
   const totalPrice = calculateTotalPrice(offer.offerPrice)
 
   return (
-    <div className="bg-gray-800/50 rounded-lg border border-gray-700/50 p-4 hover:border-[#daa520]/50 transition">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-2xl">💰</span>
-            <div>
-              <p className="text-sm font-medium text-white">
-                𝕂Ǝ𝕂TV #{offer.tokenId} {getVoucherName(offer.tokenId)}
-              </p>
-              <p className="text-xs text-gray-500">
-                Offerer: {offer.offerer.slice(0, 6)}...{offer.offerer.slice(-4)}
-              </p>
-            </div>
-          </div>
+    <div className="bg-gradient-to-br from-green-500/10 to-emerald-600/10 rounded-lg border-2 border-green-500/30 hover:border-green-500/50 transition-all relative shadow-lg">
+      {/* "You Can Accept" Badge */}
+      <div className="absolute top-3 right-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs px-3 py-1 rounded-full font-bold shadow-lg z-10">
+        ✨ Accept This
+      </div>
 
-          <div className="ml-10 space-y-1">
-            <p className="text-xs text-gray-400">
-              <span className="text-gray-500">Quantity:</span> <span className="text-white">{offer.amount.toString()}</span>
-            </p>
-            <p className="text-xs text-gray-400">
-              <span className="text-gray-500">Price/Each:</span>{' '}
-              <span className="text-[#daa520] font-bold">{pricePerItem.toLocaleString(undefined, { minimumFractionDigits: 4 })} BASED</span>
-            </p>
-            <p className="text-sm font-bold text-[#daa520]">
-              Total: {totalPrice.toLocaleString(undefined, { minimumFractionDigits: 4 })} BASED
-            </p>
-            <p className="text-xs text-gray-500">💰 BASED escrowed • General offer (anyone can accept)</p>
+      <div className="p-6 space-y-4">
+        {/* Voucher Media */}
+        {mediaUrl ? (
+          <div className="relative w-full h-48 rounded-lg overflow-hidden bg-black/20 mb-4">
+            <Image
+              src={mediaUrl}
+              alt={voucherName}
+              fill
+              className="object-contain"
+              unoptimized
+            />
+          </div>
+        ) : (
+          <div className="text-center mb-4">
+            <div className="text-6xl mb-2">💰</div>
+          </div>
+        )}
+
+        {/* Voucher Info */}
+        <div className="text-center mb-2">
+          <h3 className="text-xl font-bold text-[#daa520] font-fredoka">
+            {voucherName}
+          </h3>
+          <p className="text-xs text-gray-500 mt-1">
+            #{offer.tokenId.toString()}
+          </p>
+        </div>
+
+        {/* Offer Details */}
+        <div className="space-y-2 text-sm bg-black/20 rounded-lg p-4">
+          <div className="flex justify-between text-gray-400">
+            <span>Offerer:</span>
+            <span className="text-white font-mono text-xs">
+              {offer.offerer.slice(0, 6)}...{offer.offerer.slice(-4)}
+            </span>
+          </div>
+          <div className="flex justify-between text-gray-400">
+            <span>Quantity:</span>
+            <span className="text-white font-bold">{offer.amount.toString()}</span>
+          </div>
+          <div className="flex justify-between text-gray-400">
+            <span>Price/Each:</span>
+            <span className="text-white font-bold">
+              {pricePerItem.toLocaleString(undefined, { minimumFractionDigits: 4 })} BASED
+            </span>
+          </div>
+          <div className="flex justify-between border-t border-gray-800 pt-2 mt-2">
+            <span className="font-bold text-gray-300">Total:</span>
+            <span className="text-[#daa520] font-bold text-lg">
+              {totalPrice.toLocaleString(undefined, { minimumFractionDigits: 4 })} BASED
+            </span>
+          </div>
+          <div className="text-xs text-gray-500 text-center mt-2">
+            💰 BASED escrowed
           </div>
         </div>
 
+        {/* Accept Button */}
         <button
           onClick={handleAccept}
           disabled={isPending || isAccepting}
-          className="flex-shrink-0 px-4 py-2 bg-green-500/20 border border-green-500/50 rounded-lg text-sm text-green-400 hover:bg-green-500/30 transition disabled:opacity-50"
+          className="w-full py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-105 shadow-lg shadow-green-500/30"
         >
           {isPending || isAccepting ? 'Accepting...' : '✅ Accept Offer'}
         </button>
@@ -268,25 +317,27 @@ function AcceptableOfferCard({
 }
 
 /**
- * Your Offers Section (offers you made)
+ * Your Offers Section - NFT Card Grid
  */
 function YourOffersSection({
   offerIds,
   onRefresh,
+  metadataMap,
 }: {
   offerIds: bigint[]
   onRefresh: () => void
+  metadataMap: ReturnType<typeof useAllVoucherMetadata>['metadataMap']
 }) {
   if (offerIds.length === 0) {
     return (
       <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
-        <h3 className="text-lg font-bold text-[#daa520] mb-4 font-fredoka">
+        <h3 className="text-xl font-bold text-[#daa520] mb-4 font-fredoka">
           💼 Your Offers
         </h3>
-        <div className="text-center py-8">
-          <div className="text-4xl mb-2">💼</div>
-          <p className="text-gray-400">You haven&apos;t created any offers yet</p>
-          <p className="text-sm text-gray-500 mt-1">Browse All Offers and make an offer to get started</p>
+        <div className="text-center py-12">
+          <div className="text-6xl mb-4">💼</div>
+          <p className="text-lg text-gray-400">You haven&apos;t created any offers yet</p>
+          <p className="text-sm text-gray-500 mt-2">Browse All Offers and make an offer to get started</p>
         </div>
       </div>
     )
@@ -294,18 +345,19 @@ function YourOffersSection({
 
   return (
     <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
-      <h3 className="text-lg font-bold text-[#daa520] mb-4 font-fredoka">
+      <h3 className="text-xl font-bold text-[#daa520] mb-2 font-fredoka">
         💼 Your Offers
       </h3>
-      <p className="text-sm text-gray-400 mb-4">
+      <p className="text-sm text-gray-400 mb-6">
         Offers you&apos;ve created on other users&apos; vouchers
       </p>
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {offerIds.map((offerId) => (
-          <YourOfferCard
+          <YourOfferNFTCard
             key={offerId.toString()}
             offerId={offerId}
             onRefresh={onRefresh}
+            metadataMap={metadataMap}
           />
         ))}
       </div>
@@ -314,14 +366,16 @@ function YourOffersSection({
 }
 
 /**
- * Your Offer Card (can be cancelled)
+ * Your Offer NFT Card - Full voucher card with image
  */
-function YourOfferCard({
+function YourOfferNFTCard({
   offerId,
   onRefresh,
+  metadataMap,
 }: {
   offerId: bigint
   onRefresh: () => void
+  metadataMap: ReturnType<typeof useAllVoucherMetadata>['metadataMap']
 }) {
   const { offer, isLoading } = useOfferDetails(offerId)
   const { cancelOffer, isPending } = useKektvOffers()
@@ -352,52 +406,82 @@ function YourOfferCard({
 
   if (isLoading || !offer) {
     return (
-      <div className="bg-gray-800/50 rounded-lg border border-gray-700/50 p-4">
-        <div className="animate-pulse">Loading offer...</div>
+      <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border border-[#daa520]/20 p-6">
+        <div className="animate-pulse text-center text-gray-400">Loading offer...</div>
       </div>
     )
   }
 
+  const metadata = metadataMap[Number(offer.tokenId)]
+  const mediaUrl = metadata?.animation_url || metadata?.image
+  const voucherName = metadata?.name || getVoucherName(offer.tokenId)
   const pricePerItem = calculatePricePerItem(offer.offerPrice, offer.amount)
   const totalPrice = calculateTotalPrice(offer.offerPrice)
 
   return (
-    <div className="bg-gray-800/50 rounded-lg border border-gray-700/50 p-4 hover:border-gray-600/50 transition">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-2xl">💼</span>
-            <div>
-              <p className="text-sm font-medium text-white">
-                𝕂Ǝ𝕂TV #{offer.tokenId} {getVoucherName(offer.tokenId)}
-              </p>
-              <p className="text-xs text-gray-500">
-                {offer.voucherOwner === '0x0000000000000000000000000000000000000000'
-                  ? 'General offer (anyone can accept)'
-                  : `To: ${offer.voucherOwner.slice(0, 6)}...${offer.voucherOwner.slice(-4)}`
-                }
-              </p>
-            </div>
+    <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border border-[#daa520]/20 hover:border-[#daa520]/40 transition-all shadow-md">
+      <div className="p-6 space-y-4">
+        {/* Voucher Media */}
+        {mediaUrl ? (
+          <div className="relative w-full h-48 rounded-lg overflow-hidden bg-black/20 mb-4">
+            <Image
+              src={mediaUrl}
+              alt={voucherName}
+              fill
+              className="object-contain"
+              unoptimized
+            />
           </div>
+        ) : (
+          <div className="text-center mb-4">
+            <div className="text-6xl mb-2">💼</div>
+          </div>
+        )}
 
-          <div className="ml-10 space-y-1">
-            <p className="text-xs text-gray-400">
-              <span className="text-gray-500">Quantity:</span> <span className="text-white">{offer.amount.toString()}</span>
-            </p>
-            <p className="text-xs text-gray-400">
-              <span className="text-gray-500">Price/Each:</span>{' '}
-              <span className="text-[#daa520] font-bold">{pricePerItem.toLocaleString(undefined, { minimumFractionDigits: 4 })} BASED</span>
-            </p>
-            <p className="text-sm font-bold text-[#daa520]">
-              Total: {totalPrice.toLocaleString(undefined, { minimumFractionDigits: 4 })} BASED
-            </p>
+        {/* Voucher Info */}
+        <div className="text-center mb-2">
+          <h3 className="text-xl font-bold text-[#daa520] font-fredoka">
+            {voucherName}
+          </h3>
+          <p className="text-xs text-gray-500 mt-1">
+            #{offer.tokenId.toString()}
+          </p>
+        </div>
+
+        {/* Offer Details */}
+        <div className="space-y-2 text-sm bg-black/20 rounded-lg p-4">
+          <div className="flex justify-between text-gray-400">
+            <span>To:</span>
+            <span className="text-white font-mono text-xs">
+              {offer.voucherOwner === '0x0000000000000000000000000000000000000000'
+                ? 'Anyone'
+                : `${offer.voucherOwner.slice(0, 6)}...${offer.voucherOwner.slice(-4)}`
+              }
+            </span>
+          </div>
+          <div className="flex justify-between text-gray-400">
+            <span>Quantity:</span>
+            <span className="text-white font-bold">{offer.amount.toString()}</span>
+          </div>
+          <div className="flex justify-between text-gray-400">
+            <span>Price/Each:</span>
+            <span className="text-white font-bold">
+              {pricePerItem.toLocaleString(undefined, { minimumFractionDigits: 4 })} BASED
+            </span>
+          </div>
+          <div className="flex justify-between border-t border-gray-800 pt-2 mt-2">
+            <span className="font-bold text-gray-300">Total:</span>
+            <span className="text-[#daa520] font-bold text-lg">
+              {totalPrice.toLocaleString(undefined, { minimumFractionDigits: 4 })} BASED
+            </span>
           </div>
         </div>
 
+        {/* Cancel Button */}
         <button
           onClick={handleCancel}
           disabled={isPending || isCancelling}
-          className="flex-shrink-0 px-4 py-2 bg-red-500/20 border border-red-500/50 rounded-lg text-sm text-red-400 hover:bg-red-500/30 transition disabled:opacity-50"
+          className="w-full py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-red-500/20 border border-red-500/50 text-red-400 hover:bg-red-500/30"
         >
           {isPending || isCancelling ? 'Cancelling...' : '❌ Cancel Offer'}
         </button>
@@ -407,25 +491,27 @@ function YourOfferCard({
 }
 
 /**
- * Your Marketplace Listings Section
+ * Your Marketplace Listings Section - NFT Card Grid
  */
 function YourMarketplaceListingsSection({
   listings,
   onRefresh,
+  metadataMap,
 }: {
   listings: ReturnType<typeof useKektvListings>['listings']
   onRefresh: () => void
+  metadataMap: ReturnType<typeof useAllVoucherMetadata>['metadataMap']
 }) {
   if (listings.length === 0) {
     return (
       <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
-        <h3 className="text-lg font-bold text-[#daa520] mb-4 font-fredoka">
+        <h3 className="text-xl font-bold text-[#daa520] mb-4 font-fredoka">
           🏪 Your Marketplace Listings
         </h3>
-        <div className="text-center py-8">
-          <div className="text-4xl mb-2">🏪</div>
-          <p className="text-gray-400">You don&apos;t have any active listings</p>
-          <p className="text-sm text-gray-500 mt-1">List your vouchers for sale to get started</p>
+        <div className="text-center py-12">
+          <div className="text-6xl mb-4">🏪</div>
+          <p className="text-lg text-gray-400">You don&apos;t have any active listings</p>
+          <p className="text-sm text-gray-500 mt-2">List your vouchers for sale to get started</p>
         </div>
       </div>
     )
@@ -433,18 +519,19 @@ function YourMarketplaceListingsSection({
 
   return (
     <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
-      <h3 className="text-lg font-bold text-[#daa520] mb-4 font-fredoka">
+      <h3 className="text-xl font-bold text-[#daa520] mb-2 font-fredoka">
         🏪 Your Marketplace Listings
       </h3>
-      <p className="text-sm text-gray-400 mb-4">
+      <p className="text-sm text-gray-400 mb-6">
         Vouchers you&apos;ve listed for sale on the marketplace
       </p>
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {listings.map((listing) => (
-          <MarketplaceListingCard
+          <MarketplaceListingNFTCard
             key={`${listing.seller}-${listing.tokenId}`}
             listing={listing}
             onRefresh={onRefresh}
+            metadataMap={metadataMap}
           />
         ))}
       </div>
@@ -453,14 +540,16 @@ function YourMarketplaceListingsSection({
 }
 
 /**
- * Marketplace Listing Card
+ * Marketplace Listing NFT Card - Full voucher card with image
  */
-function MarketplaceListingCard({
+function MarketplaceListingNFTCard({
   listing,
   onRefresh,
+  metadataMap,
 }: {
   listing: ReturnType<typeof useKektvListings>['listings'][0]
   onRefresh: () => void
+  metadataMap: ReturnType<typeof useAllVoucherMetadata>['metadataMap']
 }) {
   const { cancelListing, isPending } = useKektvMarketplace()
   const [isCancelling, setIsCancelling] = useState(false)
@@ -488,40 +577,67 @@ function MarketplaceListingCard({
     }
   }
 
+  const metadata = metadataMap[Number(listing.tokenId)]
+  const mediaUrl = metadata?.animation_url || metadata?.image
+  const voucherName = metadata?.name || getVoucherName(listing.tokenId)
   const pricePerItem = Number(listing.pricePerItem) / 1e18
   const totalPrice = Number(listing.totalPrice) / 1e18
 
   return (
-    <div className="bg-gray-800/50 rounded-lg border border-gray-700/50 p-4 hover:border-gray-600/50 transition">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-2xl">🏪</span>
-            <div>
-              <p className="text-sm font-medium text-white">
-                𝕂Ǝ𝕂TV #{listing.tokenId} {getVoucherName(listing.tokenId)}
-              </p>
-            </div>
+    <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border border-[#daa520]/20 hover:border-[#daa520]/40 transition-all shadow-md">
+      <div className="p-6 space-y-4">
+        {/* Voucher Media */}
+        {mediaUrl ? (
+          <div className="relative w-full h-48 rounded-lg overflow-hidden bg-black/20 mb-4">
+            <Image
+              src={mediaUrl}
+              alt={voucherName}
+              fill
+              className="object-contain"
+              unoptimized
+            />
           </div>
+        ) : (
+          <div className="text-center mb-4">
+            <div className="text-6xl mb-2">🏪</div>
+          </div>
+        )}
 
-          <div className="ml-10 space-y-1">
-            <p className="text-xs text-gray-400">
-              <span className="text-gray-500">Quantity:</span> <span className="text-white">{listing.amount.toString()} vouchers</span>
-            </p>
-            <p className="text-xs text-gray-400">
-              <span className="text-gray-500">Price/Each:</span>{' '}
-              <span className="text-[#daa520] font-bold">{pricePerItem.toLocaleString()} BASED</span>
-            </p>
-            <p className="text-sm font-bold text-[#daa520]">
-              Total: {totalPrice.toLocaleString()} BASED
-            </p>
+        {/* Voucher Info */}
+        <div className="text-center mb-2">
+          <h3 className="text-xl font-bold text-[#daa520] font-fredoka">
+            {voucherName}
+          </h3>
+          <p className="text-xs text-gray-500 mt-1">
+            #{listing.tokenId.toString()}
+          </p>
+        </div>
+
+        {/* Listing Details */}
+        <div className="space-y-2 text-sm bg-black/20 rounded-lg p-4">
+          <div className="flex justify-between text-gray-400">
+            <span>Quantity:</span>
+            <span className="text-white font-bold">{listing.amount.toString()} vouchers</span>
+          </div>
+          <div className="flex justify-between text-gray-400">
+            <span>Price/Each:</span>
+            <span className="text-white font-bold">
+              {pricePerItem.toLocaleString()} BASED
+            </span>
+          </div>
+          <div className="flex justify-between border-t border-gray-800 pt-2 mt-2">
+            <span className="font-bold text-gray-300">Total Value:</span>
+            <span className="text-[#daa520] font-bold text-lg">
+              {totalPrice.toLocaleString()} BASED
+            </span>
           </div>
         </div>
 
+        {/* Cancel Button */}
         <button
           onClick={handleCancel}
           disabled={isPending || isCancelling}
-          className="flex-shrink-0 px-4 py-2 bg-red-500/20 border border-red-500/50 rounded-lg text-sm text-red-400 hover:bg-red-500/30 transition disabled:opacity-50"
+          className="w-full py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-red-500/20 border border-red-500/50 text-red-400 hover:bg-red-500/30"
         >
           {isPending || isCancelling ? 'Cancelling...' : '❌ Cancel Listing'}
         </button>
