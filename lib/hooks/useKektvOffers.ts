@@ -277,23 +277,30 @@ export function useOfferDetails(offerId: bigint | null) {
     },
   })
 
-  // Transform tuple response to Offer object
-  // Contract returns: [offerId, offerer, voucherOwner, tokenId, amount, offerPrice, createdAt, active]
-  type OfferTuple = readonly [bigint, string, string, bigint, bigint, bigint, bigint, boolean]
-  const offerTuple = data as OfferTuple | undefined
+  // Wagmi v2 returns struct data as an object with named properties, NOT as a tuple array!
+  // Contract returns struct with named fields
+  console.log('🔍 useOfferDetails raw data:', { offerId: offerId?.toString(), data, typeofData: typeof data })
 
-  const offer: Offer | undefined = offerTuple
+  // Handle both object (Wagmi v2 struct) and array (old tuple) formats
+  const rawData = data as unknown
+  const dataAsObject = rawData as Record<string, unknown>
+  const dataAsArray = rawData as unknown[]
+
+  const offer: Offer | undefined = data
     ? {
-        offerId: offerTuple[0],
-        offerer: offerTuple[1] as Address,
-        voucherOwner: offerTuple[2] as Address,
-        tokenId: offerTuple[3],
-        amount: offerTuple[4],
-        offerPrice: offerTuple[5],
-        createdAt: offerTuple[6],
-        active: offerTuple[7],
+        // Try object properties first (Wagmi v2), fallback to array indices (old format)
+        offerId: (dataAsObject.offerId as bigint) || (dataAsArray[0] as bigint),
+        offerer: ((dataAsObject.offerer as string) || (dataAsArray[1] as string)) as Address,
+        voucherOwner: ((dataAsObject.voucherOwner as string) || (dataAsArray[2] as string)) as Address,
+        tokenId: (dataAsObject.tokenId as bigint) || (dataAsArray[3] as bigint),
+        amount: (dataAsObject.amount as bigint) || (dataAsArray[4] as bigint),
+        offerPrice: (dataAsObject.offerPrice as bigint) || (dataAsArray[5] as bigint),
+        createdAt: (dataAsObject.createdAt as bigint) || (dataAsArray[6] as bigint),
+        active: dataAsObject.active !== undefined ? (dataAsObject.active as boolean) : (dataAsArray[7] as boolean),
       }
     : undefined
+
+  console.log('🔍 useOfferDetails transformed offer:', offer)
 
   return {
     offer,
