@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useAccount } from 'wagmi'
 import { useKektvOffers } from '@/lib/hooks/useKektvOffers'
 import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
+import { useVoucherHolders } from '@/lib/hooks/useVoucherHolders'
 import { VOUCHER_IDS, VOUCHER_NAMES, meetsMinimumOffer } from '@/config/contracts/kektv-offers'
 
 // Only show voucher IDs 1, 2, and 3 (exclude 0)
@@ -27,6 +28,9 @@ export function MakeOfferForm() {
   const [selectedVoucher, setSelectedVoucher] = useState<number | null>(null)
   const [amount, setAmount] = useState('')
   const [totalBased, setTotalBased] = useState('')
+
+  // Fetch live holder data for selected voucher
+  const { holders, totalSupply, holderCount, isLoading: holdersLoading } = useVoucherHolders(selectedVoucher)
 
   const handleMakeOffer = async () => {
     if (selectedVoucher === null || !amount || !totalBased) {
@@ -185,6 +189,62 @@ export function MakeOfferForm() {
               <div className="text-xs text-gray-500 mt-2">
                 BASED will be escrowed in contract until offer is accepted or canceled
               </div>
+            </div>
+          )}
+
+          {/* Holder Information (when voucher selected) */}
+          {selectedVoucher !== null && (
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="text-blue-400 font-fredoka font-bold">📊 Market Info</div>
+                </div>
+                {!holdersLoading && (
+                  <div className="text-xs text-gray-400">
+                    {holderCount} holders • {totalSupply.toString()} total
+                  </div>
+                )}
+              </div>
+
+              {holdersLoading ? (
+                <div className="text-center py-4">
+                  <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-400 mx-auto mb-2"></div>
+                  <p className="text-xs text-gray-500">Loading holder data...</p>
+                </div>
+              ) : holders.length === 0 ? (
+                <div className="text-center py-4 text-gray-500 text-sm">
+                  No current holders
+                </div>
+              ) : (
+                <>
+                  <div className="text-xs text-gray-400 mb-3">
+                    💡 <strong>General Offer:</strong> Any holder below can accept (first come, first served)
+                  </div>
+                  <div className="space-y-1 max-h-48 overflow-y-auto">
+                    {holders.slice(0, 5).map((holder, index) => (
+                      <div
+                        key={holder.address}
+                        className="flex items-center justify-between p-2 bg-black/20 rounded text-xs"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-gray-500">#{index + 1}</span>
+                          <span className="font-mono text-gray-300">
+                            {holder.address.slice(0, 6)}...{holder.address.slice(-4)}
+                          </span>
+                        </div>
+                        <span className="text-blue-400 font-bold">
+                          {holder.balance.toString()}×
+                        </span>
+                      </div>
+                    ))}
+                    {holders.length > 5 && (
+                      <div className="text-center text-xs text-gray-500 mt-2">
+                        +{holders.length - 5} more holders
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           )}
 

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useTokenOffers, useOfferDetails } from '@/lib/hooks/useKektvOffers'
 import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
+import { useVoucherHolders } from '@/lib/hooks/useVoucherHolders'
 import { OfferCard } from './OfferCard'
 import { VOUCHER_IDS } from '@/config/contracts/kektv-offers'
 
@@ -24,6 +25,9 @@ export function BrowseOffers() {
 
   // If a token is selected, fetch its offers
   const { offerIds, isLoading, refetch } = useTokenOffers(selectedToken)
+
+  // Fetch live holder data for selected token
+  const { holders, totalSupply, holderCount, isLoading: holdersLoading } = useVoucherHolders(selectedToken)
 
   return (
     <div className="space-y-8">
@@ -81,6 +85,57 @@ export function BrowseOffers() {
           })}
         </div>
       </div>
+
+      {/* Holder Information (when token selected) */}
+      {selectedToken !== null && (
+        <div className="bg-gray-900/60 rounded-lg border border-[#daa520]/20 p-6 max-w-4xl mx-auto">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-[#daa520] font-fredoka">
+              Current Holders
+            </h3>
+            {!holdersLoading && (
+              <div className="text-sm text-gray-400">
+                {holderCount} holders • {totalSupply.toString()} total vouchers
+              </div>
+            )}
+          </div>
+
+          {holdersLoading ? (
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#daa520] mx-auto mb-2"></div>
+              <p className="text-xs text-gray-500">Loading holder data...</p>
+            </div>
+          ) : holders.length === 0 ? (
+            <div className="text-center py-8 text-gray-500 text-sm">
+              No holders found for this voucher type
+            </div>
+          ) : (
+            <>
+              <p className="text-xs text-gray-400 mb-4">
+                💡 General offers can be accepted by any holder listed below (first come, first served)
+              </p>
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {holders.map((holder, index) => (
+                  <div
+                    key={holder.address}
+                    className="flex items-center justify-between p-3 bg-black/20 rounded-lg hover:bg-black/30 transition"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="text-xs text-gray-500 font-mono">#{index + 1}</div>
+                      <div className="font-mono text-sm text-gray-300">
+                        {holder.address.slice(0, 6)}...{holder.address.slice(-4)}
+                      </div>
+                    </div>
+                    <div className="text-sm font-bold text-[#daa520]">
+                      {holder.balance.toString()}× vouchers
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
 
       {/* Offers Display */}
       {selectedToken === null ? (
