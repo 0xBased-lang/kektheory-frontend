@@ -278,8 +278,8 @@ function AcceptableOfferNFTCard({
     userAddress: userAddress,
   })
 
-  // Smart filtering: Don't show this card if it's not a valid offer for you
-  // Now that we know offer is fully loaded with all properties, we can safely access them
+  // SIMPLIFIED filtering: Only filter out obviously wrong offers
+  // Ownership validation will happen when user tries to accept
   if (userAddress) {
     // 1. Filter out offers you made yourself
     if (offer.offerer.toLowerCase() === userAddress.toLowerCase()) {
@@ -293,41 +293,31 @@ function AcceptableOfferNFTCard({
       return null
     }
 
-    // 3. For general offers (voucherOwner = 0x0), check if you own enough tokens
+    // 3. For TARGETED offers, only show if it's targeted at YOU
     const isGeneralOffer = offer.voucherOwner === '0x0000000000000000000000000000000000000000'
-    console.log('📊 Offer type:', isGeneralOffer ? 'GENERAL' : 'TARGETED')
+    console.log('📊 Offer details:', {
+      offerId: offerId.toString(),
+      tokenId: offer.tokenId.toString(),
+      voucherOwner: offer.voucherOwner,
+      isGeneralOffer,
+      userAddress,
+      ownedVouchers: ownedVouchers.map(v => ({ id: v.id, balance: v.balanceNumber })),
+    })
 
-    if (isGeneralOffer) {
-      const ownedVoucher = ownedVouchers.find(v => v.id === Number(offer.tokenId))
-      const ownedAmount = ownedVoucher?.balanceNumber || 0
-      const requiredAmount = Number(offer.amount)
-
-      console.log('💰 General offer ownership check:', {
-        tokenId: offer.tokenId.toString(),
-        ownedAmount,
-        requiredAmount,
-        ownedVouchers: ownedVouchers.map(v => ({ id: v.id, balance: v.balanceNumber })),
-      })
-
-      // Don't show if you don't have enough vouchers
-      if (ownedAmount < requiredAmount) {
-        console.log('🚫 Offer filtered: Not enough vouchers owned')
+    if (!isGeneralOffer) {
+      // This is a targeted offer - only show if it's for you
+      if (offer.voucherOwner.toLowerCase() !== userAddress.toLowerCase()) {
+        console.log('🚫 Offer filtered: Targeted offer not for you')
         return null
       }
     }
 
-    // 4. For targeted offers, verify it's actually for you
-    const isTargetedOffer = !isGeneralOffer
-    if (isTargetedOffer && offer.voucherOwner.toLowerCase() !== userAddress.toLowerCase()) {
-      console.log('🚫 Offer filtered: Targeted offer not for you', {
-        voucherOwner: offer.voucherOwner,
-        userAddress: userAddress,
-      })
-      return null
-    }
+    // NOTE: We removed the ownership check for general offers
+    // The contract will validate ownership when user tries to accept
+    // This way users can see all offers, even if they don't currently own the tokens
   }
 
-  console.log('✅ Offer PASSED all filters - rendering card!')
+  console.log('✅ Offer PASSED filters - rendering card!')
 
   const metadata = metadataMap[Number(offer.tokenId)]
   const mediaUrl = metadata?.animation_url || metadata?.image
