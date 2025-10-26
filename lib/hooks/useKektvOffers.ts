@@ -5,7 +5,7 @@ import {
   useSwitchChain,
   useReadContract,
 } from 'wagmi'
-import { KEKTV_OFFERS_ADDRESS, KEKTV_OFFERS_ABI } from '@/config/contracts/kektv-offers'
+import { KEKTV_OFFERS_ADDRESS, KEKTV_OFFERS_ABI, type Offer } from '@/config/contracts/kektv-offers'
 import { basedChain } from '@/config/chains'
 
 /**
