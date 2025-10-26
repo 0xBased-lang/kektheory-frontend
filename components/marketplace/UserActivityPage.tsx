@@ -890,7 +890,7 @@ function ActivityCard({
         <div className="flex items-center gap-3">
           <span className="text-3xl">{getEventIcon(event.eventType)}</span>
           <div>
-            <p className="text-base font-bold text-white">
+            <p className="text-base font-bold text-[#daa520]">
               {getEventLabel(event.eventType, isOfferer, isOwner, isSeller, isBuyer)}
             </p>
             <p className="text-sm text-gray-500">{formatDate(event.timestamp)}</p>
