@@ -12,6 +12,14 @@ export function YourOffers() {
   const { offerIds, isLoading, refetch } = useUserOffers(address)
   const { cancelOffer, isPending } = useKektvOffers()
 
+  // Debug logging
+  console.log('📤 Your Offers Debug:', {
+    address,
+    offerIds,
+    offerCount: offerIds?.length || 0,
+    isLoading,
+  })
+
   if (!address) {
     return (
       <div className="text-center py-16">
@@ -52,9 +60,25 @@ export function YourOffers() {
         <p className="text-xl font-fredoka text-gray-400 mb-2">
           You haven&apos;t made any offers yet
         </p>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-500 mb-4">
           Browse vouchers and make an offer to get started
         </p>
+
+        {/* Debug info for troubleshooting */}
+        {address && (
+          <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg max-w-md mx-auto">
+            <p className="text-xs text-blue-400 mb-2">💡 Just made an offer?</p>
+            <p className="text-xs text-gray-400 mb-3">
+              Data may take a few seconds to load. Check the browser console for debug info or click the Refresh button in Browse Offers.
+            </p>
+            <button
+              onClick={() => refetch()}
+              className="px-4 py-2 bg-blue-500/20 border border-blue-500/40 rounded-lg text-sm text-blue-300 hover:bg-blue-500/30 transition"
+            >
+              🔄 Click to Refresh
+            </button>
+          </div>
+        )}
       </div>
     )
   }
