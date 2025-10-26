@@ -32,7 +32,7 @@ export function BrowseOffers() {
         <h3 className="text-xl font-bold text-[#daa520] mb-4 font-fredoka text-center">
           Select Voucher Type
         </h3>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
           {VOUCHER_OPTIONS.map((voucher) => {
             const metadata = metadataMap[voucher.id]
             const mediaUrl = metadata?.animation_url || metadata?.image
@@ -44,28 +44,37 @@ export function BrowseOffers() {
                 key={voucher.id}
                 onClick={() => setSelectedToken(voucher.id)}
                 className={`
-                  p-4 rounded-lg font-fredoka font-bold transition-all border
+                  bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border overflow-hidden transition-all
                   ${isSelected
-                    ? `bg-gradient-to-br from-${voucher.color}-500/20 to-${voucher.color}-600/20 border-${voucher.color}-500 ring-2 ring-${voucher.color}-500/50`
-                    : `bg-gradient-to-br from-${voucher.color}-500/10 to-${voucher.color}-600/10 border-${voucher.color}-500/30 hover:border-${voucher.color}-500/50`
+                    ? 'border-[#daa520] ring-2 ring-[#daa520]/50 shadow-lg shadow-[#daa520]/20'
+                    : 'border-[#daa520]/20 hover:border-[#daa520]/40'
                   }
                 `}
               >
-                {mediaUrl ? (
-                  <div className="relative w-16 h-16 mx-auto mb-2">
-                    <Image
-                      src={mediaUrl}
-                      alt={voucherName}
-                      fill
-                      className="object-contain"
-                      unoptimized
-                    />
+                <div className="p-6">
+                  {/* Voucher Media */}
+                  {mediaUrl ? (
+                    <div className="relative w-full h-48 rounded-lg overflow-hidden bg-black/20 mb-4">
+                      <Image
+                        src={mediaUrl}
+                        alt={voucherName}
+                        fill
+                        className="object-contain"
+                        unoptimized
+                      />
+                    </div>
+                  ) : (
+                    <div className="text-center mb-4">
+                      <div className="text-6xl mb-2">{voucher.fallbackIcon}</div>
+                    </div>
+                  )}
+
+                  {/* Voucher Name */}
+                  <div className="text-center">
+                    <h3 className="text-xl font-bold text-[#daa520] font-fredoka">
+                      {voucherName}
+                    </h3>
                   </div>
-                ) : (
-                  <div className="text-4xl mb-2">{voucher.fallbackIcon}</div>
-                )}
-                <div className={`text-${voucher.color}-400`}>
-                  {voucherName}
                 </div>
               </button>
             )

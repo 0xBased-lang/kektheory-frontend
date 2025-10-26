@@ -79,8 +79,8 @@ export function MakeOfferForm() {
         <div className="space-y-4">
           {/* Select Voucher Type */}
           <div>
-            <label className="block text-gray-400 mb-3">Select Voucher Type</label>
-            <div className="grid grid-cols-2 gap-3">
+            <label className="block text-gray-400 mb-3 text-center">Select Voucher Type</label>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {VOUCHER_OPTIONS.map((voucher) => {
                 const metadata = metadataMap[voucher.id]
                 const mediaUrl = metadata?.animation_url || metadata?.image
@@ -92,16 +92,17 @@ export function MakeOfferForm() {
                     key={voucher.id}
                     onClick={() => setSelectedVoucher(voucher.id)}
                     className={`
-                      rounded-lg border p-4 transition-all text-left
+                      bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border overflow-hidden transition-all
                       ${isSelected
-                        ? `bg-gradient-to-br from-${voucher.color}/20 to-${voucher.color}/20 border-${voucher.color} ring-2 ring-${voucher.color}/50`
-                        : `bg-gradient-to-br from-${voucher.color}/10 to-${voucher.color}/10 border-${voucher.color}/30 hover:border-${voucher.color}/50`
+                        ? 'border-[#daa520] ring-2 ring-[#daa520]/50 shadow-lg shadow-[#daa520]/20'
+                        : 'border-[#daa520]/20 hover:border-[#daa520]/40'
                       }
                     `}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="p-4">
+                      {/* Voucher Media */}
                       {mediaUrl ? (
-                        <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-black/20 flex-shrink-0">
+                        <div className="relative w-full h-32 rounded-lg overflow-hidden bg-black/20 mb-3">
                           <Image
                             src={mediaUrl}
                             alt={voucherName}
@@ -111,12 +112,14 @@ export function MakeOfferForm() {
                           />
                         </div>
                       ) : (
-                        <div className="w-16 h-16 flex items-center justify-center bg-black/20 rounded-lg flex-shrink-0">
-                          <div className="text-4xl">{voucher.icon}</div>
+                        <div className="text-center mb-3">
+                          <div className="text-5xl mb-2">{voucher.icon}</div>
                         </div>
                       )}
-                      <div className="flex-1">
-                        <div className={`font-bold text-${voucher.color} font-fredoka`}>
+
+                      {/* Voucher Name */}
+                      <div className="text-center">
+                        <div className="font-bold text-[#daa520] font-fredoka">
                           {voucherName}
                         </div>
                         {isSelected && (
