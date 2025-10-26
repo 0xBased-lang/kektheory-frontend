@@ -401,13 +401,13 @@ function MarketplaceListingsSection({
               <div className="flex justify-between text-gray-400">
                 <span>Price/Each:</span>
                 <span className="text-white font-bold">
-                  {(Number(listing.pricePerItem) / 1e18).toLocaleString()} BASED
+                  {(Number(listing.pricePerItem) / 1e18).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
                 </span>
               </div>
               <div className="flex justify-between text-gray-400 border-t border-gray-800 pt-2 mt-2">
                 <span className="font-bold">Total:</span>
                 <span className="text-[#daa520] font-bold text-lg">
-                  {(Number(listing.totalPrice) / 1e18).toLocaleString()} BASED
+                  {(Number(listing.totalPrice) / 1e18).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
                 </span>
               </div>
             </div>

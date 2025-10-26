@@ -451,13 +451,13 @@ function AcceptableOfferNFTCard({
           <div className="flex justify-between text-gray-400">
             <span>Price/Each:</span>
             <span className="text-white font-bold">
-              {pricePerItem.toLocaleString(undefined, { minimumFractionDigits: 4 })} BASED
+              {pricePerItem.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
             </span>
           </div>
           <div className="flex justify-between border-t border-gray-800 pt-2 mt-2">
             <span className="font-bold text-gray-300">Total:</span>
             <span className="text-[#daa520] font-bold text-lg">
-              {totalPrice.toLocaleString(undefined, { minimumFractionDigits: 4 })} BASED
+              {totalPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
             </span>
           </div>
           <div className="text-xs text-gray-500 text-center mt-2">
@@ -662,13 +662,13 @@ function YourOfferNFTCard({
           <div className="flex justify-between text-gray-400">
             <span>Price/Each:</span>
             <span className="text-white font-bold">
-              {pricePerItem.toLocaleString(undefined, { minimumFractionDigits: 4 })} BASED
+              {pricePerItem.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
             </span>
           </div>
           <div className="flex justify-between border-t border-gray-800 pt-2 mt-2">
             <span className="font-bold text-gray-300">Total:</span>
             <span className="text-[#daa520] font-bold text-lg">
-              {totalPrice.toLocaleString(undefined, { minimumFractionDigits: 4 })} BASED
+              {totalPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
             </span>
           </div>
         </div>

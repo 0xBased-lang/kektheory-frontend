@@ -177,7 +177,7 @@ export function MakeOfferForm() {
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400">Total BASED:</span>
                   <span className="text-2xl font-bold text-[#daa520]">
-                    {Number(totalBased).toLocaleString()} BASED
+                    {Number(totalBased).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
                   </span>
                 </div>
                 <div className="flex justify-between items-center text-sm">

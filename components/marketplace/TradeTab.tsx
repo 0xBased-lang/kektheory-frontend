@@ -237,13 +237,13 @@ function BrowseListings({ onSelectNFT }: { onSelectNFT: (tokenId: number) => voi
                     <div className="flex justify-between text-gray-400">
                       <span>Price/Each:</span>
                       <span className="text-white font-bold">
-                        {(Number(listing.pricePerItem) / 1e18).toLocaleString()} BASED
+                        {(Number(listing.pricePerItem) / 1e18).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
                       </span>
                     </div>
                     <div className="flex justify-between text-gray-400 border-t border-gray-800 pt-2 mt-2">
                       <span className="font-bold">You Pay:</span>
                       <span className="text-[#daa520] font-bold text-lg">
-                        {(Number(listing.totalPrice) / 1e18).toLocaleString()} BASED
+                        {(Number(listing.totalPrice) / 1e18).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
                       </span>
                     </div>
                     <div className="text-xs text-gray-500 text-center mt-1">
@@ -500,7 +500,7 @@ function ListVouchers() {
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Total Sale Price:</span>
                 <span className="text-2xl font-bold text-[#daa520]">
-                  {(Number(amount) * Number(pricePerItem)).toLocaleString()} BASED
+                  {(Number(amount) * Number(pricePerItem)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
                 </span>
               </div>
               <div className="text-xs text-gray-500 mt-2">
@@ -595,10 +595,10 @@ function YourListings() {
                     {metadata?.name || listing.voucherName}
                   </div>
                   <div className="text-sm text-gray-400">
-                    <span className="text-white font-bold">{listing.amount.toString()}</span> × {(Number(listing.pricePerItem) / 1e18).toLocaleString()} BASED
+                    <span className="text-white font-bold">{listing.amount.toString()}</span> × {(Number(listing.pricePerItem) / 1e18).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED each
                   </div>
                   <div className="text-xs text-[#daa520] mt-1">
-                    Total: {(Number(listing.totalPrice) / 1e18).toLocaleString()} BASED
+                    Total: {(Number(listing.totalPrice) / 1e18).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
                   </div>
                 </div>
 
