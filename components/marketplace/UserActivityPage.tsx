@@ -15,7 +15,6 @@ import { useUserOffers, useReceivedOffers, useOfferDetails } from '@/lib/hooks/u
 import { formatUnits } from 'ethers'
 import type { TradingEvent } from '@/lib/services/explorer-api'
 import { VOUCHER_NAMES } from '@/config/contracts/kektv-offers'
-import type { Offer } from '@/config/contracts/kektv-offers'
 
 // Constants
 const EXPLORER_BASE_URL = 'https://explorer.bf1337.org'
@@ -47,7 +46,7 @@ export function UserActivityPage() {
   const { address, isConnected } = useAccount()
   const { data: events, isLoading, refetch: refetchHistory } = useMyOfferHistory()
   const { stats, isLoading: statsLoading } = useMyStats()
-  const { listings, isLoading: listingsLoading, refetch: refetchListings } = useKektvListings(address)
+  const { listings, refetch: refetchListings } = useKektvListings(address)
   const { offerIds: madeOfferIds, refetch: refetchMade } = useUserOffers(address)
   const { offerIds: receivedOfferIds, refetch: refetchReceived } = useReceivedOffers(address)
 
@@ -106,14 +105,12 @@ export function UserActivityPage() {
         {/* 1. Offers You Can Accept */}
         <OffersYouCanAcceptSection
           offerIds={receivedOfferIds}
-          userAddress={address!}
           onRefresh={handleRefresh}
         />
 
         {/* 2. Your Offers (offers you made) */}
         <YourOffersSection
           offerIds={madeOfferIds}
-          userAddress={address!}
           onRefresh={handleRefresh}
         />
 
@@ -127,7 +124,7 @@ export function UserActivityPage() {
       {/* Historical Activity */}
       <div className="space-y-4 pt-6 border-t border-gray-700">
         <h2 className="text-2xl font-bold text-[#daa520] font-fredoka">📜 Activity History</h2>
-        <ActivityHistory events={events || []} userAddress={address!} onRefresh={handleRefresh} />
+        <ActivityHistory events={events || []} userAddress={address!} />
       </div>
     </div>
   )
@@ -138,11 +135,9 @@ export function UserActivityPage() {
  */
 function OffersYouCanAcceptSection({
   offerIds,
-  userAddress,
   onRefresh,
 }: {
   offerIds: bigint[]
-  userAddress: string
   onRefresh: () => void
 }) {
   if (offerIds.length === 0) {
@@ -277,11 +272,9 @@ function AcceptableOfferCard({
  */
 function YourOffersSection({
   offerIds,
-  userAddress,
   onRefresh,
 }: {
   offerIds: bigint[]
-  userAddress: string
   onRefresh: () => void
 }) {
   if (offerIds.length === 0) {
@@ -292,7 +285,7 @@ function YourOffersSection({
         </h3>
         <div className="text-center py-8">
           <div className="text-4xl mb-2">💼</div>
-          <p className="text-gray-400">You haven't created any offers yet</p>
+          <p className="text-gray-400">You haven&apos;t created any offers yet</p>
           <p className="text-sm text-gray-500 mt-1">Browse All Offers and make an offer to get started</p>
         </div>
       </div>
@@ -305,7 +298,7 @@ function YourOffersSection({
         💼 Your Offers
       </h3>
       <p className="text-sm text-gray-400 mb-4">
-        Offers you've created on other users' vouchers
+        Offers you&apos;ve created on other users&apos; vouchers
       </p>
       <div className="space-y-3">
         {offerIds.map((offerId) => (
@@ -431,7 +424,7 @@ function YourMarketplaceListingsSection({
         </h3>
         <div className="text-center py-8">
           <div className="text-4xl mb-2">🏪</div>
-          <p className="text-gray-400">You don't have any active listings</p>
+          <p className="text-gray-400">You don&apos;t have any active listings</p>
           <p className="text-sm text-gray-500 mt-1">List your vouchers for sale to get started</p>
         </div>
       </div>
@@ -444,7 +437,7 @@ function YourMarketplaceListingsSection({
         🏪 Your Marketplace Listings
       </h3>
       <p className="text-sm text-gray-400 mb-4">
-        Vouchers you've listed for sale on the marketplace
+        Vouchers you&apos;ve listed for sale on the marketplace
       </p>
       <div className="space-y-3">
         {listings.map((listing) => (
@@ -599,11 +592,9 @@ function UserStatistics({
 function ActivityHistory({
   events,
   userAddress,
-  onRefresh,
 }: {
   events: TradingEvent[]
   userAddress: string
-  onRefresh: () => void
 }) {
   if (events.length === 0) {
     return (
