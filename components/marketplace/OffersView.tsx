@@ -3,36 +3,39 @@ import { useState } from 'react'
 import { BrowseOffers } from './BrowseOffers'
 import { MakeOfferForm } from './MakeOfferForm'
 import { YourOffers } from './YourOffers'
-import { ReceivedOffers } from './ReceivedOffers'
 
-type OfferView = 'browse' | 'make' | 'yours' | 'received'
+type OfferView = 'marketplace' | 'activity' | 'create'
 
 /**
- * Main container for the Offers system with sub-navigation
- * Integrates into the KEKTV tab alongside Browse & List views
+ * Main container for the Offers system with enhanced UX
+ *
+ * Architecture:
+ * - Marketplace: Browse all offers with smart "For You" filtering
+ * - My Activity: Track your created offers and history
+ * - Create: Make new offers
  */
 export function OffersView() {
-  const [activeView, setActiveView] = useState<OfferView>('browse')
+  const [activeView, setActiveView] = useState<OfferView>('marketplace')
 
   const navButtons: {
     id: OfferView
     label: string
+    icon: string
   }[] = [
     {
-      id: 'browse',
-      label: 'Browse Offers',
+      id: 'marketplace',
+      label: 'Marketplace',
+      icon: '🏪',
     },
     {
-      id: 'make',
-      label: 'Make Offer',
+      id: 'activity',
+      label: 'My Activity',
+      icon: '💼',
     },
     {
-      id: 'yours',
-      label: 'Your Offers',
-    },
-    {
-      id: 'received',
-      label: 'Received',
+      id: 'create',
+      label: 'Create Offer',
+      icon: '➕',
     },
   ]
 
@@ -51,7 +54,7 @@ export function OffersView() {
                   key={button.id}
                   onClick={() => setActiveView(button.id)}
                   className={`
-                    px-6 py-2 rounded-lg font-fredoka font-bold transition-all whitespace-nowrap
+                    px-6 py-2 rounded-lg font-fredoka font-bold transition-all whitespace-nowrap flex items-center gap-2
                     ${
                       isActive
                         ? 'bg-[#daa520] text-black shadow-lg shadow-[#daa520]/20'
@@ -59,7 +62,8 @@ export function OffersView() {
                     }
                   `}
                 >
-                  {button.label}
+                  <span>{button.icon}</span>
+                  <span>{button.label}</span>
                 </button>
               )
             })}
@@ -77,7 +81,7 @@ export function OffersView() {
                   key={button.id}
                   onClick={() => setActiveView(button.id)}
                   className={`
-                    w-full px-4 py-3 rounded-lg font-fredoka font-bold transition-all text-left
+                    w-full px-4 py-3 rounded-lg font-fredoka font-bold transition-all text-left flex items-center gap-2
                     ${
                       isActive
                         ? 'bg-[#daa520] text-black shadow-lg shadow-[#daa520]/20'
@@ -85,7 +89,8 @@ export function OffersView() {
                     }
                   `}
                 >
-                  {button.label}
+                  <span>{button.icon}</span>
+                  <span>{button.label}</span>
                 </button>
               )
             })}
@@ -95,10 +100,9 @@ export function OffersView() {
 
       {/* Content Area */}
       <div className="flex-1 min-h-[500px]">
-        {activeView === 'browse' && <BrowseOffers />}
-        {activeView === 'make' && <MakeOfferForm />}
-        {activeView === 'yours' && <YourOffers />}
-        {activeView === 'received' && <ReceivedOffers />}
+        {activeView === 'marketplace' && <BrowseOffers />}
+        {activeView === 'create' && <MakeOfferForm />}
+        {activeView === 'activity' && <YourOffers />}
       </div>
     </div>
   )

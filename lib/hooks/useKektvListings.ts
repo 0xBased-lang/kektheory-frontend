@@ -120,7 +120,7 @@ export function useUserVoucherBalances() {
   const { address } = useAccount()
 
   // Read balances for all voucher types
-  const { data: balances, isLoading } = useReadContract({
+  const { data: balances, isLoading, error } = useReadContract({
     address: KEKTECH_VOUCHERS.address,
     abi: KEKTECH_VOUCHERS.abi,
     functionName: 'balanceOfBatch',
@@ -138,6 +138,7 @@ export function useUserVoucherBalances() {
   return {
     vouchers: vouchersWithBalances,
     isLoading,
+    error,
     hasVouchers: vouchersWithBalances.some(v => v.balance > 0n),
   }
 }

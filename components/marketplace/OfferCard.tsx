@@ -10,13 +10,14 @@ import type { Offer } from '@/config/contracts/kektv-offers'
 interface OfferCardProps {
   offer: Offer
   onSuccess?: () => void
+  canAccept?: boolean // Whether user has sufficient vouchers to accept this offer
 }
 
 /**
  * Individual offer card component
  * Matches the style of marketplace listing cards
  */
-export function OfferCard({ offer, onSuccess }: OfferCardProps) {
+export function OfferCard({ offer, onSuccess, canAccept }: OfferCardProps) {
   const { address } = useAccount()
   const { acceptOffer, rejectOffer, isPending } = useKektvOffers()
   const { metadataMap } = useAllVoucherMetadata()
@@ -52,7 +53,15 @@ export function OfferCard({ offer, onSuccess }: OfferCardProps) {
   const totalPrice = offer.offerPrice * offer.amount
 
   return (
-    <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border border-[#daa520]/20 hover:border-[#daa520]/40 transition-all">
+    <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border border-[#daa520]/20 hover:border-[#daa520]/40 transition-all relative">
+      {/* Actionable Offer Badge */}
+      {canAccept && address && (
+        <div className="absolute top-3 right-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs px-3 py-1 rounded-full font-bold shadow-lg shadow-green-500/30 flex items-center gap-1 z-10">
+          <span>✨</span>
+          <span>You can accept</span>
+        </div>
+      )}
+
       <div className="p-6 space-y-4">
         {/* Voucher Media */}
         {mediaUrl ? (
@@ -116,10 +125,15 @@ export function OfferCard({ offer, onSuccess }: OfferCardProps) {
           <div className="mt-4 grid grid-cols-2 gap-2">
             <button
               onClick={handleAccept}
-              disabled={isPending}
-              className="py-3 rounded-lg font-fredoka font-bold transition-all bg-gradient-to-r from-[#daa520] to-yellow-600 text-black hover:scale-105 shadow-lg shadow-[#daa520]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isPending || !canAccept}
+              className={`py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+                canAccept
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-105 shadow-lg shadow-green-500/30'
+                  : 'bg-gray-700 text-gray-500'
+              }`}
+              title={!canAccept ? 'Insufficient voucher balance' : ''}
             >
-              {isPending ? 'Processing...' : '✅ Accept'}
+              {isPending ? 'Processing...' : canAccept ? '✅ Accept' : '❌ Insufficient Balance'}
             </button>
             <button
               onClick={handleReject}
