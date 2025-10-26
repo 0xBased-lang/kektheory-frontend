@@ -162,6 +162,7 @@ export function OffersView() {
             Your funds are always safe in escrow and can be retrieved by cancelling your offer.
           </p>
         </div>
+        </div>
       </div>
     </div>
   )
