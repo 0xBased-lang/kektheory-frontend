@@ -26,7 +26,7 @@ export function NFTHistoryPage({ tokenId }: NFTHistoryPageProps) {
         <h1 className="text-4xl font-bold text-[#daa520] font-fredoka">
           𝕂Ǝ𝕂TV #{tokenId}
         </h1>
-        <p className="text-xl text-gray-300">{VOUCHER_NAMES[tokenId]}</p>
+        <p className="text-xl text-gray-300">{VOUCHER_NAMES[tokenId as keyof typeof VOUCHER_NAMES]}</p>
         {nftMetadata?.name && (
           <p className="text-sm text-gray-500">{nftMetadata.name}</p>
         )}

@@ -220,7 +220,7 @@ function ActivityCard({ event, userAddress }: { event: OfferEvent; userAddress: 
               <p className="text-xs text-gray-400">
                 <span className="text-gray-500">NFT:</span>{' '}
                 <span className="text-white">𝕂Ǝ𝕂TV #{event.tokenId}</span>{' '}
-                <span className="text-gray-500">({VOUCHER_NAMES[event.tokenId]})</span>
+                <span className="text-gray-500">({VOUCHER_NAMES[event.tokenId as keyof typeof VOUCHER_NAMES]})</span>
               </p>
             )}
 
