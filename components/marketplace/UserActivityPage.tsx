@@ -391,9 +391,9 @@ function AcceptableOfferNFTCard({
       return null
     }
 
-    // 3. For TARGETED offers, only show if it's targeted at YOU
+    // 3. Distinguish GENERAL offers (voucherOwner = 0x0) vs TARGETED offers (voucherOwner = specific address)
     const isGeneralOffer = offer.voucherOwner === '0x0000000000000000000000000000000000000000'
-    console.log('📊 Offer details:', {
+    console.log('📊 Offer type check:', {
       offerId: offerId.toString(),
       tokenId: offer.tokenId.toString(),
       voucherOwner: offer.voucherOwner,
@@ -403,16 +403,27 @@ function AcceptableOfferNFTCard({
     })
 
     if (!isGeneralOffer) {
-      // This is a targeted offer - only show if it's for you
+      // TARGETED OFFER - only show if it's targeted at YOU
       if (offer.voucherOwner.toLowerCase() !== userAddress.toLowerCase()) {
-        console.log('🚫 Offer filtered: Targeted offer not for you')
+        console.log('🚫 Offer filtered: Targeted offer not for someone else')
         return null
       }
-    }
+      // Targeted offer for you - show it (user can accept or reject)
+    } else {
+      // GENERAL OFFER - only show if you own enough vouchers to accept
+      // General offers CANNOT be rejected by users, so don't show if insufficient balance
+      const userVoucher = ownedVouchers.find(v => v.id === Number(offer.tokenId))
+      const hasEnoughVouchers = userVoucher && userVoucher.balanceNumber >= Number(offer.amount)
 
-    // NOTE: We removed the ownership check for general offers
-    // The contract will validate ownership when user tries to accept
-    // This way users can see all offers, even if they don't currently own the tokens
+      if (!hasEnoughVouchers) {
+        console.log('🚫 Offer filtered: General offer but insufficient vouchers', {
+          needed: offer.amount.toString(),
+          owned: userVoucher?.balanceNumber ?? 0,
+        })
+        return null // Don't show general offers if user can't accept them
+      }
+      // General offer and user has enough - show it (user can only accept, not reject)
+    }
   }
 
   console.log('✅ Offer PASSED filters - rendering card!')
@@ -423,7 +434,10 @@ function AcceptableOfferNFTCard({
   const pricePerItem = calculatePricePerItem(offer.offerPrice, offer.amount)
   const totalPrice = calculateTotalPrice(offer.offerPrice)
 
-  // Check if user owns enough vouchers to accept this offer
+  // Determine offer type for UI rendering
+  const isGeneralOffer = offer.voucherOwner === '0x0000000000000000000000000000000000000000'
+
+  // Check if user owns enough vouchers (defensive check, should already be filtered)
   const userVoucher = ownedVouchers.find(v => v.id === Number(offer.tokenId))
   const hasEnoughVouchers = userVoucher && userVoucher.balanceNumber >= Number(offer.amount)
 
@@ -493,7 +507,7 @@ function AcceptableOfferNFTCard({
 
         {/* Action Buttons */}
         {!hasEnoughVouchers ? (
-          /* User doesn't own enough vouchers */
+          /* User doesn't own enough vouchers (defensive - should be filtered out) */
           <div className="space-y-3">
             <div className="text-center bg-red-500/10 border border-red-500/30 rounded-lg p-4">
               <div className="text-red-400 font-bold mb-1">❌ Insufficient Vouchers</div>
@@ -501,14 +515,22 @@ function AcceptableOfferNFTCard({
                 You need {offer.amount.toString()} {voucherName} but only have {userVoucher?.balanceNumber ?? 0}
               </div>
             </div>
-            {/* Still allow rejecting even without vouchers */}
-            <button
-              onClick={handleReject}
-              disabled={isPending || isRejecting}
-              className="w-full py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-red-500 to-rose-600 text-white hover:scale-105 shadow-lg shadow-red-500/30"
-            >
-              {isRejecting ? 'Rejecting...' : '🚫 Reject Offer'}
-            </button>
+            {/* Only show reject button for TARGETED offers (general offers can't be rejected) */}
+            {!isGeneralOffer && (
+              <button
+                onClick={handleReject}
+                disabled={isPending || isRejecting}
+                className="w-full py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-red-500 to-rose-600 text-white hover:scale-105 shadow-lg shadow-red-500/30"
+              >
+                {isRejecting ? 'Rejecting...' : '🚫 Reject Offer'}
+              </button>
+            )}
+            {/* General offers: Show explanation instead of reject button */}
+            {isGeneralOffer && (
+              <div className="text-center text-xs text-gray-500 p-2">
+                ℹ️ General offers cannot be rejected. Only the offerer can cancel.
+              </div>
+            )}
           </div>
         ) : !isApproved && !isCheckingApproval ? (
           /* Show approval button first if not approved */
@@ -521,24 +543,33 @@ function AcceptableOfferNFTCard({
           </button>
         ) : (
           /* Show accept/reject buttons once approved */
-          <div className="grid grid-cols-2 gap-3">
+          <div className={isGeneralOffer ? "space-y-3" : "grid grid-cols-2 gap-3"}>
             {/* Accept Button */}
             <button
               onClick={handleAccept}
               disabled={isPending || isAccepting || isRejecting || isCheckingApproval}
-              className="py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-105 shadow-lg shadow-green-500/30"
+              className={`py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-105 shadow-lg shadow-green-500/30 ${isGeneralOffer ? 'w-full' : ''}`}
             >
               {isAccepting ? 'Accepting...' : '✅ Accept'}
             </button>
 
-            {/* Reject Button */}
-            <button
-              onClick={handleReject}
-              disabled={isPending || isAccepting || isRejecting || isCheckingApproval}
-              className="py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-red-500/20 border border-red-500/50 text-red-400 hover:bg-red-500/30"
-            >
-              {isRejecting ? 'Rejecting...' : '🚫 Reject'}
-            </button>
+            {/* Reject Button - ONLY for targeted offers */}
+            {!isGeneralOffer && (
+              <button
+                onClick={handleReject}
+                disabled={isPending || isAccepting || isRejecting || isCheckingApproval}
+                className="py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-red-500/20 border border-red-500/50 text-red-400 hover:bg-red-500/30"
+              >
+                {isRejecting ? 'Rejecting...' : '🚫 Reject'}
+              </button>
+            )}
+
+            {/* General offers: Show info message */}
+            {isGeneralOffer && (
+              <div className="text-center text-xs text-gray-500 p-2">
+                ℹ️ General offers cannot be rejected
+              </div>
+            )}
           </div>
         )}
       </div>
