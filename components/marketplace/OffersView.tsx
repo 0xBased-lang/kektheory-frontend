@@ -10,8 +10,8 @@ type OfferView = 'marketplace' | 'activity' | 'create'
  * Main container for the Offers system with enhanced UX
  *
  * Architecture:
- * - Marketplace: Browse all offers with smart "For You" filtering
- * - My Activity: Track your created offers and history
+ * - All Offers: Browse all offers with smart "For You" filtering
+ * - My Activity: View offers you can accept + offers you've created
  * - Create: Make new offers
  */
 export function OffersView() {
@@ -24,7 +24,7 @@ export function OffersView() {
   }[] = [
     {
       id: 'marketplace',
-      label: 'Marketplace',
+      label: 'All Offers',
       icon: '🏪',
     },
     {

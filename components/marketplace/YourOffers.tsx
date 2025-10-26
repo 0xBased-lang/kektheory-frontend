@@ -1,118 +1,214 @@
 'use client'
+import { useState } from 'react'
 import { useAccount } from 'wagmi'
-import { useUserOffers, useOfferDetails, useKektvOffers } from '@/lib/hooks/useKektvOffers'
+import { useUserOffers, useOfferDetails, useKektvOffers, useTokenOffers } from '@/lib/hooks/useKektvOffers'
+import { useUserVoucherBalances } from '@/lib/hooks/useKektvListings'
 import { OfferCard } from './OfferCard'
+import { VOUCHER_IDS } from '@/config/contracts/kektv-offers'
 
 /**
- * Display offers you've made on other users' vouchers
- * Allows you to cancel your offers
+ * My Activity - Comprehensive view of user's offer activity
+ *
+ * Shows two sections:
+ * 1. Offers You Can Accept - offers where user has sufficient vouchers
+ * 2. Your Offers - offers user has created
  */
 export function YourOffers() {
   const { address } = useAccount()
-  const { offerIds, isLoading, refetch } = useUserOffers(address)
+  const { vouchers: userVouchers } = useUserVoucherBalances()
+
+  // User's created offers
+  const { offerIds: createdOfferIds, isLoading: createdLoading, refetch: refetchCreated } = useUserOffers(address)
   const { cancelOffer, isPending } = useKektvOffers()
 
-  // Debug logging
-  console.log('📤 Your Offers Debug:', {
-    address,
-    offerIds,
-    offerCount: offerIds?.length || 0,
-    isLoading,
-  })
+  // Fetch offers from all voucher types to find actionable ones
+  const { offerIds: silverOffers } = useTokenOffers(VOUCHER_IDS.SILVER)
+  const { offerIds: goldOffers } = useTokenOffers(VOUCHER_IDS.GOLD)
+  const { offerIds: platinumOffers } = useTokenOffers(VOUCHER_IDS.PLATINUM)
+
+  const allOfferIds = [...silverOffers, ...goldOffers, ...platinumOffers]
 
   if (!address) {
     return (
       <div className="text-center py-16">
         <p className="text-xl font-fredoka text-gray-400">
-          Connect your wallet to view your offers
+          Connect your wallet to view your activity
         </p>
-      </div>
-    )
-  }
-
-  if (isLoading) {
-    return (
-      <div className="text-center py-16">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#daa520] mx-auto mb-4"></div>
-        <p className="text-gray-400">Loading your offers...</p>
-      </div>
-    )
-  }
-
-  if (!offerIds || offerIds.length === 0) {
-    return (
-      <div className="text-center py-16">
-        <div className="mx-auto w-24 h-24 mb-6">
-          <svg
-            className="w-full h-full text-gray-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-            />
-          </svg>
-        </div>
-        <p className="text-xl font-fredoka text-gray-400 mb-2">
-          You haven&apos;t made any offers yet
-        </p>
-        <p className="text-sm text-gray-500 mb-4">
-          Browse vouchers and make an offer to get started
-        </p>
-
-        {/* Debug info for troubleshooting */}
-        {address && (
-          <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg max-w-md mx-auto">
-            <p className="text-xs text-blue-400 mb-2">💡 Just made an offer?</p>
-            <p className="text-xs text-gray-400 mb-3">
-              Data may take a few seconds to load. Check the browser console for debug info or click the Refresh button in Browse Offers.
-            </p>
-            <button
-              onClick={() => refetch()}
-              className="px-4 py-2 bg-blue-500/20 border border-blue-500/40 rounded-lg text-sm text-blue-300 hover:bg-blue-500/30 transition"
-            >
-              🔄 Click to Refresh
-            </button>
-          </div>
-        )}
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h3 className="text-xl font-bold text-[#daa520] font-fredoka">
-          Your Active Offers
-        </h3>
-        <button
-          onClick={() => refetch()}
-          className="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-300 hover:border-[#daa520] transition"
-        >
-          🔄 Refresh
-        </button>
+    <div className="space-y-8">
+      {/* Section 1: Offers You Can Accept */}
+      <div>
+        <div className="flex items-center gap-3 mb-6">
+          <h2 className="text-2xl font-bold text-[#daa520] font-fredoka">
+            ✨ Offers You Can Accept
+          </h2>
+        </div>
+        <p className="text-sm text-gray-400 mb-6">
+          These offers match your voucher holdings. Accept them to trade your vouchers for BASED.
+        </p>
+        <ActionableOffers
+          allOfferIds={allOfferIds}
+          userVouchers={userVouchers}
+          userAddress={address}
+        />
       </div>
 
+      {/* Divider */}
+      <div className="border-t border-gray-800"></div>
+
+      {/* Section 2: Your Created Offers */}
+      <div>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-[#daa520] font-fredoka">
+            💼 Your Offers
+          </h2>
+          <button
+            onClick={() => refetchCreated()}
+            className="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-300 hover:border-[#daa520] transition"
+          >
+            🔄 Refresh
+          </button>
+        </div>
+        <p className="text-sm text-gray-400 mb-6">
+          Offers you&apos;ve created on other users&apos; vouchers.
+        </p>
+
+        {createdLoading ? (
+          <div className="text-center py-16">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#daa520] mx-auto mb-4"></div>
+            <p className="text-gray-400">Loading your offers...</p>
+          </div>
+        ) : !createdOfferIds || createdOfferIds.length === 0 ? (
+          <div className="text-center py-12 bg-gray-900/30 rounded-lg border border-gray-800">
+            <p className="text-gray-400 mb-2">
+              You haven&apos;t created any offers yet
+            </p>
+            <p className="text-sm text-gray-500">
+              Browse All Offers and make an offer to get started
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {createdOfferIds.map((offerId) => (
+              <YourOfferCard
+                key={offerId.toString()}
+                offerId={offerId}
+                onSuccess={refetchCreated}
+                cancelOffer={cancelOffer}
+                isPending={isPending}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Section showing offers user can accept based on their holdings
+ */
+function ActionableOffers({
+  allOfferIds,
+  userVouchers,
+  userAddress
+}: {
+  allOfferIds: bigint[]
+  userVouchers: Array<{ id: number; balance: bigint }>
+  userAddress: `0x${string}`
+}) {
+  const [actionableCount, setActionableCount] = useState(0)
+
+  if (allOfferIds.length === 0) {
+    return (
+      <div className="text-center py-12 bg-gray-900/30 rounded-lg border border-gray-800">
+        <p className="text-gray-400">
+          No offers available at the moment
+        </p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-4">
+      {actionableCount > 0 && (
+        <p className="text-sm text-green-400">
+          Found {actionableCount} {actionableCount === 1 ? 'offer' : 'offers'} you can accept
+        </p>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {offerIds.map((offerId) => (
-          <YourOfferCard
+        {allOfferIds.map((offerId) => (
+          <ActionableOfferCard
             key={offerId.toString()}
             offerId={offerId}
-            onSuccess={refetch}
-            cancelOffer={cancelOffer}
-            isPending={isPending}
+            userVouchers={userVouchers}
+            userAddress={userAddress}
+            onActionableChange={(isActionable) => {
+              if (isActionable) setActionableCount(prev => prev + 1)
+            }}
           />
         ))}
       </div>
 
-      {/* Info message about cancelled offers */}
-      <p className="text-xs text-gray-500 text-center mt-4">
-        💡 Cancelled offers are automatically hidden from this list
-      </p>
+      {actionableCount === 0 && allOfferIds.length > 0 && (
+        <div className="text-center py-12 bg-gray-900/30 rounded-lg border border-gray-800">
+          <p className="text-gray-400 mb-2">
+            No offers match your holdings
+          </p>
+          <p className="text-sm text-gray-500">
+            You don&apos;t have enough vouchers to accept any current offers
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+/**
+ * Individual actionable offer card
+ */
+function ActionableOfferCard({
+  offerId,
+  userVouchers,
+  userAddress,
+  onActionableChange
+}: {
+  offerId: bigint
+  userVouchers: Array<{ id: number; balance: bigint }>
+  userAddress: `0x${string}`
+  onActionableChange: (isActionable: boolean) => void
+}) {
+  const { offer, isLoading } = useOfferDetails(offerId)
+  const [hasNotified, setHasNotified] = useState(false)
+
+  // Calculate if user can accept this offer
+  const userBalance = offer
+    ? userVouchers.find(v => v.id === Number(offer.tokenId))?.balance || 0n
+    : 0n
+  const canAccept = offer && userBalance >= offer.amount
+
+  // Check if this is user's own offer
+  const isOwnOffer = offer && offer.offerer.toLowerCase() === userAddress.toLowerCase()
+
+  // Notify parent if actionable (only once)
+  if (!isLoading && offer && offer.active && canAccept && !isOwnOffer && !hasNotified) {
+    onActionableChange(true)
+    setHasNotified(true)
+  }
+
+  // Don't show if loading, inactive, can't accept, or is own offer
+  if (isLoading || !offer || !offer.active || !canAccept || isOwnOffer) {
+    return null
+  }
+
+  return (
+    <div className="bg-gradient-to-br from-green-500/5 to-emerald-600/5 rounded-lg border border-green-500/20 hover:border-green-500/40 transition-all">
+      <OfferCard offer={offer} onSuccess={() => {}} canAccept={canAccept} />
     </div>
   )
 }
