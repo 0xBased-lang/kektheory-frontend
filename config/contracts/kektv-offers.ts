@@ -120,7 +120,7 @@ export const KEKTV_OFFERS_CONFIG = {
   },
   relatedContracts: {
     vouchers: KEKTV_VOUCHERS_ADDRESS,
-    techToken: TECH_TOKEN_ADDRESS,
+    // No TECH token needed in V2! Uses native BASED ✅
   },
 } as const
 
