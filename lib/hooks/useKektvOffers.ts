@@ -5,6 +5,7 @@ import {
   useSwitchChain,
   useReadContract,
 } from 'wagmi'
+import { Address } from 'viem'
 import { KEKTV_OFFERS_ADDRESS, KEKTV_OFFERS_ABI, type Offer } from '@/config/contracts/kektv-offers'
 import { basedChain } from '@/config/chains'
 
@@ -284,8 +285,8 @@ export function useOfferDetails(offerId: bigint | null) {
   const offer: Offer | undefined = offerTuple
     ? {
         offerId: offerTuple[0],
-        offerer: offerTuple[1],
-        voucherOwner: offerTuple[2],
+        offerer: offerTuple[1] as Address,
+        voucherOwner: offerTuple[2] as Address,
         tokenId: offerTuple[3],
         amount: offerTuple[4],
         offerPrice: offerTuple[5],
