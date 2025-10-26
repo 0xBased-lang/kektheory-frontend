@@ -256,32 +256,62 @@ function AcceptableOfferNFTCard({
   // CRITICAL: Validate ALL required offer properties exist before using them
   // The contract might return partial data in edge cases
   if (!offer.offerer || !offer.voucherOwner || offer.tokenId === undefined || offer.amount === undefined || offer.offerPrice === undefined) {
-    // Skip malformed/incomplete offers - don't render anything
+    console.log('🚫 Offer filtered: Missing properties', {
+      offerId: offerId.toString(),
+      hasOfferer: !!offer.offerer,
+      hasVoucherOwner: !!offer.voucherOwner,
+      hasTokenId: offer.tokenId !== undefined,
+      hasAmount: offer.amount !== undefined,
+      hasOfferPrice: offer.offerPrice !== undefined,
+    })
     return null
   }
+
+  // DEBUG: Log offer details to diagnose filtering
+  console.log('🔍 Checking offer:', {
+    offerId: offerId.toString(),
+    tokenId: offer.tokenId.toString(),
+    offerer: offer.offerer,
+    voucherOwner: offer.voucherOwner,
+    amount: offer.amount.toString(),
+    active: offer.active,
+    userAddress: userAddress,
+  })
 
   // Smart filtering: Don't show this card if it's not a valid offer for you
   // Now that we know offer is fully loaded with all properties, we can safely access them
   if (userAddress) {
     // 1. Filter out offers you made yourself
     if (offer.offerer.toLowerCase() === userAddress.toLowerCase()) {
+      console.log('🚫 Offer filtered: You made this offer yourself')
       return null
     }
 
     // 2. Filter out inactive offers
     if (!offer.active) {
+      console.log('🚫 Offer filtered: Offer is inactive')
       return null
     }
 
     // 3. For general offers (voucherOwner = 0x0), check if you own enough tokens
     const isGeneralOffer = offer.voucherOwner === '0x0000000000000000000000000000000000000000'
+    console.log('📊 Offer type:', isGeneralOffer ? 'GENERAL' : 'TARGETED')
+
     if (isGeneralOffer) {
       const ownedVoucher = ownedVouchers.find(v => v.id === Number(offer.tokenId))
       const ownedAmount = ownedVoucher?.balanceNumber || 0
       const requiredAmount = Number(offer.amount)
 
+      console.log('💰 General offer ownership check:', {
+        tokenId: offer.tokenId.toString(),
+        ownedAmount,
+        requiredAmount,
+        ownedVouchers: ownedVouchers.map(v => ({ id: v.id, balance: v.balanceNumber })),
+      })
+
       // Don't show if you don't have enough vouchers
       if (ownedAmount < requiredAmount) {
+        console.log('🚫 Offer filtered: Not enough vouchers owned')
         return null
       }
     }
@@ -289,9 +319,15 @@ function AcceptableOfferNFTCard({
     // 4. For targeted offers, verify it's actually for you
     const isTargetedOffer = !isGeneralOffer
     if (isTargetedOffer && offer.voucherOwner.toLowerCase() !== userAddress.toLowerCase()) {
+      console.log('🚫 Offer filtered: Targeted offer not for you', {
+        voucherOwner: offer.voucherOwner,
+        userAddress: userAddress,
+      })
       return null
     }
   }
+
+  console.log('✅ Offer PASSED all filters - rendering card!')
 
   const metadata = metadataMap[Number(offer.tokenId)]
   const mediaUrl = metadata?.animation_url || metadata?.image
