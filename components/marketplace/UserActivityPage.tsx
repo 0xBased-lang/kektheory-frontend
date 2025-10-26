@@ -253,9 +253,16 @@ function AcceptableOfferNFTCard({
     )
   }
 
+  // CRITICAL: Validate ALL required offer properties exist before using them
+  // The contract might return partial data in edge cases
+  if (!offer.offerer || !offer.voucherOwner || offer.tokenId === undefined || offer.amount === undefined || offer.offerPrice === undefined) {
+    // Skip malformed/incomplete offers - don't render anything
+    return null
+  }
+
   // Smart filtering: Don't show this card if it's not a valid offer for you
-  // Now that we know offer is loaded, we can safely access its properties
-  if (userAddress && offer.offerer && offer.voucherOwner) {
+  // Now that we know offer is fully loaded with all properties, we can safely access them
+  if (userAddress) {
     // 1. Filter out offers you made yourself
     if (offer.offerer.toLowerCase() === userAddress.toLowerCase()) {
       return null
@@ -465,6 +472,11 @@ function YourOfferNFTCard({
     )
   }
 
+  // CRITICAL: Validate ALL required offer properties exist
+  if (!offer.offerer || !offer.voucherOwner || offer.tokenId === undefined || offer.amount === undefined || offer.offerPrice === undefined) {
+    return null
+  }
+
   const metadata = metadataMap[Number(offer.tokenId)]
   const mediaUrl = metadata?.animation_url || metadata?.image
   const voucherName = metadata?.name || getVoucherName(offer.tokenId)
@@ -628,6 +640,11 @@ function MarketplaceListingNFTCard({
         setIsCancelling(false)
       }
     }
+  }
+
+  // CRITICAL: Validate ALL required listing properties exist
+  if (listing.tokenId === undefined || listing.amount === undefined || listing.pricePerItem === undefined || listing.totalPrice === undefined) {
+    return null
   }
 
   const metadata = metadataMap[Number(listing.tokenId)]
