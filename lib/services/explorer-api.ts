@@ -32,27 +32,28 @@ const KEKTV_MARKETPLACE_ADDRESS = '0x2d79106D60f92F3a6b7B17E3cAd3Df0D4bdcE062'
 /**
  * Event signatures (keccak256 hash of event definition)
  * These are used to filter events by type
+ * UPDATED: Fixed signatures to match actual contract events from blockchain
  */
 export const EVENT_SIGNATURES = {
   // === OFFER EVENTS (from KektvOffers contract) ===
   // OfferMade(uint256 indexed offerId, address indexed offerer, address indexed voucherOwner, uint256 tokenId, uint256 amount, uint256 offerPrice)
-  OfferMade: '0x1a8e0fde244a9977c0c15878be5b18858c95d39be4ba3a7c4cf3d7a5d47698f6',
+  OfferMade: '0x1a8e4806e9c3198b224bf5fd328ba7488ee72334ba823076cf52dbfce562ffae',
 
   // OfferAccepted(uint256 indexed offerId, address indexed offerer, address indexed voucherOwner, uint256 tokenId, uint256 amount, uint256 offerPrice)
   OfferAccepted: '0x1f514add757f76c3e97bed00e66989c1e7bdf8b4d2d9c0cc2b122fe33f3d1c43',
 
   // OfferCancelled(uint256 indexed offerId, address indexed offerer)
-  OfferCancelled: '0xef706adf2e8c3e0aed0eddb0db7b8e0d5f34b82e7fe4bb7c7af8c0d48e6e45a3',
+  OfferCancelled: '0x1f51377b3e685a0e2419f9bb4ba7c07ec54936353ba3d0fb3c6538dab6766222',
 
   // OfferRejected(uint256 indexed offerId, address indexed voucherOwner)
   OfferRejected: '0x0a2e4bd6e1f84e8c8e24e5097f098f3e7c6a1c8a0e2f9b0e8c7d3a4b5c6e7f8a',
 
   // === MARKETPLACE EVENTS (from KektvMarketplace contract) ===
   // VoucherSold(address indexed seller, address indexed buyer, uint256 indexed tokenId, uint256 amount, uint256 totalPrice)
-  VoucherSold: '0xf7e9fe69e1d05372bc855b295bc4c34a1a0a5882164dd2b26df30a26c1c8ba15',
+  VoucherSold: '0xecce07a667f396cfd44218046bbb9ae45de559f1c2e3eedbc8da5677ce81df04',
 
   // VoucherListed(address indexed seller, uint256 indexed tokenId, uint256 amount, uint256 pricePerItem)
-  VoucherListed: '0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925',
+  VoucherListed: '0x77a394adf8c68c51dcf5377d5007758bd11b472d589f7196bf41a45d53db8d5f',
 
   // ListingCancelled(address indexed seller, uint256 indexed tokenId)
   ListingCancelled: '0x2e1a7d4d13322e7b96f9a57413e1525c250fb7a9021cf91d1540d5b69f16a49f',
