@@ -49,3 +49,10 @@ credentials/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# hardhat
+cache/
+artifacts/
+typechain-types/
+.env
+.env.local

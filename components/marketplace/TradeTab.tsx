@@ -8,6 +8,7 @@ import { useMarketplaceListingsAPI as useKektvListings } from '@/lib/hooks/useMa
 import { useUserVoucherBalances } from '@/lib/hooks/useKektvListings'
 import { useKektvApproval } from '@/lib/hooks/useKektvApproval'
 import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
+import { OffersView } from './OffersView'
 
 /**
  * KEKTV Marketplace Tab
@@ -15,10 +16,11 @@ import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
  * Complete marketplace for KEKTV vouchers (ERC-1155):
  * - Browse and buy listings
  * - List your own vouchers for sale
+ * - Make and receive offers on vouchers
  * - Cancel your listings
  */
 export function TradeTab() {
-  const [view, setView] = useState<'browse' | 'list'>('browse')
+  const [view, setView] = useState<'browse' | 'list' | 'offers'>('browse')
   const { isConnected } = useAccount()
 
   return (
@@ -60,12 +62,36 @@ export function TradeTab() {
           >
             List for Sale
           </button>
+          <button
+            onClick={() => setView('offers')}
+            className={`
+              px-6 py-2 rounded-lg font-fredoka font-bold transition-all
+              ${view === 'offers'
+                ? 'bg-[#daa520] text-black shadow-lg shadow-[#daa520]/20'
+                : 'bg-gray-800 text-[#daa520] hover:text-white hover:bg-gray-700'
+              }
+            `}
+          >
+            💰 Offers
+          </button>
         </div>
       )}
 
       {/* Content */}
       {view === 'browse' ? (
         <BrowseListings />
+      ) : view === 'offers' ? (
+        !isConnected ? (
+          <div className="text-center py-24">
+            <div className="text-8xl mb-6">🔌</div>
+            <h3 className="text-2xl font-bold text-[#daa520] mb-4 font-fredoka">Connect Your Wallet</h3>
+            <p className="text-gray-400 max-w-md mx-auto">
+              Connect your wallet to view and make offers
+            </p>
+          </div>
+        ) : (
+          <OffersView />
+        )
       ) : !isConnected ? (
         <div className="text-center py-24">
           <div className="text-8xl mb-6">🔌</div>

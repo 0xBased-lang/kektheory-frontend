@@ -11,7 +11,12 @@
     "start": "next start",
     "lint": "eslint",
     "generate-metadata": "node scripts/generate-metadata.js",
-    "prebuild:full": "npm run generate-metadata"
+    "prebuild:full": "npm run generate-metadata",
+    "test-rpc": "node scripts/test-rpc-connection.js",
+    "check-deployment": "node scripts/pre-deployment-check.js",
+    "deploy:offers": "hardhat run scripts/deploy-kektv-offers.js --network basedai",
+    "compile:contracts": "hardhat compile",
+    "test:contracts": "hardhat test"
   },
   "dependencies": {
     "@reown/appkit": "^1.8.9",
@@ -32,13 +37,17 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.4.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "15.5.5",
     "eslint-config-prettier": "^10.1.8",
+    "hardhat": "^2.26.3",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
     "typescript": "^5"
