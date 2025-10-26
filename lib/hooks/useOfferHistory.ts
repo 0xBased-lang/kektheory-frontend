@@ -5,7 +5,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { useAccount } from 'wagmi'
-import { explorerAPI, type OfferEvent, type EventType } from '@/lib/services/explorer-api'
+import { explorerAPI, type TradingEvent, type EventType } from '@/lib/services/explorer-api'
 import { useMemo } from 'react'
 
 /**
@@ -21,7 +21,7 @@ export interface OfferTimeline {
   status: 'active' | 'accepted' | 'cancelled' | 'rejected'
   createdAt: number
   resolvedAt?: number
-  events: OfferEvent[]
+  events: TradingEvent[]
 }
 
 /**
@@ -98,10 +98,15 @@ export function useOfferTimeline(tokenId: number | null) {
   const timeline = useMemo((): OfferTimeline[] => {
     if (!events || events.length === 0) return []
 
-    // Group events by offer ID
+    // Group events by offer ID (only process offer events, not marketplace events)
     const offerMap = new Map<string, OfferTimeline>()
 
     events.forEach((event) => {
+      // Skip marketplace events - they don't have offerId
+      if (event.eventType === 'VoucherSold' || event.eventType === 'VoucherListed' || event.eventType === 'ListingCancelled') {
+        return
+      }
+
       let offerId: string
       let offer: OfferTimeline
 
@@ -122,6 +127,9 @@ export function useOfferTimeline(tokenId: number | null) {
         }
         offerMap.set(offerId, offer)
       } else {
+        // For other offer events (Accepted, Cancelled, Rejected)
+        if (!('offerId' in event)) return // Type guard
+
         offerId = event.offerId
         offer = offerMap.get(offerId)!
 
@@ -216,7 +224,7 @@ export function useNFTStats(tokenId: number | null) {
 }
 
 /**
- * Get user's offer statistics
+ * Get user's offer and marketplace statistics
  */
 export function useUserStats(userAddress?: `0x${string}`) {
   const { data: events, isLoading } = useUserHistory(userAddress)
@@ -229,6 +237,9 @@ export function useUserStats(userAddress?: `0x${string}`) {
         offersAccepted: 0,
         offersCancelled: 0,
         offersRejected: 0,
+        vouchersSold: 0,
+        vouchersListed: 0,
+        listingsCancelled: 0,
         totalSpent: BigInt(0),
         totalEarned: BigInt(0),
       }
@@ -239,17 +250,22 @@ export function useUserStats(userAddress?: `0x${string}`) {
     let offersAccepted = 0
     let offersCancelled = 0
     let offersRejected = 0
+    let vouchersSold = 0
+    let vouchersListed = 0
+    let listingsCancelled = 0
     let totalSpent = BigInt(0)
     let totalEarned = BigInt(0)
 
     const normalizedAddress = userAddress?.toLowerCase()
 
     events.forEach((event) => {
+      // Offer events
       if (event.eventType === 'OfferMade') {
-        if (event.offerer.toLowerCase() === normalizedAddress) {
+        if ('offerer' in event && event.offerer.toLowerCase() === normalizedAddress) {
           offersMade++
         }
         if (
+          'voucherOwner' in event &&
           event.voucherOwner.toLowerCase() === normalizedAddress &&
           event.voucherOwner !== '0x0000000000000000000000000000000000000000'
         ) {
@@ -257,19 +273,37 @@ export function useUserStats(userAddress?: `0x${string}`) {
         }
       } else if (event.eventType === 'OfferAccepted') {
         offersAccepted++
-        if (event.offerer.toLowerCase() === normalizedAddress) {
+        if ('offerer' in event && event.offerer.toLowerCase() === normalizedAddress) {
           totalSpent += BigInt(event.offerPrice)
         }
-        if (event.voucherOwner.toLowerCase() === normalizedAddress) {
+        if ('voucherOwner' in event && event.voucherOwner.toLowerCase() === normalizedAddress) {
           totalEarned += BigInt(event.offerPrice)
         }
       } else if (event.eventType === 'OfferCancelled') {
-        if (event.offerer.toLowerCase() === normalizedAddress) {
+        if ('offerer' in event && event.offerer.toLowerCase() === normalizedAddress) {
           offersCancelled++
         }
       } else if (event.eventType === 'OfferRejected') {
-        if (event.voucherOwner.toLowerCase() === normalizedAddress) {
+        if ('voucherOwner' in event && event.voucherOwner.toLowerCase() === normalizedAddress) {
           offersRejected++
+        }
+      }
+      // Marketplace events
+      else if (event.eventType === 'VoucherSold') {
+        if ('seller' in event && event.seller.toLowerCase() === normalizedAddress) {
+          vouchersSold++
+          totalEarned += BigInt(event.totalPrice)
+        }
+        if ('buyer' in event && event.buyer.toLowerCase() === normalizedAddress) {
+          totalSpent += BigInt(event.totalPrice)
+        }
+      } else if (event.eventType === 'VoucherListed') {
+        if ('seller' in event && event.seller.toLowerCase() === normalizedAddress) {
+          vouchersListed++
+        }
+      } else if (event.eventType === 'ListingCancelled') {
+        if ('seller' in event && event.seller.toLowerCase() === normalizedAddress) {
+          listingsCancelled++
         }
       }
     })
@@ -280,6 +314,9 @@ export function useUserStats(userAddress?: `0x${string}`) {
       offersAccepted,
       offersCancelled,
       offersRejected,
+      vouchersSold,
+      vouchersListed,
+      listingsCancelled,
       totalSpent,
       totalEarned,
     }

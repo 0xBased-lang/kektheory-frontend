@@ -5,10 +5,17 @@
  * Uses the Blockscout API to query contract events without running a backend.
  *
  * Events tracked:
+ *
+ * OFFER EVENTS (KektvOffers contract):
  * - OfferMade: When someone creates a new offer
  * - OfferAccepted: When a voucher owner accepts an offer
  * - OfferCancelled: When the offerer cancels their offer
  * - OfferRejected: When a voucher owner rejects an offer
+ *
+ * MARKETPLACE EVENTS (KektvMarketplace contract):
+ * - VoucherSold: When someone buys from a listing
+ * - VoucherListed: When someone lists a voucher for sale
+ * - ListingCancelled: When a seller cancels their listing
  */
 
 import { AbiCoder } from 'ethers'
@@ -19,11 +26,15 @@ const EXPLORER_API = 'https://explorer.bf1337.org/api'
 // KEKTV Offers V2 Contract Address
 const KEKTV_OFFERS_ADDRESS = '0x4E8B375C717a136882071923F17Ea08E75DDBcb2'
 
+// KEKTV Marketplace V6 Contract Address
+const KEKTV_MARKETPLACE_ADDRESS = '0x2d79106D60f92F3a6b7B17E3cAd3Df0D4bdcE062'
+
 /**
  * Event signatures (keccak256 hash of event definition)
  * These are used to filter events by type
  */
 export const EVENT_SIGNATURES = {
+  // === OFFER EVENTS (from KektvOffers contract) ===
   // OfferMade(uint256 indexed offerId, address indexed offerer, address indexed voucherOwner, uint256 tokenId, uint256 amount, uint256 offerPrice)
   OfferMade: '0x1a8e0fde244a9977c0c15878be5b18858c95d39be4ba3a7c4cf3d7a5d47698f6',
 
@@ -35,6 +46,16 @@ export const EVENT_SIGNATURES = {
 
   // OfferRejected(uint256 indexed offerId, address indexed voucherOwner)
   OfferRejected: '0x0a2e4bd6e1f84e8c8e24e5097f098f3e7c6a1c8a0e2f9b0e8c7d3a4b5c6e7f8a',
+
+  // === MARKETPLACE EVENTS (from KektvMarketplace contract) ===
+  // VoucherSold(address indexed seller, address indexed buyer, uint256 indexed tokenId, uint256 amount, uint256 totalPrice)
+  VoucherSold: '0xf7e9fe69e1d05372bc855b295bc4c34a1a0a5882164dd2b26df30a26c1c8ba15',
+
+  // VoucherListed(address indexed seller, uint256 indexed tokenId, uint256 amount, uint256 pricePerItem)
+  VoucherListed: '0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925',
+
+  // ListingCancelled(address indexed seller, uint256 indexed tokenId)
+  ListingCancelled: '0x2e1a7d4d13322e7b96f9a57413e1525c250fb7a9021cf91d1540d5b69f16a49f',
 } as const
 
 /**
@@ -84,7 +105,32 @@ export interface OfferRejectedEvent extends BaseEvent {
   voucherOwner: string
 }
 
+export interface VoucherSoldEvent extends BaseEvent {
+  eventType: 'VoucherSold'
+  seller: string
+  buyer: string
+  tokenId: number
+  amount: string // in units (not wei)
+  totalPrice: string // in wei (BASED paid)
+}
+
+export interface VoucherListedEvent extends BaseEvent {
+  eventType: 'VoucherListed'
+  seller: string
+  tokenId: number
+  amount: string
+  pricePerItem: string
+}
+
+export interface ListingCancelledEvent extends BaseEvent {
+  eventType: 'ListingCancelled'
+  seller: string
+  tokenId: number
+}
+
 export type OfferEvent = OfferMadeEvent | OfferAcceptedEvent | OfferCancelledEvent | OfferRejectedEvent
+export type MarketplaceEvent = VoucherSoldEvent | VoucherListedEvent | ListingCancelledEvent
+export type TradingEvent = OfferEvent | MarketplaceEvent
 
 /**
  * Raw log data from explorer API
@@ -105,11 +151,26 @@ export class ExplorerAPIService {
   private abiCoder = AbiCoder.defaultAbiCoder()
 
   /**
-   * Get all events for KEKTV Offers contract
+   * Get all trading events (both offers and marketplace)
    * @param fromBlock - Starting block number (default: 0)
    * @param toBlock - Ending block (default: 'latest')
    */
-  async getAllEvents(fromBlock: number | string = 0, toBlock: string = 'latest'): Promise<OfferEvent[]> {
+  async getAllEvents(fromBlock: number | string = 0, toBlock: string = 'latest'): Promise<TradingEvent[]> {
+    // Fetch from both contracts in parallel
+    const [offerEvents, marketplaceEvents] = await Promise.all([
+      this.getOfferEvents(fromBlock, toBlock),
+      this.getMarketplaceEvents(fromBlock, toBlock),
+    ])
+
+    // Combine and sort by timestamp (newest first)
+    const allEvents = [...offerEvents, ...marketplaceEvents]
+    return allEvents.sort((a, b) => b.timestamp - a.timestamp)
+  }
+
+  /**
+   * Get events from KEKTV Offers contract only
+   */
+  private async getOfferEvents(fromBlock: number | string = 0, toBlock: string = 'latest'): Promise<OfferEvent[]> {
     const url = new URL(EXPLORER_API)
     url.searchParams.set('module', 'logs')
     url.searchParams.set('action', 'getLogs')
@@ -121,7 +182,28 @@ export class ExplorerAPIService {
     const data = await response.json()
 
     if (data.status === '1' && Array.isArray(data.result)) {
-      return data.result.map((log: RawLog) => this.parseLog(log)).filter((e: OfferEvent | null): e is OfferEvent => e !== null)
+      return data.result.map((log: RawLog) => this.parseLog(log)).filter((e: TradingEvent | null): e is OfferEvent => e !== null && 'offerId' in e)
+    }
+
+    return []
+  }
+
+  /**
+   * Get events from KEKTV Marketplace contract only
+   */
+  private async getMarketplaceEvents(fromBlock: number | string = 0, toBlock: string = 'latest'): Promise<MarketplaceEvent[]> {
+    const url = new URL(EXPLORER_API)
+    url.searchParams.set('module', 'logs')
+    url.searchParams.set('action', 'getLogs')
+    url.searchParams.set('fromBlock', fromBlock.toString())
+    url.searchParams.set('toBlock', toBlock)
+    url.searchParams.set('address', KEKTV_MARKETPLACE_ADDRESS)
+
+    const response = await fetch(url.toString())
+    const data = await response.json()
+
+    if (data.status === '1' && Array.isArray(data.result)) {
+      return data.result.map((log: RawLog) => this.parseLog(log)).filter((e: TradingEvent | null): e is MarketplaceEvent => e !== null && ('seller' in e || 'buyer' in e))
     }
 
     return []
@@ -132,20 +214,24 @@ export class ExplorerAPIService {
    * @param eventType - Type of event to fetch
    * @param fromBlock - Starting block
    */
-  async getEventsByType(eventType: EventType, fromBlock: number | string = 0): Promise<OfferEvent[]> {
+  async getEventsByType(eventType: EventType, fromBlock: number | string = 0): Promise<TradingEvent[]> {
+    // Determine which contract address to use based on event type
+    const isMarketplaceEvent = ['VoucherSold', 'VoucherListed', 'ListingCancelled'].includes(eventType)
+    const contractAddress = isMarketplaceEvent ? KEKTV_MARKETPLACE_ADDRESS : KEKTV_OFFERS_ADDRESS
+
     const url = new URL(EXPLORER_API)
     url.searchParams.set('module', 'logs')
     url.searchParams.set('action', 'getLogs')
     url.searchParams.set('fromBlock', fromBlock.toString())
     url.searchParams.set('toBlock', 'latest')
-    url.searchParams.set('address', KEKTV_OFFERS_ADDRESS)
+    url.searchParams.set('address', contractAddress)
     url.searchParams.set('topic0', EVENT_SIGNATURES[eventType])
 
     const response = await fetch(url.toString())
     const data = await response.json()
 
     if (data.status === '1' && Array.isArray(data.result)) {
-      return data.result.map((log: RawLog) => this.parseLog(log)).filter((e: OfferEvent | null): e is OfferEvent => e !== null)
+      return data.result.map((log: RawLog) => this.parseLog(log)).filter((e: TradingEvent | null): e is TradingEvent => e !== null)
     }
 
     return []
@@ -153,10 +239,10 @@ export class ExplorerAPIService {
 
   /**
    * Get events for a specific NFT (by tokenId)
-   * Note: tokenId is NOT indexed, so we need to fetch all events and filter
+   * Includes both offer events and marketplace events
    * @param tokenId - NFT token ID
    */
-  async getEventsForToken(tokenId: number): Promise<OfferEvent[]> {
+  async getEventsForToken(tokenId: number): Promise<TradingEvent[]> {
     const allEvents = await this.getAllEvents()
 
     return allEvents.filter((event) => {
@@ -168,18 +254,27 @@ export class ExplorerAPIService {
   }
 
   /**
-   * Get events by user address (offerer or voucherOwner)
+   * Get events by user address (offerer, voucherOwner, seller, or buyer)
+   * Includes both offer events and marketplace events
    * @param userAddress - User's wallet address
    */
-  async getEventsByUser(userAddress: string): Promise<OfferEvent[]> {
+  async getEventsByUser(userAddress: string): Promise<TradingEvent[]> {
     const allEvents = await this.getAllEvents()
     const normalizedAddress = userAddress.toLowerCase()
 
     return allEvents.filter((event) => {
+      // Offer events
       if ('offerer' in event && event.offerer.toLowerCase() === normalizedAddress) {
         return true
       }
       if ('voucherOwner' in event && event.voucherOwner.toLowerCase() === normalizedAddress) {
+        return true
+      }
+      // Marketplace events
+      if ('seller' in event && event.seller.toLowerCase() === normalizedAddress) {
+        return true
+      }
+      if ('buyer' in event && event.buyer.toLowerCase() === normalizedAddress) {
         return true
       }
       return false
@@ -189,7 +284,7 @@ export class ExplorerAPIService {
   /**
    * Parse raw log into typed event
    */
-  private parseLog(log: RawLog): OfferEvent | null {
+  private parseLog(log: RawLog): TradingEvent | null {
     const signature = log.topics[0]
     const blockNumber = parseInt(log.blockNumber, 16)
     const timestamp = parseInt(log.timeStamp, 16)
@@ -203,6 +298,7 @@ export class ExplorerAPIService {
 
     try {
       switch (signature) {
+        // Offer events
         case EVENT_SIGNATURES.OfferMade:
           return this.parseOfferMade(log, baseEvent)
 
@@ -214,6 +310,16 @@ export class ExplorerAPIService {
 
         case EVENT_SIGNATURES.OfferRejected:
           return this.parseOfferRejected(log, baseEvent)
+
+        // Marketplace events
+        case EVENT_SIGNATURES.VoucherSold:
+          return this.parseVoucherSold(log, baseEvent)
+
+        case EVENT_SIGNATURES.VoucherListed:
+          return this.parseVoucherListed(log, baseEvent)
+
+        case EVENT_SIGNATURES.ListingCancelled:
+          return this.parseListingCancelled(log, baseEvent)
 
         default:
           console.warn('Unknown event signature:', signature)
@@ -305,10 +411,69 @@ export class ExplorerAPIService {
   }
 
   /**
+   * Parse VoucherSold event
+   * event VoucherSold(address indexed seller, address indexed buyer, uint256 indexed tokenId, uint256 amount, uint256 totalPrice)
+   */
+  private parseVoucherSold(log: RawLog, baseEvent: Omit<BaseEvent, 'eventType'>): VoucherSoldEvent {
+    const seller = '0x' + log.topics[1].slice(26)
+    const buyer = '0x' + log.topics[2].slice(26)
+    const tokenId = Number(BigInt(log.topics[3]))
+
+    // Decode non-indexed parameters from data
+    const decoded = this.abiCoder.decode(['uint256', 'uint256'], log.data)
+
+    return {
+      ...baseEvent,
+      eventType: 'VoucherSold',
+      seller,
+      buyer,
+      tokenId,
+      amount: decoded[0].toString(),
+      totalPrice: decoded[1].toString(),
+    }
+  }
+
+  /**
+   * Parse VoucherListed event
+   * event VoucherListed(address indexed seller, uint256 indexed tokenId, uint256 amount, uint256 pricePerItem)
+   */
+  private parseVoucherListed(log: RawLog, baseEvent: Omit<BaseEvent, 'eventType'>): VoucherListedEvent {
+    const seller = '0x' + log.topics[1].slice(26)
+    const tokenId = Number(BigInt(log.topics[2]))
+
+    const decoded = this.abiCoder.decode(['uint256', 'uint256'], log.data)
+
+    return {
+      ...baseEvent,
+      eventType: 'VoucherListed',
+      seller,
+      tokenId,
+      amount: decoded[0].toString(),
+      pricePerItem: decoded[1].toString(),
+    }
+  }
+
+  /**
+   * Parse ListingCancelled event
+   * event ListingCancelled(address indexed seller, uint256 indexed tokenId)
+   */
+  private parseListingCancelled(log: RawLog, baseEvent: Omit<BaseEvent, 'eventType'>): ListingCancelledEvent {
+    const seller = '0x' + log.topics[1].slice(26)
+    const tokenId = Number(BigInt(log.topics[2]))
+
+    return {
+      ...baseEvent,
+      eventType: 'ListingCancelled',
+      seller,
+      tokenId,
+    }
+  }
+
+  /**
    * Get paginated results (handles >1000 logs limit)
    */
-  async getAllEventsWithPagination(): Promise<OfferEvent[]> {
-    let allEvents: OfferEvent[] = []
+  async getAllEventsWithPagination(): Promise<TradingEvent[]> {
+    let allEvents: TradingEvent[] = []
     let fromBlock: number | string = 0
     let hasMore = true
     let iterations = 0

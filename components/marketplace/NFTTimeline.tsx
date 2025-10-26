@@ -9,7 +9,7 @@
 import { useState } from 'react'
 import { useOfferTimeline, type OfferTimeline } from '@/lib/hooks/useOfferHistory'
 import { formatUnits } from 'ethers'
-import type { OfferEvent } from '@/lib/services/explorer-api'
+import type { TradingEvent } from '@/lib/services/explorer-api'
 
 interface NFTTimelineProps {
   tokenId: number
@@ -203,7 +203,7 @@ function InfoRow({ label, value, isAddress }: { label: string; value: string; is
 /**
  * Event row (shows individual events in timeline)
  */
-function EventRow({ event }: { event: OfferEvent }) {
+function EventRow({ event }: { event: TradingEvent }) {
   return (
     <div className="flex items-center gap-3 text-xs bg-gray-800/50 rounded p-2">
       <span className="flex-shrink-0">{getEventIcon(event.eventType)}</span>
@@ -239,7 +239,7 @@ function getStatusColor(status: OfferTimeline['status']): string {
   }
 }
 
-function getEventIcon(eventType: OfferEvent['eventType']): string {
+function getEventIcon(eventType: TradingEvent['eventType']): string {
   switch (eventType) {
     case 'OfferMade':
       return '💰'
@@ -249,10 +249,16 @@ function getEventIcon(eventType: OfferEvent['eventType']): string {
       return '❌'
     case 'OfferRejected':
       return '🚫'
+    case 'VoucherSold':
+      return '💸'
+    case 'VoucherListed':
+      return '🏪'
+    case 'ListingCancelled':
+      return '🚫'
   }
 }
 
-function getEventLabel(eventType: OfferEvent['eventType']): string {
+function getEventLabel(eventType: TradingEvent['eventType']): string {
   switch (eventType) {
     case 'OfferMade':
       return 'Offer Created'
@@ -262,6 +268,12 @@ function getEventLabel(eventType: OfferEvent['eventType']): string {
       return 'Offer Cancelled'
     case 'OfferRejected':
       return 'Offer Rejected'
+    case 'VoucherSold':
+      return 'Voucher Sold'
+    case 'VoucherListed':
+      return 'Voucher Listed'
+    case 'ListingCancelled':
+      return 'Listing Cancelled'
   }
 }
 
