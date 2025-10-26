@@ -123,14 +123,15 @@ function YourOfferCard({
 }: {
   offerId: bigint
   onSuccess: () => void
-  cancelOffer: (offerId: bigint) => Promise<void>
+  cancelOffer: (offerId: bigint) => Promise<`0x${string}`>
   isPending: boolean
 }) {
   const { offer, isLoading } = useOfferDetails(offerId)
 
   const handleCancel = async () => {
     try {
-      await cancelOffer(offerId)
+      const txHash = await cancelOffer(offerId)
+      console.log('Offer cancelled, tx:', txHash)
       alert('Offer cancelled successfully! BASED refunded to your wallet.')
       onSuccess()
     } catch (error) {
