@@ -50,6 +50,17 @@ export function UserActivityPage() {
   const { offerIds: madeOfferIds, refetch: refetchMade } = useUserOffers(address)
   const { offerIds: receivedOfferIds, refetch: refetchReceived } = useReceivedOffers(address)
 
+  // Debug logging
+  console.log('🔍 Trading Activity Debug:', {
+    address,
+    listings: listings?.length || 0,
+    madeOfferIds: madeOfferIds?.length || 0,
+    receivedOfferIds: receivedOfferIds?.length || 0,
+    listingsData: listings,
+    madeOfferIdsData: madeOfferIds,
+    receivedOfferIdsData: receivedOfferIds,
+  })
+
   const handleRefresh = async () => {
     await Promise.all([refetchHistory(), refetchListings(), refetchMade(), refetchReceived()])
   }
@@ -192,10 +203,11 @@ function AcceptableOfferCard({
   const isMountedRef = useRef(true)
 
   useEffect(() => {
+    console.log('📦 AcceptableOfferCard:', { offerId: offerId.toString(), offer, isLoading })
     return () => {
       isMountedRef.current = false
     }
-  }, [])
+  }, [offerId, offer, isLoading])
 
   const handleAccept = async () => {
     try {
