@@ -44,12 +44,14 @@ const publicClient = createPublicClient({
 
 export async function GET() {
   try {
-    // 1. Get contract deployment block (to avoid scanning entire chain)
-    // V6 Contract deployed at block ~2449512 (October 19, 2025, 5:10 AM)
-    const deploymentBlock = 2449510n // Start slightly before V6 deployment
+    // 1. Get recent blocks only (performance optimization)
+    // Scan last 10,000 blocks instead of all blocks since deployment
+    // Most listings are recent anyway
     const currentBlock = await publicClient.getBlockNumber()
+    const BLOCKS_TO_SCAN = 10000n // ~7 days of blocks
+    const fromBlock = currentBlock > BLOCKS_TO_SCAN ? currentBlock - BLOCKS_TO_SCAN : 0n
 
-    // 2. Fetch VoucherListed events
+    // 2. Fetch VoucherListed events (recent blocks only)
     // V6 uses simple event signature (no timestamp)
     type VoucherListedEvent = {
       args: { seller: string; tokenId: bigint; amount: bigint; pricePerItem: bigint }
@@ -61,7 +63,7 @@ export async function GET() {
       listedEvents = await publicClient.getLogs({
         address: KEKTV_MARKETPLACE_ADDRESS,
         event: parseAbiItem('event VoucherListed(address indexed seller, uint256 indexed tokenId, uint256 amount, uint256 pricePerItem)'),
-        fromBlock: deploymentBlock,
+        fromBlock,
         toBlock: currentBlock,
       }) as VoucherListedEvent[]
     } catch (error) {
@@ -79,7 +81,7 @@ export async function GET() {
       soldEvents = await publicClient.getLogs({
         address: KEKTV_MARKETPLACE_ADDRESS,
         event: parseAbiItem('event VoucherSold(address indexed seller, address indexed buyer, uint256 indexed tokenId, uint256 amount, uint256 totalPrice)'),
-        fromBlock: deploymentBlock,
+        fromBlock,
         toBlock: currentBlock,
       }) as VoucherSoldEvent[]
     } catch (error) {
@@ -97,7 +99,7 @@ export async function GET() {
       cancelledEvents = await publicClient.getLogs({
         address: KEKTV_MARKETPLACE_ADDRESS,
         event: parseAbiItem('event ListingCancelled(address indexed seller, uint256 indexed tokenId)'),
-        fromBlock: deploymentBlock,
+        fromBlock,
         toBlock: currentBlock,
       }) as ListingCancelledEvent[]
     } catch (error) {
@@ -230,7 +232,7 @@ export async function GET() {
       headers: {
         'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
         'X-Total-Listings': String(activeListings.length),
-        'X-Scanned-Blocks': String(currentBlock - deploymentBlock),
+        'X-Scanned-Blocks': String(currentBlock - fromBlock),
         'X-Listed-Events': String(listedEvents.length),
         'X-Sold-Events': String(soldEvents.length),
       }
