@@ -57,6 +57,15 @@ export function UserActivityPage() {
   const { metadataMap } = useAllVoucherMetadata()
   const { ownedVouchers } = useVoucherBalance() // For filtering offers
 
+  // DEBUG: Log offer IDs to diagnose display issues
+  console.log('🎯 UserActivityPage - Offer IDs:', {
+    address,
+    madeOfferIds: madeOfferIds.map(id => id.toString()),
+    receivedOfferIds: receivedOfferIds.map(id => id.toString()),
+    madeCount: madeOfferIds.length,
+    receivedCount: receivedOfferIds.length,
+  })
+
   const handleRefresh = async () => {
     await Promise.all([refetchHistory(), refetchListings(), refetchMade(), refetchReceived()])
   }
@@ -468,6 +477,12 @@ function YourOfferNFTCard({
   const [isCancelling, setIsCancelling] = useState(false)
   const isMountedRef = useRef(true)
 
+  console.log('💼 YourOfferNFTCard rendering:', {
+    offerId: offerId.toString(),
+    isLoading,
+    hasOffer: !!offer,
+  })
+
   useEffect(() => {
     return () => {
       isMountedRef.current = false
@@ -491,6 +506,7 @@ function YourOfferNFTCard({
   }
 
   if (isLoading || !offer) {
+    console.log('💼 YourOfferNFTCard: Still loading or no offer data')
     return (
       <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border border-[#daa520]/20 p-6">
         <div className="animate-pulse text-center text-gray-400">Loading offer...</div>
@@ -500,8 +516,22 @@ function YourOfferNFTCard({
 
   // CRITICAL: Validate ALL required offer properties exist
   if (!offer.offerer || !offer.voucherOwner || offer.tokenId === undefined || offer.amount === undefined || offer.offerPrice === undefined) {
+    console.log('💼 YourOfferNFTCard: Missing properties - filtering out', {
+      hasOfferer: !!offer.offerer,
+      hasVoucherOwner: !!offer.voucherOwner,
+      hasTokenId: offer.tokenId !== undefined,
+      hasAmount: offer.amount !== undefined,
+      hasOfferPrice: offer.offerPrice !== undefined,
+    })
     return null
   }
+
+  console.log('💼 YourOfferNFTCard: Rendering card for offer', {
+    offerId: offerId.toString(),
+    tokenId: offer.tokenId.toString(),
+    amount: offer.amount.toString(),
+    active: offer.active,
+  })
 
   const metadata = metadataMap[Number(offer.tokenId)]
   const mediaUrl = metadata?.animation_url || metadata?.image
