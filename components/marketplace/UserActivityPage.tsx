@@ -108,7 +108,7 @@ export function UserActivityPage() {
         <p className="text-gray-400">Manage your offers, listings, and view trading history</p>
       </div>
 
-      {/* Compact Horizontal Statistics Bar - STICKY */}
+      {/* Compact Horizontal Statistics Bar - STICKY (Doubles as navigation) */}
       <div className="sticky top-0 z-20 bg-black/90 backdrop-blur-sm border-b border-gray-700/50">
         <div className="flex items-center justify-around py-4 px-6">
           <StatBarItem
@@ -134,33 +134,6 @@ export function UserActivityPage() {
             highlight={listings.length > 0}
             onClick={() => setActiveTab('listings')}
             isActive={activeTab === 'listings'}
-          />
-        </div>
-      </div>
-
-      {/* Tab Navigation - STICKY */}
-      <div className="sticky top-[76px] z-10 bg-gray-900/95 backdrop-blur-sm border-b border-gray-700/50">
-        <div className="flex gap-2 px-6 py-3">
-          <TabButton
-            active={activeTab === 'accept'}
-            onClick={() => setActiveTab('accept')}
-            icon="✨"
-            label="Offers to Accept"
-            count={receivedOfferIds.length}
-          />
-          <TabButton
-            active={activeTab === 'your-offers'}
-            onClick={() => setActiveTab('your-offers')}
-            icon="💼"
-            label="Your Offers"
-            count={madeOfferIds.length}
-          />
-          <TabButton
-            active={activeTab === 'listings'}
-            onClick={() => setActiveTab('listings')}
-            icon="🏪"
-            label="Active Listings"
-            count={listings.length}
           />
         </div>
       </div>
@@ -237,42 +210,6 @@ function StatBarItem({
         </div>
         <div className="text-xs text-gray-400 whitespace-nowrap">{label}</div>
       </div>
-    </button>
-  )
-}
-
-/**
- * Tab Button - Navigation tab
- */
-function TabButton({
-  active,
-  onClick,
-  icon,
-  label,
-  count,
-}: {
-  active: boolean
-  onClick: () => void
-  icon: string
-  label: string
-  count: number
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-fredoka font-medium transition-all ${
-        active
-          ? 'bg-[#daa520] text-black'
-          : 'bg-gray-800/50 text-gray-300 hover:bg-gray-800 hover:text-white'
-      }`}
-    >
-      <span className="text-lg">{icon}</span>
-      <span>{label}</span>
-      <span className={`text-sm px-2 py-0.5 rounded-full ${
-        active ? 'bg-black/20' : 'bg-gray-700'
-      }`}>
-        {count}
-      </span>
     </button>
   )
 }
