@@ -3,13 +3,13 @@
 import { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useKektvMarketplace } from '@/lib/hooks/useKektvMarketplace'
 import { useMarketplaceListingsAPI as useKektvListings } from '@/lib/hooks/useMarketplaceListingsAPI'
 import { useUserVoucherBalances } from '@/lib/hooks/useKektvListings'
 import { useKektvApproval } from '@/lib/hooks/useKektvApproval'
-import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
+import { useAllVoucherMetadata, useVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
 import { OffersView } from './OffersView'
+import { UserActivityPage } from './UserActivityPage'
 
 /**
  * KEKTV Marketplace Tab
@@ -21,8 +21,14 @@ import { OffersView } from './OffersView'
  * - Cancel your listings
  */
 export function TradeTab() {
-  const [view, setView] = useState<'browse' | 'list' | 'offers'>('browse')
+  const [view, setView] = useState<'browse' | 'list' | 'offers' | 'activity'>('browse')
+  const [selectedNFT, setSelectedNFT] = useState<number | null>(null)
   const { isConnected } = useAccount()
+
+  // Show NFT detail view if NFT selected
+  if (selectedNFT !== null) {
+    return <NFTDetailView tokenId={selectedNFT} onBack={() => setSelectedNFT(null)} />
+  }
 
   return (
     <div className="space-y-8">
@@ -38,7 +44,7 @@ export function TradeTab() {
 
       {/* View Switcher */}
       {isConnected && (
-        <div className="flex justify-center gap-4">
+        <div className="flex justify-center gap-4 flex-wrap">
           <button
             onClick={() => setView('browse')}
             className={`
@@ -49,7 +55,7 @@ export function TradeTab() {
               }
             `}
           >
-            Browse & Buy
+            🛍️ Browse & Buy
           </button>
           <button
             onClick={() => setView('list')}
@@ -61,7 +67,7 @@ export function TradeTab() {
               }
             `}
           >
-            List for Sale
+            🏷️ List for Sale
           </button>
           <button
             onClick={() => setView('offers')}
@@ -75,12 +81,24 @@ export function TradeTab() {
           >
             💰 Offers
           </button>
+          <button
+            onClick={() => setView('activity')}
+            className={`
+              px-6 py-2 rounded-lg font-fredoka font-bold transition-all
+              ${view === 'activity'
+                ? 'bg-[#daa520] text-black shadow-lg shadow-[#daa520]/20'
+                : 'bg-gray-800 text-[#daa520] hover:text-white hover:bg-gray-700'
+              }
+            `}
+          >
+            📊 My Trading Activity
+          </button>
         </div>
       )}
 
       {/* Content */}
       {view === 'browse' ? (
-        <BrowseListings />
+        <BrowseListings onSelectNFT={setSelectedNFT} />
       ) : view === 'offers' ? (
         !isConnected ? (
           <div className="text-center py-24">
@@ -93,6 +111,8 @@ export function TradeTab() {
         ) : (
           <OffersView />
         )
+      ) : view === 'activity' ? (
+        <UserActivityPage />
       ) : !isConnected ? (
         <div className="text-center py-24">
           <div className="text-8xl mb-6">🔌</div>
@@ -111,7 +131,7 @@ export function TradeTab() {
 /**
  * Browse and buy voucher listings
  */
-function BrowseListings() {
+function BrowseListings({ onSelectNFT }: { onSelectNFT: (tokenId: number) => void }) {
   const { address, isConnected } = useAccount()
   const { listings, isLoading } = useKektvListings()
   const marketplace = useKektvMarketplace()
@@ -173,28 +193,35 @@ function BrowseListings() {
             className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border border-[#daa520]/20 overflow-hidden hover:border-[#daa520]/40 transition-all"
           >
             <div className="p-6">
-              {/* Voucher Media */}
-              {mediaUrl ? (
-                <div className="relative w-full h-48 rounded-lg overflow-hidden bg-black/20 mb-4">
-                  <Image
-                    src={mediaUrl}
-                    alt={metadata?.name || listing.voucherName}
-                    fill
-                    className="object-contain"
-                    unoptimized
-                  />
-                </div>
-              ) : (
-                <div className="text-center mb-4">
-                  <div className="text-6xl mb-2">{listing.voucherIcon}</div>
-                </div>
-              )}
+              {/* Clickable NFT Card Upper Section */}
+              <div
+                onClick={() => onSelectNFT(listing.tokenId)}
+                className="cursor-pointer hover:opacity-80 transition-opacity"
+              >
+                {/* Voucher Media */}
+                {mediaUrl ? (
+                  <div className="relative w-full h-48 rounded-lg overflow-hidden bg-black/20 mb-4">
+                    <Image
+                      src={mediaUrl}
+                      alt={metadata?.name || listing.voucherName}
+                      fill
+                      className="object-contain"
+                      unoptimized
+                    />
+                  </div>
+                ) : (
+                  <div className="text-center mb-4">
+                    <div className="text-6xl mb-2">{listing.voucherIcon}</div>
+                  </div>
+                )}
 
-              {/* Voucher Info */}
-              <div className="text-center mb-4">
-                <h3 className="text-xl font-bold text-[#daa520] font-fredoka">
-                  {metadata?.name || listing.voucherName}
-                </h3>
+                {/* Voucher Info */}
+                <div className="text-center mb-4">
+                  <h3 className="text-xl font-bold text-[#daa520] font-fredoka">
+                    {metadata?.name || listing.voucherName}
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-1">Click to view details</p>
+                </div>
               </div>
 
               {/* Listing Details */}
@@ -220,34 +247,23 @@ function BrowseListings() {
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="space-y-2">
-                {/* Buy Button */}
-                <button
-                  onClick={() => handleBuy(listing)}
-                  disabled={!isConnected || marketplace.isPending || listing.seller === address}
-                  className={`
-                    w-full py-3 rounded-lg font-fredoka font-bold transition-all
-                    ${!isConnected || listing.seller === address
-                      ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-[#daa520] to-yellow-600 text-black hover:scale-105 shadow-lg shadow-[#daa520]/20'
-                    }
-                  `}
-                >
-                  {!isConnected ? '🔗 Connect Wallet to Buy' :
-                    listing.seller === address ? 'Your Listing' :
-                    marketplace.isPending ? 'Buying...' :
-                    '💰 Buy Now'}
-                </button>
-
-                {/* View Details Link */}
-                <Link
-                  href={`/marketplace/history/${listing.tokenId}`}
-                  className="block w-full py-2 rounded-lg text-center font-fredoka font-medium text-[#daa520] border border-[#daa520]/30 hover:bg-[#daa520]/10 hover:border-[#daa520] transition-all"
-                >
-                  📊 View Trading History
-                </Link>
-              </div>
+              {/* Buy Button */}
+              <button
+                onClick={() => handleBuy(listing)}
+                disabled={!isConnected || marketplace.isPending || listing.seller === address}
+                className={`
+                  w-full mt-4 py-3 rounded-lg font-fredoka font-bold transition-all
+                  ${!isConnected || listing.seller === address
+                    ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-[#daa520] to-yellow-600 text-black hover:scale-105 shadow-lg shadow-[#daa520]/20'
+                  }
+                `}
+              >
+                {!isConnected ? '🔗 Connect Wallet to Buy' :
+                  listing.seller === address ? 'Your Listing' :
+                  marketplace.isPending ? 'Buying...' :
+                  '💰 Buy Now'}
+              </button>
             </div>
           </div>
         )})}
@@ -582,6 +598,129 @@ function YourListings() {
             </div>
           )
         })}
+      </div>
+    </div>
+  )
+}
+
+/**
+ * NFT Detail View - Shows individual NFT with metadata and trading history
+ */
+function NFTDetailView({ tokenId, onBack }: { tokenId: number; onBack: () => void }) {
+  const { metadata, loading, error } = useVoucherMetadata(tokenId)
+
+  if (loading) {
+    return (
+      <div className="text-center py-24">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#daa520] mx-auto mb-4"></div>
+        <p className="text-gray-400">Loading NFT details...</p>
+      </div>
+    )
+  }
+
+  if (error || !metadata) {
+    return (
+      <div className="text-center py-24">
+        <div className="text-8xl mb-6">❌</div>
+        <h3 className="text-2xl font-bold text-[#daa520] mb-4 font-fredoka">
+          Error Loading NFT
+        </h3>
+        <p className="text-gray-400 mb-6">{error || 'Failed to load NFT metadata'}</p>
+        <button
+          onClick={onBack}
+          className="px-6 py-3 bg-[#daa520] text-black rounded-lg font-fredoka font-bold hover:bg-yellow-600 transition"
+        >
+          ← Back to Marketplace
+        </button>
+      </div>
+    )
+  }
+
+  const mediaUrl = metadata.animation_url || metadata.image
+
+  return (
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Back Button */}
+      <button
+        onClick={onBack}
+        className="px-4 py-2 bg-gray-800 text-[#daa520] rounded-lg font-fredoka font-bold hover:bg-gray-700 transition"
+      >
+        ← Back to Marketplace
+      </button>
+
+      {/* NFT Header */}
+      <div className="text-center">
+        <h1 className="text-4xl font-bold text-[#daa520] mb-2 font-fredoka">
+          {metadata.name}
+        </h1>
+        <p className="text-gray-400">Complete details and metadata for this NFT</p>
+      </div>
+
+      {/* Main Content */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Left: NFT Image */}
+        <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border border-[#daa520]/20 p-6">
+          {mediaUrl ? (
+            <div className="relative w-full aspect-square rounded-lg overflow-hidden bg-black/20">
+              <Image
+                src={mediaUrl}
+                alt={metadata.name}
+                fill
+                className="object-contain"
+                unoptimized
+              />
+            </div>
+          ) : (
+            <div className="w-full aspect-square flex items-center justify-center bg-black/20 rounded-lg">
+              <div className="text-9xl">🎟️</div>
+            </div>
+          )}
+        </div>
+
+        {/* Right: Metadata */}
+        <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border border-[#daa520]/20 p-6 space-y-4">
+          {/* Description */}
+          {metadata.description && (
+            <div>
+              <h3 className="text-lg font-bold text-[#daa520] mb-2 font-fredoka">Description</h3>
+              <p className="text-gray-300">{metadata.description}</p>
+            </div>
+          )}
+
+          {/* Token ID */}
+          <div>
+            <h3 className="text-lg font-bold text-[#daa520] mb-2 font-fredoka">Token ID</h3>
+            <p className="text-gray-300">#{tokenId}</p>
+          </div>
+
+          {/* Attributes */}
+          {metadata.attributes && metadata.attributes.length > 0 && (
+            <div>
+              <h3 className="text-lg font-bold text-[#daa520] mb-2 font-fredoka">Attributes</h3>
+              <div className="space-y-2">
+                {metadata.attributes.map((attr, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center bg-black/20 rounded-lg p-3"
+                  >
+                    <span className="text-gray-400">{attr.trait_type}</span>
+                    <span className="text-white font-bold">{attr.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Trading History Section (Placeholder) */}
+      <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border border-[#daa520]/20 p-6">
+        <h3 className="text-2xl font-bold text-[#daa520] mb-4 font-fredoka">
+          📊 Trading History
+        </h3>
+        <p className="text-gray-400 text-center py-8">
+          Trading history feature coming soon! This will show all transactions, offers, and sales for this specific NFT.
+        </p>
       </div>
     </div>
   )
