@@ -11,7 +11,7 @@
  * - OfferRejected: When a voucher owner rejects an offer
  */
 
-import { keccak256, toUtf8Bytes, AbiCoder } from 'ethers'
+import { AbiCoder } from 'ethers'
 
 // BasedAI Explorer API endpoint
 const EXPLORER_API = 'https://explorer.bf1337.org/api'

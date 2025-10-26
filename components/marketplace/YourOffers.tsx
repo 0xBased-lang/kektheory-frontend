@@ -135,8 +135,7 @@ function YourOfferCard({
 
   const handleCancel = async () => {
     try {
-      const txHash = await cancelOffer(offerId)
-      console.log('Offer cancelled, tx:', txHash)
+      await cancelOffer(offerId)
 
       // Wait for blockchain to update before refetching
       setTimeout(() => {
