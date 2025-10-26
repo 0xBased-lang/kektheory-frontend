@@ -228,38 +228,6 @@ function AcceptableOfferNFTCard({
     }
   }, [])
 
-  // Filter logic: Don't show this card if...
-  if (offer && userAddress) {
-    // 1. This is your own offer
-    if (offer.offerer.toLowerCase() === userAddress.toLowerCase()) {
-      return null
-    }
-
-    // 2. Offer is not active
-    if (!offer.active) {
-      return null
-    }
-
-    // 3. For general offers (voucherOwner = 0x0), check if you own the tokens
-    const isGeneralOffer = offer.voucherOwner === '0x0000000000000000000000000000000000000000'
-    if (isGeneralOffer) {
-      const ownedVoucher = ownedVouchers.find(v => v.id === Number(offer.tokenId))
-      const ownedAmount = ownedVoucher?.balanceNumber || 0
-      const requiredAmount = Number(offer.amount)
-
-      // Don't show if you don't have enough vouchers
-      if (ownedAmount < requiredAmount) {
-        return null
-      }
-    }
-
-    // 4. For targeted offers, check if it's for you
-    const isTargetedOffer = !isGeneralOffer
-    if (isTargetedOffer && offer.voucherOwner.toLowerCase() !== userAddress.toLowerCase()) {
-      return null
-    }
-  }
-
   const handleAccept = async () => {
     try {
       setIsAccepting(true)
@@ -276,12 +244,46 @@ function AcceptableOfferNFTCard({
     }
   }
 
+  // IMPORTANT: Check loading state FIRST before accessing offer properties
   if (isLoading || !offer) {
     return (
       <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border border-[#daa520]/20 p-6">
         <div className="animate-pulse text-center text-gray-400">Loading offer...</div>
       </div>
     )
+  }
+
+  // Smart filtering: Don't show this card if it's not a valid offer for you
+  // Now that we know offer is loaded, we can safely access its properties
+  if (userAddress && offer.offerer && offer.voucherOwner) {
+    // 1. Filter out offers you made yourself
+    if (offer.offerer.toLowerCase() === userAddress.toLowerCase()) {
+      return null
+    }
+
+    // 2. Filter out inactive offers
+    if (!offer.active) {
+      return null
+    }
+
+    // 3. For general offers (voucherOwner = 0x0), check if you own enough tokens
+    const isGeneralOffer = offer.voucherOwner === '0x0000000000000000000000000000000000000000'
+    if (isGeneralOffer) {
+      const ownedVoucher = ownedVouchers.find(v => v.id === Number(offer.tokenId))
+      const ownedAmount = ownedVoucher?.balanceNumber || 0
+      const requiredAmount = Number(offer.amount)
+
+      // Don't show if you don't have enough vouchers
+      if (ownedAmount < requiredAmount) {
+        return null
+      }
+    }
+
+    // 4. For targeted offers, verify it's actually for you
+    const isTargetedOffer = !isGeneralOffer
+    if (isTargetedOffer && offer.voucherOwner.toLowerCase() !== userAddress.toLowerCase()) {
+      return null
+    }
   }
 
   const metadata = metadataMap[Number(offer.tokenId)]
