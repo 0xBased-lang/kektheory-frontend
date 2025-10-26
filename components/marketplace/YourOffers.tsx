@@ -1,17 +1,21 @@
 'use client'
 import { useState } from 'react'
+import Image from 'next/image'
 import { useAccount } from 'wagmi'
 import { useUserOffers, useOfferDetails, useKektvOffers, useTokenOffers } from '@/lib/hooks/useKektvOffers'
-import { useUserVoucherBalances } from '@/lib/hooks/useKektvListings'
+import { useUserVoucherBalances, useKektvListings } from '@/lib/hooks/useKektvListings'
+import { useKektvMarketplace } from '@/lib/hooks/useKektvMarketplace'
+import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
 import { OfferCard } from './OfferCard'
 import { VOUCHER_IDS } from '@/config/contracts/kektv-offers'
 
 /**
  * My Activity - Comprehensive view of user's offer activity
  *
- * Shows two sections:
+ * Shows three sections:
  * 1. Offers You Can Accept - offers where user has sufficient vouchers
  * 2. Your Offers - offers user has created
+ * 3. Your Marketplace Listings - vouchers user has listed for sale
  */
 export function YourOffers() {
   const { address } = useAccount()
@@ -20,6 +24,9 @@ export function YourOffers() {
   // User's created offers
   const { offerIds: createdOfferIds, isLoading: createdLoading, refetch: refetchCreated } = useUserOffers(address)
   const { cancelOffer, isPending } = useKektvOffers()
+
+  // User's marketplace listings
+  const { listings, isLoading: listingsLoading, refetch: refetchListings } = useKektvListings(address)
 
   // Fetch offers from all voucher types to find actionable ones
   const { offerIds: silverOffers } = useTokenOffers(VOUCHER_IDS.SILVER)
@@ -104,6 +111,33 @@ export function YourOffers() {
             ))}
           </div>
         )}
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-gray-800"></div>
+
+      {/* Section 3: Your Marketplace Listings */}
+      <div>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-[#daa520] font-fredoka">
+            🏪 Your Marketplace Listings
+          </h2>
+          <button
+            onClick={() => refetchListings()}
+            className="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-300 hover:border-[#daa520] transition"
+          >
+            🔄 Refresh
+          </button>
+        </div>
+        <p className="text-sm text-gray-400 mb-6">
+          Vouchers you&apos;ve listed for sale on the marketplace.
+        </p>
+
+        <MarketplaceListingsSection
+          listings={listings}
+          isLoading={listingsLoading}
+          onSuccess={refetchListings}
+        />
       </div>
     </div>
   )
@@ -270,6 +304,127 @@ function YourOfferCard({
           {isPending ? '⏳ Cancelling...' : '❌ Cancel Offer'}
         </button>
       </div>
+    </div>
+  )
+}
+
+/**
+ * Section showing user's marketplace listings
+ */
+function MarketplaceListingsSection({
+  listings,
+  isLoading,
+  onSuccess,
+}: {
+  listings: ReturnType<typeof useKektvListings>['listings']
+  isLoading: boolean
+  onSuccess: () => void
+}) {
+  const marketplace = useKektvMarketplace()
+  const { metadataMap } = useAllVoucherMetadata()
+
+  const handleCancel = async (tokenId: number) => {
+    try {
+      await marketplace.cancelListing(BigInt(tokenId))
+      alert('Listing cancelled successfully!')
+      setTimeout(() => {
+        onSuccess()
+      }, 3000)
+    } catch (error) {
+      alert(`Cancellation failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="text-center py-16">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#daa520] mx-auto mb-4"></div>
+        <p className="text-gray-400">Loading your listings...</p>
+      </div>
+    )
+  }
+
+  if (listings.length === 0) {
+    return (
+      <div className="text-center py-12 bg-gray-900/30 rounded-lg border border-gray-800">
+        <p className="text-gray-400 mb-2">
+          You haven&apos;t listed any vouchers for sale yet
+        </p>
+        <p className="text-sm text-gray-500">
+          Go to the &ldquo;List for Sale&rdquo; tab to create your first listing
+        </p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {listings.map((listing) => {
+        const metadata = metadataMap[listing.tokenId]
+        const mediaUrl = metadata?.animation_url || metadata?.image
+
+        return (
+          <div
+            key={`${listing.seller}-${listing.tokenId}`}
+            className="bg-gray-900/60 rounded-xl border border-gray-700/50 p-6 hover:border-[#daa520]/50 transition"
+          >
+            {/* Voucher Media */}
+            {mediaUrl ? (
+              <div className="relative w-full h-48 rounded-lg overflow-hidden bg-black/20 mb-4">
+                <Image
+                  src={mediaUrl}
+                  alt={metadata?.name || listing.voucherName}
+                  fill
+                  className="object-contain"
+                  unoptimized
+                />
+              </div>
+            ) : (
+              <div className="text-center mb-4">
+                <div className="text-6xl mb-2">{listing.voucherIcon}</div>
+              </div>
+            )}
+
+            {/* Listing Info */}
+            <div className="text-center mb-4">
+              <h3 className="text-xl font-bold text-[#daa520] font-fredoka">
+                {metadata?.name || listing.voucherName}
+              </h3>
+            </div>
+
+            {/* Listing Details */}
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between text-gray-400">
+                <span>Quantity:</span>
+                <span className="text-white font-bold">{listing.amount.toString()}</span>
+              </div>
+              <div className="flex justify-between text-gray-400">
+                <span>Price/Each:</span>
+                <span className="text-white font-bold">
+                  {(Number(listing.pricePerItem) / 1e18).toLocaleString()} BASED
+                </span>
+              </div>
+              <div className="flex justify-between text-gray-400 border-t border-gray-800 pt-2 mt-2">
+                <span className="font-bold">Total:</span>
+                <span className="text-[#daa520] font-bold text-lg">
+                  {(Number(listing.totalPrice) / 1e18).toLocaleString()} BASED
+                </span>
+              </div>
+            </div>
+
+            {/* Cancel Button */}
+            <div className="mt-4 pt-4 border-t border-gray-700/50">
+              <button
+                onClick={() => handleCancel(listing.tokenId)}
+                disabled={marketplace.isPending}
+                className="w-full px-4 py-2 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 font-fredoka font-semibold hover:bg-red-500/20 hover:border-red-500/50 transition disabled:opacity-50"
+              >
+                {marketplace.isPending ? '⏳ Cancelling...' : '❌ Cancel Listing'}
+              </button>
+            </div>
+          </div>
+        )
+      })}
     </div>
   )
 }

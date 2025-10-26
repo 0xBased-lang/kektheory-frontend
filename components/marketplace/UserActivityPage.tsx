@@ -14,9 +14,13 @@ import { VOUCHER_NAMES } from '@/config/contracts/kektv-offers'
 
 export function UserActivityPage() {
   const { address, isConnected } = useAccount()
-  const { data: events, isLoading } = useMyOfferHistory()
-  const { stats, isLoading: statsLoading } = useMyStats()
+  const { data: events, isLoading, refetch: refetchHistory } = useMyOfferHistory()
+  const { stats, isLoading: statsLoading, refetch: refetchStats } = useMyStats()
   const [filter, setFilter] = useState<'all' | 'made' | 'received'>('all')
+
+  const handleRefresh = async () => {
+    await Promise.all([refetchHistory(), refetchStats()])
+  }
 
   if (!isConnected) {
     return (
@@ -43,12 +47,21 @@ export function UserActivityPage() {
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-2">
-        <h1 className="text-4xl font-bold text-[#daa520] font-fredoka">My Activity</h1>
+        <div className="flex items-center justify-center gap-4">
+          <h1 className="text-4xl font-bold text-[#daa520] font-fredoka">My Activity</h1>
+          <button
+            onClick={handleRefresh}
+            disabled={isLoading || statsLoading}
+            className="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-300 hover:border-[#daa520] transition disabled:opacity-50"
+          >
+            🔄 Refresh
+          </button>
+        </div>
         <p className="text-gray-400">Your complete trading history</p>
       </div>
 
       {/* Statistics */}
-      <UserStatistics stats={stats} />
+      <UserStatistics stats={stats} onRefresh={handleRefresh} isRefreshing={isLoading || statsLoading} />
 
       {/* Activity Timeline */}
       <div className="space-y-4">
@@ -88,6 +101,8 @@ function UserStatistics({
   stats,
 }: {
   stats: ReturnType<typeof useMyStats>['stats']
+  onRefresh?: () => void
+  isRefreshing?: boolean
 }) {
   return (
     <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
