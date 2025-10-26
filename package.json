@@ -45,7 +45,7 @@
     "@types/react-dom": "^19",
     "dotenv": "^17.2.3",
     "eslint": "^9",
-    "eslint-config-next": "15.5.5",
+    "eslint-config-next": "16.0.0",
     "eslint-config-prettier": "^10.1.8",
     "hardhat": "^2.26.3",
     "prettier": "^3.6.2",
