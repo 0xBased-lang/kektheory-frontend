@@ -138,8 +138,8 @@ function BrowseListings({ onSelectNFT }: { onSelectNFT: (tokenId: number) => voi
   const marketplace = useKektvMarketplace()
   const { metadataMap, loading: metadataLoading } = useAllVoucherMetadata()
 
-  // All voucher IDs to display (complete collection)
-  const allVoucherIds = [0, 1, 2, 3]
+  // All voucher IDs to display (excluding 0 - test NFT)
+  const allVoucherIds = [1, 2, 3]
 
   // Create map of listings by tokenId for easy lookup
   const listingsByTokenId = listings.reduce((acc, listing) => {
@@ -175,8 +175,8 @@ function BrowseListings({ onSelectNFT }: { onSelectNFT: (tokenId: number) => voi
 
   return (
     <div>
-      {/* Complete Collection Grid - Shows all 4 vouchers */}
-      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Complete Collection Grid - Shows vouchers 1, 2, 3 */}
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {allVoucherIds.map((tokenId) => {
           const listing = listingsByTokenId[tokenId]
           const metadata = metadataMap[tokenId]

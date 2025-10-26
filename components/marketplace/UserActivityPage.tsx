@@ -6,12 +6,9 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
 import { useAccount } from 'wagmi'
 import { useMyOfferHistory, useMyStats } from '@/lib/hooks/useOfferHistory'
 import { useKektvListings } from '@/lib/hooks/useKektvListings'
-import { useKektvMarketplace } from '@/lib/hooks/useKektvMarketplace'
-import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
 import { formatUnits } from 'ethers'
 import type { OfferEvent } from '@/lib/services/explorer-api'
 import { VOUCHER_NAMES } from '@/config/contracts/kektv-offers'
@@ -67,7 +64,12 @@ export function UserActivityPage() {
       </div>
 
       {/* Statistics */}
-      <UserStatistics stats={stats} onRefresh={handleRefresh} isRefreshing={isLoading || statsLoading} />
+      <UserStatistics
+        stats={stats}
+        listings={listings}
+        onRefresh={handleRefresh}
+        isRefreshing={isLoading || statsLoading || listingsLoading}
+      />
 
       {/* Activity Timeline */}
       <div className="space-y-4">
@@ -96,23 +98,6 @@ export function UserActivityPage() {
         {/* Events list */}
         <ActivityList events={events || []} filter={filter} userAddress={address!} />
       </div>
-
-      {/* Marketplace Listings Section */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-[#daa520] font-fredoka">
-            🏪 Your Marketplace Listings
-          </h2>
-        </div>
-        <p className="text-sm text-gray-400">
-          Vouchers you&apos;ve listed for sale on the marketplace
-        </p>
-        <MarketplaceListings
-          listings={listings}
-          isLoading={listingsLoading}
-          onRefresh={refetchListings}
-        />
-      </div>
     </div>
   )
 }
@@ -122,21 +107,43 @@ export function UserActivityPage() {
  */
 function UserStatistics({
   stats,
+  listings,
 }: {
   stats: ReturnType<typeof useMyStats>['stats']
+  listings: ReturnType<typeof useKektvListings>['listings']
   onRefresh?: () => void
   isRefreshing?: boolean
 }) {
+  // Calculate listing statistics
+  const activeListingsCount = listings.length
+  const totalListedValue = listings.reduce((sum, listing) => {
+    return sum + BigInt(listing.totalPrice)
+  }, BigInt(0))
+
   return (
     <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
       <h3 className="text-lg font-bold text-[#daa520] mb-4 font-fredoka">📊 Your Stats</h3>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* Offer Stats */}
         <StatCard label="Offers Made" value={stats.offersMade.toString()} icon="💰" />
         <StatCard label="Offers Received" value={stats.offersReceived.toString()} icon="📥" />
         <StatCard label="Accepted" value={stats.offersAccepted.toString()} icon="✅" highlight={stats.offersAccepted > 0} />
         <StatCard label="Cancelled" value={stats.offersCancelled.toString()} icon="❌" />
 
+        {/* Marketplace Listing Stats */}
+        <StatCard label="Active Listings" value={activeListingsCount.toString()} icon="🏪" highlight={activeListingsCount > 0} />
+
+        {totalListedValue > BigInt(0) && (
+          <StatCard
+            label="Total Listed Value"
+            value={(Number(totalListedValue) / 1e18).toLocaleString() + ' BASED'}
+            icon="💎"
+            highlight={true}
+          />
+        )}
+
+        {/* Trading Volume Stats */}
         {stats.totalSpent > BigInt(0) && (
           <StatCard label="Total Spent" value={formatUnits(stats.totalSpent, 18) + ' TECH'} icon="💸" />
         )}
@@ -387,122 +394,4 @@ function formatDate(timestamp: number): string {
   if (diffDays < 7) return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`
 
   return date.toLocaleDateString()
-}
-
-/**
- * Marketplace Listings Section
- */
-function MarketplaceListings({
-  listings,
-  isLoading,
-  onRefresh,
-}: {
-  listings: ReturnType<typeof useKektvListings>['listings']
-  isLoading: boolean
-  onRefresh: () => void
-}) {
-  const marketplace = useKektvMarketplace()
-  const { metadataMap } = useAllVoucherMetadata()
-
-  const handleCancel = async (tokenId: number) => {
-    try {
-      await marketplace.cancelListing(BigInt(tokenId))
-      alert('Listing cancelled successfully!')
-      setTimeout(() => {
-        onRefresh()
-      }, 3000)
-    } catch (error) {
-      alert(`Cancellation failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
-    }
-  }
-
-  if (isLoading) {
-    return (
-      <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-8 text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#daa520] mx-auto mb-4"></div>
-        <p className="text-gray-400">Loading your listings...</p>
-      </div>
-    )
-  }
-
-  if (listings.length === 0) {
-    return (
-      <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-8 text-center">
-        <div className="text-6xl mb-4">🏪</div>
-        <p className="text-xl font-fredoka text-gray-400 mb-2">No active listings</p>
-        <p className="text-sm text-gray-500">You haven&apos;t listed any vouchers for sale yet</p>
-      </div>
-    )
-  }
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {listings.map((listing) => {
-        const metadata = metadataMap[listing.tokenId]
-        const mediaUrl = metadata?.animation_url || metadata?.image
-
-        return (
-          <div
-            key={`${listing.seller}-${listing.tokenId}`}
-            className="bg-gray-900/60 rounded-xl border border-gray-700/50 p-6 hover:border-[#daa520]/50 transition"
-          >
-            {/* Voucher Media */}
-            {mediaUrl ? (
-              <div className="relative w-full h-48 rounded-lg overflow-hidden bg-black/20 mb-4">
-                <Image
-                  src={mediaUrl}
-                  alt={metadata?.name || listing.voucherName}
-                  fill
-                  className="object-contain"
-                  unoptimized
-                />
-              </div>
-            ) : (
-              <div className="text-center mb-4">
-                <div className="text-6xl mb-2">{listing.voucherIcon}</div>
-              </div>
-            )}
-
-            {/* Listing Info */}
-            <div className="text-center mb-4">
-              <h3 className="text-xl font-bold text-[#daa520] font-fredoka">
-                {metadata?.name || listing.voucherName}
-              </h3>
-            </div>
-
-            {/* Listing Details */}
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between text-gray-400">
-                <span>Quantity:</span>
-                <span className="text-white font-bold">{listing.amount.toString()}</span>
-              </div>
-              <div className="flex justify-between text-gray-400">
-                <span>Price/Each:</span>
-                <span className="text-white font-bold">
-                  {(Number(listing.pricePerItem) / 1e18).toLocaleString()} BASED
-                </span>
-              </div>
-              <div className="flex justify-between text-gray-400 border-t border-gray-800 pt-2 mt-2">
-                <span className="font-bold">Total:</span>
-                <span className="text-[#daa520] font-bold text-lg">
-                  {(Number(listing.totalPrice) / 1e18).toLocaleString()} BASED
-                </span>
-              </div>
-            </div>
-
-            {/* Cancel Button */}
-            <div className="mt-4 pt-4 border-t border-gray-700/50">
-              <button
-                onClick={() => handleCancel(listing.tokenId)}
-                disabled={marketplace.isPending}
-                className="w-full px-4 py-2 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 font-fredoka font-semibold hover:bg-red-500/20 hover:border-red-500/50 transition disabled:opacity-50"
-              >
-                {marketplace.isPending ? '⏳ Cancelling...' : '❌ Cancel Listing'}
-              </button>
-            </div>
-          </div>
-        )
-      })}
-    </div>
-  )
 }
