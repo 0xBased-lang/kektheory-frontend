@@ -599,6 +599,15 @@ function YourOfferNFTCard({
     active: offer.active,
   })
 
+  // CRITICAL: Filter out inactive (cancelled/accepted/rejected) offers
+  if (!offer.active) {
+    console.log('💼 YourOfferNFTCard: Filtering out inactive offer', {
+      offerId: offerId.toString(),
+      active: offer.active,
+    })
+    return null
+  }
+
   const metadata = metadataMap[Number(offer.tokenId)]
   const mediaUrl = metadata?.animation_url || metadata?.image
   const voucherName = metadata?.name || getVoucherName(offer.tokenId)
