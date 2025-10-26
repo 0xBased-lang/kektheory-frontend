@@ -7,11 +7,10 @@ import { useKektvOffers } from '@/lib/hooks/useKektvOffers'
 import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
 import { VOUCHER_IDS, VOUCHER_NAMES, meetsMinimumOffer } from '@/config/contracts/kektv-offers'
 
+// Only show voucher IDs 1 and 2 (exclude 0 and 3)
 const VOUCHER_OPTIONS = [
-  { id: VOUCHER_IDS.GENESIS, name: VOUCHER_NAMES[VOUCHER_IDS.GENESIS], icon: '💎', color: 'purple' },
   { id: VOUCHER_IDS.SILVER, name: VOUCHER_NAMES[VOUCHER_IDS.SILVER], icon: '🥈', color: 'gray' },
-  { id: VOUCHER_IDS.GOLD, name: VOUCHER_NAMES[VOUCHER_IDS.GOLD], icon: '🥇', color: '[#daa520]' },
-  { id: VOUCHER_IDS.PLATINUM, name: VOUCHER_NAMES[VOUCHER_IDS.PLATINUM], icon: '💠', color: 'cyan' },
+  { id: VOUCHER_IDS.GOLD, name: VOUCHER_NAMES[VOUCHER_IDS.GOLD], icon: '🥇', color: 'gray' },
 ]
 
 /**

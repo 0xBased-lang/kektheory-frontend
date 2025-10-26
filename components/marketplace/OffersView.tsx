@@ -26,33 +26,33 @@ export function OffersView() {
       id: 'browse',
       label: 'Browse Offers',
       icon: '🔍',
-      gradient: 'from-purple-500/10 to-purple-600/10',
-      activeGradient: 'from-purple-500 to-purple-600',
-      borderColor: 'border-purple-500'
+      gradient: 'from-gray-800/40 to-gray-700/40',
+      activeGradient: 'from-gray-700 to-gray-600',
+      borderColor: 'border-gray-500'
     },
     {
       id: 'make',
       label: 'Make Offer',
       icon: '✍️',
-      gradient: 'from-[#daa520]/10 to-yellow-600/10',
-      activeGradient: 'from-[#daa520] to-yellow-600',
-      borderColor: 'border-[#daa520]'
+      gradient: 'from-gray-800/40 to-gray-700/40',
+      activeGradient: 'from-gray-700 to-gray-600',
+      borderColor: 'border-gray-500'
     },
     {
       id: 'yours',
       label: 'Your Offers',
       icon: '📤',
-      gradient: 'from-cyan-500/10 to-cyan-600/10',
-      activeGradient: 'from-cyan-500 to-cyan-600',
-      borderColor: 'border-cyan-500'
+      gradient: 'from-gray-800/40 to-gray-700/40',
+      activeGradient: 'from-gray-700 to-gray-600',
+      borderColor: 'border-gray-500'
     },
     {
       id: 'received',
       label: 'Received',
       icon: '📥',
-      gradient: 'from-green-500/10 to-emerald-600/10',
-      activeGradient: 'from-green-500 to-emerald-600',
-      borderColor: 'border-green-500'
+      gradient: 'from-gray-800/40 to-gray-700/40',
+      activeGradient: 'from-gray-700 to-gray-600',
+      borderColor: 'border-gray-500'
     },
   ]
 
