@@ -7,10 +7,11 @@ import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
 import { OfferCard } from './OfferCard'
 import { VOUCHER_IDS } from '@/config/contracts/kektv-offers'
 
-// Only show voucher IDs 1 and 2 (exclude 0 and 3)
+// Only show voucher IDs 1, 2, and 3 (exclude 0)
 const VOUCHER_OPTIONS = [
   { id: VOUCHER_IDS.SILVER, fallbackIcon: '🥈', color: 'gray' },
   { id: VOUCHER_IDS.GOLD, fallbackIcon: '🥇', color: 'gray' },
+  { id: VOUCHER_IDS.PLATINUM, fallbackIcon: '💠', color: 'gray' },
 ]
 
 /**
