@@ -17,6 +17,7 @@ import { useUserOffers, useOfferDetails } from '@/lib/hooks/useKektvOffers'
 import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
 import { useAllReceivableOffers } from '@/lib/hooks/useAllReceivableOffers'
 import { useVoucherBalance } from '@/lib/hooks/useVoucherBalance'
+import { useKektvOffersApproval } from '@/lib/hooks/useKektvOffersApproval'
 import { formatUnits } from 'ethers'
 import type { TradingEvent } from '@/lib/services/explorer-api'
 import { VOUCHER_NAMES } from '@/config/contracts/kektv-offers'
@@ -278,6 +279,13 @@ function AcceptableOfferNFTCard({
 }) {
   const { offer, isLoading } = useOfferDetails(offerId)
   const { acceptOffer, rejectOffer, isPending } = useKektvOffers()
+  const {
+    isApproved,
+    isLoading: isCheckingApproval,
+    approveOffersContract,
+    isPending: isApprovePending,
+    isConfirming: isApproveConfirming
+  } = useKektvOffersApproval()
   const [isAccepting, setIsAccepting] = useState(false)
   const [isRejecting, setIsRejecting] = useState(false)
   const isMountedRef = useRef(true)
@@ -287,6 +295,15 @@ function AcceptableOfferNFTCard({
       isMountedRef.current = false
     }
   }, [])
+
+  const handleApprove = async () => {
+    try {
+      await approveOffersContract()
+      // Approval successful - user can now accept the offer
+    } catch (error) {
+      console.error('Failed to approve:', error)
+    }
+  }
 
   const handleAccept = async () => {
     try {
@@ -466,25 +483,37 @@ function AcceptableOfferNFTCard({
         </div>
 
         {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-3">
-          {/* Accept Button */}
+        {!isApproved && !isCheckingApproval ? (
+          /* Show approval button first if not approved */
           <button
-            onClick={handleAccept}
-            disabled={isPending || isAccepting || isRejecting}
-            className="py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-105 shadow-lg shadow-green-500/30"
+            onClick={handleApprove}
+            disabled={isApprovePending || isApproveConfirming}
+            className="w-full py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-yellow-500 to-orange-600 text-white hover:scale-105 shadow-lg shadow-yellow-500/30"
           >
-            {isAccepting ? 'Accepting...' : '✅ Accept'}
+            {isApprovePending || isApproveConfirming ? '🔄 Approving...' : '🔓 Approve First'}
           </button>
+        ) : (
+          /* Show accept/reject buttons once approved */
+          <div className="grid grid-cols-2 gap-3">
+            {/* Accept Button */}
+            <button
+              onClick={handleAccept}
+              disabled={isPending || isAccepting || isRejecting || isCheckingApproval}
+              className="py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-105 shadow-lg shadow-green-500/30"
+            >
+              {isAccepting ? 'Accepting...' : '✅ Accept'}
+            </button>
 
-          {/* Reject Button */}
-          <button
-            onClick={handleReject}
-            disabled={isPending || isAccepting || isRejecting}
-            className="py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-red-500/20 border border-red-500/50 text-red-400 hover:bg-red-500/30"
-          >
-            {isRejecting ? 'Rejecting...' : '🚫 Reject'}
-          </button>
-        </div>
+            {/* Reject Button */}
+            <button
+              onClick={handleReject}
+              disabled={isPending || isAccepting || isRejecting || isCheckingApproval}
+              className="py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-red-500/20 border border-red-500/50 text-red-400 hover:bg-red-500/30"
+            >
+              {isRejecting ? 'Rejecting...' : '🚫 Reject'}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )
