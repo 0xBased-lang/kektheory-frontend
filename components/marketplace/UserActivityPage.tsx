@@ -227,8 +227,9 @@ function AcceptableOfferNFTCard({
   userAddress: `0x${string}` | undefined
 }) {
   const { offer, isLoading } = useOfferDetails(offerId)
-  const { acceptOffer, isPending } = useKektvOffers()
+  const { acceptOffer, rejectOffer, isPending } = useKektvOffers()
   const [isAccepting, setIsAccepting] = useState(false)
+  const [isRejecting, setIsRejecting] = useState(false)
   const isMountedRef = useRef(true)
 
   useEffect(() => {
@@ -249,6 +250,22 @@ function AcceptableOfferNFTCard({
     } finally {
       if (isMountedRef.current) {
         setIsAccepting(false)
+      }
+    }
+  }
+
+  const handleReject = async () => {
+    try {
+      setIsRejecting(true)
+      await rejectOffer(offerId)
+      if (isMountedRef.current) {
+        onRefresh()
+      }
+    } catch (error) {
+      console.error('Failed to reject offer:', error)
+    } finally {
+      if (isMountedRef.current) {
+        setIsRejecting(false)
       }
     }
   }
@@ -398,14 +415,26 @@ function AcceptableOfferNFTCard({
           </div>
         </div>
 
-        {/* Accept Button */}
-        <button
-          onClick={handleAccept}
-          disabled={isPending || isAccepting}
-          className="w-full py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-105 shadow-lg shadow-green-500/30"
-        >
-          {isPending || isAccepting ? 'Accepting...' : '✅ Accept Offer'}
-        </button>
+        {/* Action Buttons */}
+        <div className="grid grid-cols-2 gap-3">
+          {/* Accept Button */}
+          <button
+            onClick={handleAccept}
+            disabled={isPending || isAccepting || isRejecting}
+            className="py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-105 shadow-lg shadow-green-500/30"
+          >
+            {isAccepting ? 'Accepting...' : '✅ Accept'}
+          </button>
+
+          {/* Reject Button */}
+          <button
+            onClick={handleReject}
+            disabled={isPending || isAccepting || isRejecting}
+            className="py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-red-500/20 border border-red-500/50 text-red-400 hover:bg-red-500/30"
+          >
+            {isRejecting ? 'Rejecting...' : '🚫 Reject'}
+          </button>
+        </div>
       </div>
     </div>
   )
