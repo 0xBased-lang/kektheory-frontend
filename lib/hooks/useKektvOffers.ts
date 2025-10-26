@@ -9,15 +9,20 @@ import { KEKTV_OFFERS_ADDRESS, KEKTV_OFFERS_ABI, type Offer } from '@/config/con
 import { basedChain } from '@/config/chains'
 
 /**
- * Hook for KEKTV Offers operations
+ * Hook for KEKTV Offers operations (V2 - BASED Payments)
  *
  * Handles:
- * - Making offers on KEKTV vouchers (uses TECH token escrow)
+ * - Making offers on KEKTV vouchers (uses BASED native token)
  * - Accepting offers (if you own the vouchers)
  * - Canceling offers (if you made them)
  * - Rejecting offers (if they're on your vouchers)
  * - Querying offers by token, user, etc.
  * - Auto network switching to BasedAI
+ *
+ * V2 Changes:
+ * - Uses BASED (native token) instead of TECH (ERC-20)
+ * - No token approval needed
+ * - Simpler UX for users
  */
 export function useKektvOffers() {
   const { address, chainId } = useAccount()
@@ -29,15 +34,17 @@ export function useKektvOffers() {
   })
 
   /**
-   * Make an offer on a KEKTV voucher
+   * Make an offer on a KEKTV voucher (V2 - pays in BASED)
    * @param tokenId - Voucher type ID (0-3: Genesis, Silver, Gold, Platinum)
    * @param amount - Number of vouchers to offer on
-   * @param pricePerItemString - Price per voucher in TECH (e.g., "500")
+   * @param totalBasedString - Total BASED to offer (e.g., "500" = 500 BASED total)
+   * @param voucherOwner - Address that owns the vouchers (can be zero address for general offers)
    */
   const makeOffer = async (
     tokenId: number,
     amount: bigint,
-    pricePerItemString: string
+    totalBasedString: string,
+    voucherOwner: string = '0x0000000000000000000000000000000000000000'
   ) => {
     if (!address) throw new Error('Wallet not connected')
 
@@ -47,22 +54,23 @@ export function useKektvOffers() {
         await switchChainAsync({ chainId: basedChain.id })
       }
 
-      // Convert price string to wei (1 TECH = 10^18 wei)
-      const pricePerItem = BigInt(pricePerItemString) * BigInt(10 ** 18)
+      // Convert BASED string to wei (1 BASED = 10^18 wei)
+      const totalBased = BigInt(totalBasedString) * BigInt(10 ** 18)
 
-      console.log('💰 Make Offer:', {
+      console.log('💰 Make Offer (V2 - BASED):', {
         tokenId,
         amount: amount.toString(),
-        pricePerItem: (pricePerItem / BigInt(10 ** 18)).toString() + ' TECH',
-        totalCost: ((pricePerItem * amount) / BigInt(10 ** 18)).toString() + ' TECH',
+        totalBased: (totalBased / BigInt(10 ** 18)).toString() + ' BASED',
+        voucherOwner,
       })
 
-      // Make the offer (TECH tokens will be escrowed in contract)
+      // Make the offer (send BASED as value, escrowed in contract)
       const hash = await writeContractAsync({
         address: KEKTV_OFFERS_ADDRESS,
         abi: KEKTV_OFFERS_ABI,
         functionName: 'makeOffer',
-        args: [BigInt(tokenId), amount, pricePerItem],
+        args: [BigInt(tokenId), amount, voucherOwner as `0x${string}`],
+        value: totalBased, // Send BASED as payment
         gas: 500000n, // Fixed gas limit to avoid RPC estimation issues
       })
 
@@ -87,7 +95,7 @@ export function useKektvOffers() {
 
       console.log('✅ Accepting Offer:', offerId.toString())
 
-      // Accept the offer (transfers vouchers to buyer, TECH to seller)
+      // Accept the offer (transfers vouchers to buyer, BASED to seller)
       const hash = await writeContractAsync({
         address: KEKTV_OFFERS_ADDRESS,
         abi: KEKTV_OFFERS_ABI,
@@ -117,7 +125,7 @@ export function useKektvOffers() {
 
       console.log('❌ Canceling Offer:', offerId.toString())
 
-      // Cancel the offer (refunds TECH to offerer)
+      // Cancel the offer (refunds BASED to offerer)
       const hash = await writeContractAsync({
         address: KEKTV_OFFERS_ADDRESS,
         abi: KEKTV_OFFERS_ABI,
@@ -147,7 +155,7 @@ export function useKektvOffers() {
 
       console.log('🚫 Rejecting Offer:', offerId.toString())
 
-      // Reject the offer (refunds TECH to offerer)
+      // Reject the offer (refunds BASED to offerer)
       const hash = await writeContractAsync({
         address: KEKTV_OFFERS_ADDRESS,
         abi: KEKTV_OFFERS_ABI,

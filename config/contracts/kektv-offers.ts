@@ -1,27 +1,31 @@
 /**
- * KEKTV Offers Contract Configuration
+ * KEKTV Offers Contract Configuration V2
  * Deployed on BasedAI Mainnet
  *
- * Contract: KektvVouchersOffers
- * Address: 0x591486eBd4CA9EFACB40BEb42e8c3D41d5364899
+ * Contract: KektvVouchersOffersV2
+ * Address: 0x4E8B375C717a136882071923F17Ea08E75DDBcb2
  * Network: BasedAI (32323)
- * Deployed: 2025-10-25
+ * Deployed: 2025-10-26
+ *
+ * V2 Changes:
+ * - ✅ Uses BASED (native token) instead of TECH (ERC-20)
+ * - ✅ No token approval needed
+ * - ✅ Simpler UX for users
+ * - ✅ Lower gas costs
  */
 
 import { Address } from 'viem'
-import kektvOffersAbi from './kektv-offers-abi.json'
+import kektvOffersV2Abi from './kektv-offers-v2-abi.json'
 
 // ============ Contract Addresses ============
 
-export const KEKTV_OFFERS_ADDRESS = '0x591486eBd4CA9EFACB40BEb42e8c3D41d5364899' as Address
+export const KEKTV_OFFERS_ADDRESS = '0x4E8B375C717a136882071923F17Ea08E75DDBcb2' as Address
 
 export const KEKTV_VOUCHERS_ADDRESS = '0x7FEF981beE047227f848891c6C9F9dad11767a48' as Address
 
-export const TECH_TOKEN_ADDRESS = '0x62E8D022CAf673906e62904f7BB5ae467082b546' as Address
-
 // ============ Contract ABI ============
 
-export const KEKTV_OFFERS_ABI = kektvOffersAbi
+export const KEKTV_OFFERS_ABI = kektvOffersV2Abi
 
 // ============ Network Configuration ============
 
@@ -52,10 +56,10 @@ export const BASEDAI_NETWORK = {
 // ============ Constants ============
 
 /**
- * Minimum offer value in TECH tokens (wei)
- * 0.001 TECH = 1000000000000000 wei
+ * Minimum offer value in BASED (wei)
+ * 0.001 BASED = 1000000000000000 wei
  */
-export const MIN_OFFER_VALUE = '1000000000000000' as const // 0.001 TECH
+export const MIN_OFFER_VALUE = '1000000000000000' as const // 0.001 BASED
 
 /**
  * KEKTV Voucher Token IDs

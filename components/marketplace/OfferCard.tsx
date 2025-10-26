@@ -31,7 +31,7 @@ export function OfferCard({ offer, onSuccess }: OfferCardProps) {
   const handleAccept = async () => {
     try {
       await acceptOffer(offer.offerId)
-      alert('Offer accepted successfully! Vouchers transferred to buyer, TECH transferred to you.')
+      alert('Offer accepted successfully! Vouchers transferred to buyer, BASED transferred to you.')
       onSuccess?.()
     } catch (error) {
       alert(`Accept failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
@@ -41,7 +41,7 @@ export function OfferCard({ offer, onSuccess }: OfferCardProps) {
   const handleReject = async () => {
     try {
       await rejectOffer(offer.offerId)
-      alert('Offer rejected! TECH refunded to offerer.')
+      alert('Offer rejected! BASED refunded to offerer.')
       onSuccess?.()
     } catch (error) {
       alert(`Reject failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
@@ -103,7 +103,7 @@ export function OfferCard({ offer, onSuccess }: OfferCardProps) {
             </span>
           </div>
           <div className="text-xs text-gray-500 text-center mt-1">
-            TECH tokens escrowed in contract
+            BASED escrowed in contract
           </div>
         </div>
 

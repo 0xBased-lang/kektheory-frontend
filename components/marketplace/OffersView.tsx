@@ -62,8 +62,8 @@ export function OffersView() {
             <h4 className="font-semibold text-[#daa520] mb-2">Making Offers</h4>
             <ul className="space-y-1">
               <li>• Choose voucher type and quantity</li>
-              <li>• Set your offer price in TECH tokens</li>
-              <li>• Your TECH is held safely in escrow</li>
+              <li>• Set your total offer in BASED</li>
+              <li>• Your BASED is held safely in escrow</li>
               <li>• Wait for the seller to accept or reject</li>
             </ul>
           </div>
@@ -71,7 +71,7 @@ export function OffersView() {
             <h4 className="font-semibold text-[#daa520] mb-2">Accepting Offers</h4>
             <ul className="space-y-1">
               <li>• Review offers on your vouchers</li>
-              <li>• Accept to sell instantly for TECH</li>
+              <li>• Accept to sell instantly for BASED</li>
               <li>• Reject if price is too low</li>
               <li>• Trade completes automatically</li>
             </ul>
@@ -79,7 +79,7 @@ export function OffersView() {
         </div>
         <div className="mt-4 pt-4 border-t border-[#daa520]/20">
           <p className="text-xs text-gray-500">
-            <span className="font-semibold text-[#daa520]">Note:</span> All offers require approval to spend TECH tokens.
+            <span className="font-semibold text-[#daa520]">Note:</span> Offers are paid in BASED (native token).
             Your funds are always safe in escrow and can be retrieved by cancelling your offer.
           </p>
         </div>
