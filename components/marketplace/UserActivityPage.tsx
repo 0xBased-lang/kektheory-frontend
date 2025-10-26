@@ -284,7 +284,8 @@ function AcceptableOfferNFTCard({
     isLoading: isCheckingApproval,
     approveOffersContract,
     isPending: isApprovePending,
-    isConfirming: isApproveConfirming
+    isConfirming: isApproveConfirming,
+    refetch: refetchApproval
   } = useKektvOffersApproval()
   const [isAccepting, setIsAccepting] = useState(false)
   const [isRejecting, setIsRejecting] = useState(false)
@@ -299,7 +300,11 @@ function AcceptableOfferNFTCard({
   const handleApprove = async () => {
     try {
       await approveOffersContract()
-      // Approval successful - user can now accept the offer
+      // Approval successful - refetch approval status to update UI
+      // Wait longer for blockchain confirmation (3 blocks ~36s)
+      setTimeout(() => {
+        refetchApproval()
+      }, 5000) // Wait 5s for blockchain confirmation
     } catch (error) {
       console.error('Failed to approve:', error)
     }
@@ -418,6 +423,10 @@ function AcceptableOfferNFTCard({
   const pricePerItem = calculatePricePerItem(offer.offerPrice, offer.amount)
   const totalPrice = calculateTotalPrice(offer.offerPrice)
 
+  // Check if user owns enough vouchers to accept this offer
+  const userVoucher = ownedVouchers.find(v => v.id === Number(offer.tokenId))
+  const hasEnoughVouchers = userVoucher && userVoucher.balanceNumber >= Number(offer.amount)
+
   return (
     <div className="bg-gradient-to-br from-green-500/10 to-emerald-600/10 rounded-lg border-2 border-green-500/30 hover:border-green-500/50 transition-all relative shadow-lg">
       {/* "You Can Accept" Badge */}
@@ -483,7 +492,25 @@ function AcceptableOfferNFTCard({
         </div>
 
         {/* Action Buttons */}
-        {!isApproved && !isCheckingApproval ? (
+        {!hasEnoughVouchers ? (
+          /* User doesn't own enough vouchers */
+          <div className="space-y-3">
+            <div className="text-center bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+              <div className="text-red-400 font-bold mb-1">❌ Insufficient Vouchers</div>
+              <div className="text-xs text-gray-400">
+                You need {offer.amount.toString()} {voucherName} but only have {userVoucher?.balanceNumber ?? 0}
+              </div>
+            </div>
+            {/* Still allow rejecting even without vouchers */}
+            <button
+              onClick={handleReject}
+              disabled={isPending || isRejecting}
+              className="w-full py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-red-500 to-rose-600 text-white hover:scale-105 shadow-lg shadow-red-500/30"
+            >
+              {isRejecting ? 'Rejecting...' : '🚫 Reject Offer'}
+            </button>
+          </div>
+        ) : !isApproved && !isCheckingApproval ? (
           /* Show approval button first if not approved */
           <button
             onClick={handleApprove}
