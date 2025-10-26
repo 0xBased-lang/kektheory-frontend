@@ -21,7 +21,7 @@ export const TECH_TOKEN_ADDRESS = '0x62E8D022CAf673906e62904f7BB5ae467082b546' a
 
 // ============ Contract ABI ============
 
-export const KEKTV_OFFERS_ABI = kektvOffersAbi as const
+export const KEKTV_OFFERS_ABI = kektvOffersAbi
 
 // ============ Network Configuration ============
 
