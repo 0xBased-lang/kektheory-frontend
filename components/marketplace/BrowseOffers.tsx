@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react'
 import Image from 'next/image'
-import { useAccount } from 'wagmi'
 import { useTokenOffers, useOfferDetails } from '@/lib/hooks/useKektvOffers'
 import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
 import { useVoucherHolders } from '@/lib/hooks/useVoucherHolders'

@@ -15,11 +15,12 @@ import { VOUCHER_NAMES } from '@/config/contracts/kektv-offers'
 export function UserActivityPage() {
   const { address, isConnected } = useAccount()
   const { data: events, isLoading, refetch: refetchHistory } = useMyOfferHistory()
-  const { stats, isLoading: statsLoading, refetch: refetchStats } = useMyStats()
+  const { stats, isLoading: statsLoading } = useMyStats()
   const [filter, setFilter] = useState<'all' | 'made' | 'received'>('all')
 
   const handleRefresh = async () => {
-    await Promise.all([refetchHistory(), refetchStats()])
+    // Refetching events will automatically update stats (stats are derived from events)
+    await refetchHistory()
   }
 
   if (!isConnected) {
