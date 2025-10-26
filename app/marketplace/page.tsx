@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { MintTab } from '@/components/marketplace/MintTab'
@@ -32,57 +33,72 @@ export default function MarketplacePage() {
           />
 
           {/* Tab Navigation - Dashboard Style */}
-          <div className="mb-8 flex justify-center">
-            <div className="inline-flex gap-2 rounded-xl bg-gray-900/60 p-1 border border-gray-800">
-              <button
-                onClick={() => setActiveTab('mint')}
-                className={`
-                  px-8 py-3 rounded-lg font-fredoka font-bold transition-all duration-200
-                  ${activeTab === 'mint'
-                    ? 'bg-[#3fb8bd] text-black shadow-lg shadow-[#3fb8bd]/20'
-                    : 'text-[#3fb8bd] hover:text-white hover:bg-gray-800/50'
-                  }
-                `}
-              >
-                Mint
-              </button>
-              <button
-                onClick={() => setActiveTab('surprise')}
-                className={`
-                  px-8 py-3 rounded-lg font-fredoka font-bold transition-all duration-200 text-2xl
-                  ${activeTab === 'surprise'
-                    ? 'bg-[#4ecca7] shadow-lg shadow-[#4ecca7]/20'
-                    : 'hover:bg-gray-800/50'
-                  }
-                `}
-              >
-                👀
-              </button>
-              <button
-                onClick={() => setActiveTab('kektv')}
-                className={`
-                  px-8 py-3 rounded-lg font-fredoka font-bold transition-all duration-200
-                  ${activeTab === 'kektv'
-                    ? 'bg-[#daa520] text-black shadow-lg shadow-[#daa520]/20'
-                    : 'text-[#daa520] hover:text-white hover:bg-gray-800/50'
-                  }
-                `}
-              >
-                𝕂Ǝ𝕂TV
-              </button>
-              <button
-                onClick={() => setActiveTab('limited')}
-                className={`
-                  px-8 py-3 rounded-lg font-fredoka font-bold transition-all duration-200
-                  ${activeTab === 'limited'
-                    ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/20'
-                    : 'text-purple-400 hover:text-white hover:bg-gray-800/50'
-                  }
-                `}
-              >
-                Limited Edition
-              </button>
+          <div className="mb-8 space-y-4">
+            <div className="flex justify-center">
+              <div className="inline-flex gap-2 rounded-xl bg-gray-900/60 p-1 border border-gray-800">
+                <button
+                  onClick={() => setActiveTab('mint')}
+                  className={`
+                    px-8 py-3 rounded-lg font-fredoka font-bold transition-all duration-200
+                    ${activeTab === 'mint'
+                      ? 'bg-[#3fb8bd] text-black shadow-lg shadow-[#3fb8bd]/20'
+                      : 'text-[#3fb8bd] hover:text-white hover:bg-gray-800/50'
+                    }
+                  `}
+                >
+                  Mint
+                </button>
+                <button
+                  onClick={() => setActiveTab('surprise')}
+                  className={`
+                    px-8 py-3 rounded-lg font-fredoka font-bold transition-all duration-200 text-2xl
+                    ${activeTab === 'surprise'
+                      ? 'bg-[#4ecca7] shadow-lg shadow-[#4ecca7]/20'
+                      : 'hover:bg-gray-800/50'
+                    }
+                  `}
+                >
+                  👀
+                </button>
+                <button
+                  onClick={() => setActiveTab('kektv')}
+                  className={`
+                    px-8 py-3 rounded-lg font-fredoka font-bold transition-all duration-200
+                    ${activeTab === 'kektv'
+                      ? 'bg-[#daa520] text-black shadow-lg shadow-[#daa520]/20'
+                      : 'text-[#daa520] hover:text-white hover:bg-gray-800/50'
+                    }
+                  `}
+                >
+                  𝕂Ǝ𝕂TV
+                </button>
+                <button
+                  onClick={() => setActiveTab('limited')}
+                  className={`
+                    px-8 py-3 rounded-lg font-fredoka font-bold transition-all duration-200
+                    ${activeTab === 'limited'
+                      ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/20'
+                      : 'text-purple-400 hover:text-white hover:bg-gray-800/50'
+                    }
+                  `}
+                >
+                  Limited Edition
+                </button>
+              </div>
             </div>
+
+            {/* My Activity Link - Visible on KEKTV tab */}
+            {activeTab === 'kektv' && (
+              <div className="flex justify-center">
+                <Link
+                  href="/marketplace/activity"
+                  className="inline-flex items-center gap-2 px-6 py-2 rounded-lg bg-gray-800/50 border border-[#daa520]/30 text-[#daa520] hover:bg-gray-800 hover:border-[#daa520] transition-all font-fredoka"
+                >
+                  <span>📊</span>
+                  <span>My Trading Activity</span>
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Tab Content */}
