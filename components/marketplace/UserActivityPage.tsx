@@ -884,83 +884,85 @@ function ActivityCard({
   const isBuyer = 'buyer' in event && event.buyer.toLowerCase() === normalizedAddress
 
   return (
-    <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-4 hover:border-gray-600/50 transition">
-      <div className="flex items-start justify-between gap-4">
-        {/* Left: Event info */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-2xl">{getEventIcon(event.eventType)}</span>
-            <div>
-              <p className="text-sm font-medium text-white">
-                {getEventLabel(event.eventType, isOfferer, isOwner, isSeller, isBuyer)}
-              </p>
-              <p className="text-xs text-gray-500">{formatDate(event.timestamp)}</p>
-            </div>
-          </div>
-
-          {/* Event details */}
-          <div className="space-y-1 ml-10">
-            {'tokenId' in event && (
-              <p className="text-xs text-gray-400">
-                <span className="text-gray-500">NFT:</span>{' '}
-                <span className="text-white">𝕂Ǝ𝕂TV #{event.tokenId}</span>{' '}
-                <span className="text-gray-500">({getVoucherName(event.tokenId)})</span>
-              </p>
-            )}
-
-            {'offerPrice' in event && (
-              <p className="text-sm font-bold text-[#daa520]">
-                {formatUnits(event.offerPrice, 18)} BASED
-              </p>
-            )}
-
-            {'totalPrice' in event && (
-              <p className="text-sm font-bold text-[#daa520]">
-                {formatUnits(event.totalPrice, 18)} BASED
-              </p>
-            )}
-
-            {'amount' in event && (
-              <p className="text-xs text-gray-400">
-                <span className="text-gray-500">Amount:</span> <span className="text-white">{event.amount} vouchers</span>
-              </p>
-            )}
-
-            {/* Role indicator */}
-            <div className="flex gap-2 flex-wrap">
-              {isOfferer && (
-                <span className="text-xs px-2 py-0.5 rounded bg-blue-500/20 text-blue-400">
-                  You offered
-                </span>
-              )}
-              {isOwner && (
-                <span className="text-xs px-2 py-0.5 rounded bg-purple-500/20 text-purple-400">
-                  Your voucher
-                </span>
-              )}
-              {isSeller && (
-                <span className="text-xs px-2 py-0.5 rounded bg-green-500/20 text-green-400">
-                  You sold
-                </span>
-              )}
-              {isBuyer && (
-                <span className="text-xs px-2 py-0.5 rounded bg-orange-500/20 text-orange-400">
-                  You bought
-                </span>
-              )}
-            </div>
+    <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6 hover:border-gray-600/50 transition">
+      {/* Header Row: Icon, Title, Date, TX Link */}
+      <div className="flex items-center justify-between gap-6 mb-4">
+        <div className="flex items-center gap-3">
+          <span className="text-3xl">{getEventIcon(event.eventType)}</span>
+          <div>
+            <p className="text-base font-bold text-white">
+              {getEventLabel(event.eventType, isOfferer, isOwner, isSeller, isBuyer)}
+            </p>
+            <p className="text-sm text-gray-500">{formatDate(event.timestamp)}</p>
           </div>
         </div>
 
-        {/* Right: Transaction link */}
+        {/* Transaction link */}
         <a
           href={`${EXPLORER_BASE_URL}/tx/${event.transactionHash}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-shrink-0 text-xs text-[#daa520] hover:underline"
+          className="flex-shrink-0 px-4 py-2 bg-[#daa520]/10 border border-[#daa520]/30 rounded-lg text-sm text-[#daa520] hover:bg-[#daa520]/20 hover:border-[#daa520]/50 transition font-fredoka font-bold"
         >
           View TX →
         </a>
+      </div>
+
+      {/* Details Grid: Horizontal Layout */}
+      <div className="flex items-center gap-6 flex-wrap">
+        {'tokenId' in event && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-500">NFT:</span>
+            <span className="text-sm font-bold text-white">𝕂Ǝ𝕂TV #{event.tokenId}</span>
+          </div>
+        )}
+
+        {'offerPrice' in event && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-500">Price:</span>
+            <span className="text-base font-bold text-[#daa520]">
+              {formatUnits(event.offerPrice, 18)} BASED
+            </span>
+          </div>
+        )}
+
+        {'totalPrice' in event && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-500">Total:</span>
+            <span className="text-base font-bold text-[#daa520]">
+              {formatUnits(event.totalPrice, 18)} BASED
+            </span>
+          </div>
+        )}
+
+        {'amount' in event && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-500">Amount:</span>
+            <span className="text-sm font-bold text-white">{event.amount} vouchers</span>
+          </div>
+        )}
+
+        {/* Role badges */}
+        {isOfferer && (
+          <span className="text-xs px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
+            You offered
+          </span>
+        )}
+        {isOwner && (
+          <span className="text-xs px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30">
+            Your voucher
+          </span>
+        )}
+        {isSeller && (
+          <span className="text-xs px-3 py-1 rounded-full bg-green-500/20 text-green-400 border border-green-500/30">
+            You sold
+          </span>
+        )}
+        {isBuyer && (
+          <span className="text-xs px-3 py-1 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30">
+            You bought
+          </span>
+        )}
       </div>
     </div>
   )

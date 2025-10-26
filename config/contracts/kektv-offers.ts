@@ -73,12 +73,11 @@ export const VOUCHER_IDS = {
 
 /**
  * Voucher names for display
+ * NOTE: Removed placeholder names (Silver, Gold, Platinum)
+ * Use actual metadata names from NFT contract instead
  */
 export const VOUCHER_NAMES = {
-  [VOUCHER_IDS.GENESIS]: 'Genesis',
-  [VOUCHER_IDS.SILVER]: 'Silver',
-  [VOUCHER_IDS.GOLD]: 'Gold',
-  [VOUCHER_IDS.PLATINUM]: 'Platinum',
+  // No placeholder names - use metadata only
 } as const
 
 // ============ TypeScript Types ============
@@ -130,9 +129,11 @@ export type KektvOffersConfig = typeof KEKTV_OFFERS_CONFIG
 
 /**
  * Get voucher name by ID
+ * Returns empty string to avoid showing placeholder names
+ * Actual names should come from NFT metadata
  */
-export function getVoucherName(tokenId: number): string {
-  return VOUCHER_NAMES[tokenId as keyof typeof VOUCHER_NAMES] || 'Unknown'
+export function getVoucherName(_tokenId: number): string {
+  return '' // No placeholders - use metadata instead
 }
 
 /**

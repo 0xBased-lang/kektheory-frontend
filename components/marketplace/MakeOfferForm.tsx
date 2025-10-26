@@ -6,13 +6,14 @@ import { useAccount } from 'wagmi'
 import { useKektvOffers } from '@/lib/hooks/useKektvOffers'
 import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
 import { useVoucherHolders } from '@/lib/hooks/useVoucherHolders'
-import { VOUCHER_IDS, VOUCHER_NAMES, meetsMinimumOffer } from '@/config/contracts/kektv-offers'
+import { VOUCHER_IDS, meetsMinimumOffer } from '@/config/contracts/kektv-offers'
 
 // Only show voucher IDs 1, 2, and 3 (exclude 0)
+// No placeholder names - will use metadata from NFT contract
 const VOUCHER_OPTIONS = [
-  { id: VOUCHER_IDS.SILVER, name: VOUCHER_NAMES[VOUCHER_IDS.SILVER], icon: '🥈', color: 'gray' },
-  { id: VOUCHER_IDS.GOLD, name: VOUCHER_NAMES[VOUCHER_IDS.GOLD], icon: '🥇', color: 'gray' },
-  { id: VOUCHER_IDS.PLATINUM, name: VOUCHER_NAMES[VOUCHER_IDS.PLATINUM], icon: '💠', color: 'gray' },
+  { id: VOUCHER_IDS.SILVER, fallbackIcon: '🥈', color: 'gray' },
+  { id: VOUCHER_IDS.GOLD, fallbackIcon: '🥇', color: 'gray' },
+  { id: VOUCHER_IDS.PLATINUM, fallbackIcon: '💠', color: 'gray' },
 ]
 
 /**
@@ -88,7 +89,7 @@ export function MakeOfferForm() {
               {VOUCHER_OPTIONS.map((voucher) => {
                 const metadata = metadataMap[voucher.id]
                 const mediaUrl = metadata?.animation_url || metadata?.image
-                const voucherName = metadata?.name || voucher.name // Use metadata name if available
+                const voucherName = metadata?.name || voucher.fallbackIcon // Use metadata name if available
                 const isSelected = selectedVoucher === voucher.id
 
                 return (
@@ -117,7 +118,7 @@ export function MakeOfferForm() {
                         </div>
                       ) : (
                         <div className="text-center mb-3">
-                          <div className="text-5xl mb-2">{voucher.icon}</div>
+                          <div className="text-5xl mb-2">{voucher.fallbackIcon}</div>
                         </div>
                       )}
 
