@@ -9,7 +9,7 @@
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { useAccount } from 'wagmi'
-import { useMyOfferHistory, useMyStats } from '@/lib/hooks/useOfferHistory'
+import { useMyOfferHistory } from '@/lib/hooks/useOfferHistory'
 import { useKektvListings } from '@/lib/hooks/useKektvListings'
 import { useKektvOffers } from '@/lib/hooks/useKektvOffers'
 import { useKektvMarketplace } from '@/lib/hooks/useKektvMarketplace'
@@ -50,12 +50,12 @@ function calculateTotalPrice(offerPrice: bigint): number {
 export function UserActivityPage() {
   const { address, isConnected } = useAccount()
   const { data: events, isLoading, refetch: refetchHistory } = useMyOfferHistory()
-  const { stats, isLoading: statsLoading } = useMyStats()
   const { listings, refetch: refetchListings } = useKektvListings(address)
   const { offerIds: madeOfferIds, refetch: refetchMade } = useUserOffers(address)
   const { offerIds: receivedOfferIds, refetch: refetchReceived } = useAllReceivableOffers() // NEW: Comprehensive offer detection
   const { metadataMap } = useAllVoucherMetadata()
   const { ownedVouchers } = useVoucherBalance() // For filtering offers
+  const [activeTab, setActiveTab] = useState<'accept' | 'your-offers' | 'listings'>('accept')
 
   // DEBUG: Log offer IDs to diagnose display issues
   console.log('🎯 UserActivityPage - Offer IDs:', {
@@ -82,7 +82,7 @@ export function UserActivityPage() {
     )
   }
 
-  if (isLoading || statsLoading) {
+  if (isLoading) {
     return (
       <div className="max-w-4xl mx-auto text-center py-16">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#daa520] mx-auto mb-4"></div>
@@ -92,14 +92,14 @@ export function UserActivityPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
+    <div className="max-w-7xl mx-auto">
       {/* Header */}
-      <div className="text-center space-y-2">
+      <div className="text-center space-y-2 py-6">
         <div className="flex items-center justify-center gap-4">
           <h1 className="text-4xl font-bold text-[#daa520] font-fredoka">My Trading Activity</h1>
           <button
             onClick={handleRefresh}
-            disabled={isLoading || statsLoading}
+            disabled={isLoading}
             className="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-300 hover:border-[#daa520] transition disabled:opacity-50"
           >
             🔄 Refresh
@@ -108,46 +108,172 @@ export function UserActivityPage() {
         <p className="text-gray-400">Manage your offers, listings, and view trading history</p>
       </div>
 
-      {/* Statistics */}
-      <UserStatistics
-        stats={stats}
-        listings={listings}
-        madeOffersCount={madeOfferIds.length}
-        receivedOffersCount={receivedOfferIds.length}
-      />
-
-      {/* Actionable Sections with NFT Cards */}
-      <div className="space-y-8">
-        {/* 1. Offers You Can Accept */}
-        <OffersYouCanAcceptSection
-          offerIds={receivedOfferIds}
-          onRefresh={handleRefresh}
-          metadataMap={metadataMap}
-          ownedVouchers={ownedVouchers}
-          userAddress={address}
-        />
-
-        {/* 2. Your Offers (offers you made) */}
-        <YourOffersSection
-          offerIds={madeOfferIds}
-          onRefresh={handleRefresh}
-          metadataMap={metadataMap}
-        />
-
-        {/* 3. Your Marketplace Listings */}
-        <YourMarketplaceListingsSection
-          listings={listings}
-          onRefresh={handleRefresh}
-          metadataMap={metadataMap}
-        />
+      {/* Compact Horizontal Statistics Bar - STICKY */}
+      <div className="sticky top-0 z-20 bg-black/90 backdrop-blur-sm border-b border-gray-700/50">
+        <div className="flex items-center justify-around py-4 px-6">
+          <StatBarItem
+            icon="✨"
+            label="Offers to Accept"
+            value={receivedOfferIds.length}
+            highlight={receivedOfferIds.length > 0}
+            onClick={() => setActiveTab('accept')}
+            isActive={activeTab === 'accept'}
+          />
+          <StatBarItem
+            icon="💼"
+            label="Your Active Offers"
+            value={madeOfferIds.length}
+            highlight={madeOfferIds.length > 0}
+            onClick={() => setActiveTab('your-offers')}
+            isActive={activeTab === 'your-offers'}
+          />
+          <StatBarItem
+            icon="🏪"
+            label="Active Listings"
+            value={listings.length}
+            highlight={listings.length > 0}
+            onClick={() => setActiveTab('listings')}
+            isActive={activeTab === 'listings'}
+          />
+        </div>
       </div>
 
-      {/* Historical Activity */}
-      <div className="space-y-4 pt-6 border-t border-gray-700">
+      {/* Tab Navigation - STICKY */}
+      <div className="sticky top-[76px] z-10 bg-gray-900/95 backdrop-blur-sm border-b border-gray-700/50">
+        <div className="flex gap-2 px-6 py-3">
+          <TabButton
+            active={activeTab === 'accept'}
+            onClick={() => setActiveTab('accept')}
+            icon="✨"
+            label="Offers to Accept"
+            count={receivedOfferIds.length}
+          />
+          <TabButton
+            active={activeTab === 'your-offers'}
+            onClick={() => setActiveTab('your-offers')}
+            icon="💼"
+            label="Your Offers"
+            count={madeOfferIds.length}
+          />
+          <TabButton
+            active={activeTab === 'listings'}
+            onClick={() => setActiveTab('listings')}
+            icon="🏪"
+            label="Active Listings"
+            count={listings.length}
+          />
+        </div>
+      </div>
+
+      {/* Single Active Section - Conditional Rendering */}
+      <div className="p-6">
+        {activeTab === 'accept' && (
+          <OffersYouCanAcceptSection
+            offerIds={receivedOfferIds}
+            onRefresh={handleRefresh}
+            metadataMap={metadataMap}
+            ownedVouchers={ownedVouchers}
+            userAddress={address}
+          />
+        )}
+
+        {activeTab === 'your-offers' && (
+          <YourOffersSection
+            offerIds={madeOfferIds}
+            onRefresh={handleRefresh}
+            metadataMap={metadataMap}
+          />
+        )}
+
+        {activeTab === 'listings' && (
+          <YourMarketplaceListingsSection
+            listings={listings}
+            onRefresh={handleRefresh}
+            metadataMap={metadataMap}
+          />
+        )}
+      </div>
+
+      {/* Historical Activity - Moved to bottom */}
+      <div className="px-6 pb-6 space-y-4 pt-6 border-t border-gray-700">
         <h2 className="text-2xl font-bold text-[#daa520] font-fredoka">📜 Activity History</h2>
         <ActivityHistory events={events || []} userAddress={address!} />
       </div>
     </div>
+  )
+}
+
+/**
+ * Stat Bar Item - Compact horizontal stat with click-to-navigate
+ */
+function StatBarItem({
+  icon,
+  label,
+  value,
+  highlight,
+  onClick,
+  isActive,
+}: {
+  icon: string
+  label: string
+  value: number
+  highlight?: boolean
+  onClick: () => void
+  isActive: boolean
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-3 px-6 py-2 rounded-lg transition-all cursor-pointer ${
+        isActive
+          ? 'bg-[#daa520]/20 border border-[#daa520]/50'
+          : 'border border-transparent hover:bg-gray-800/50'
+      }`}
+    >
+      <span className="text-3xl">{icon}</span>
+      <div className="text-left">
+        <div className={`text-2xl font-bold ${highlight ? 'text-[#daa520]' : 'text-white'}`}>
+          {value}
+        </div>
+        <div className="text-xs text-gray-400 whitespace-nowrap">{label}</div>
+      </div>
+    </button>
+  )
+}
+
+/**
+ * Tab Button - Navigation tab
+ */
+function TabButton({
+  active,
+  onClick,
+  icon,
+  label,
+  count,
+}: {
+  active: boolean
+  onClick: () => void
+  icon: string
+  label: string
+  count: number
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-fredoka font-medium transition-all ${
+        active
+          ? 'bg-[#daa520] text-black'
+          : 'bg-gray-800/50 text-gray-300 hover:bg-gray-800 hover:text-white'
+      }`}
+    >
+      <span className="text-lg">{icon}</span>
+      <span>{label}</span>
+      <span className={`text-sm px-2 py-0.5 rounded-full ${
+        active ? 'bg-black/20' : 'bg-gray-700'
+      }`}>
+        {count}
+      </span>
+    </button>
   )
 }
 
@@ -169,39 +295,26 @@ function OffersYouCanAcceptSection({
 }) {
   if (offerIds.length === 0) {
     return (
-      <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
-        <h3 className="text-xl font-bold text-[#daa520] mb-4 font-fredoka">
-          ✨ Offers You Can Accept
-        </h3>
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">💰</div>
-          <p className="text-lg text-gray-400">No offers to accept right now</p>
-          <p className="text-sm text-gray-500 mt-2">Offers on your vouchers will appear here as NFT cards</p>
-        </div>
+      <div className="text-center py-12">
+        <div className="text-6xl mb-4">💰</div>
+        <p className="text-lg text-gray-400">No offers to accept right now</p>
+        <p className="text-sm text-gray-500 mt-2">Offers on your vouchers will appear here as NFT cards</p>
       </div>
     )
   }
 
   return (
-    <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
-      <h3 className="text-xl font-bold text-[#daa520] mb-2 font-fredoka">
-        ✨ Offers You Can Accept
-      </h3>
-      <p className="text-sm text-gray-400 mb-6">
-        Found {offerIds.length} offer{offerIds.length !== 1 ? 's' : ''} you can accept
-      </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {offerIds.map((offerId) => (
-          <AcceptableOfferNFTCard
-            key={offerId.toString()}
-            offerId={offerId}
-            onRefresh={onRefresh}
-            metadataMap={metadataMap}
-            ownedVouchers={ownedVouchers}
-            userAddress={userAddress}
-          />
-        ))}
-      </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-5">
+      {offerIds.map((offerId) => (
+        <AcceptableOfferNFTCard
+          key={offerId.toString()}
+          offerId={offerId}
+          onRefresh={onRefresh}
+          metadataMap={metadataMap}
+          ownedVouchers={ownedVouchers}
+          userAddress={userAddress}
+        />
+      ))}
     </div>
   )
 }
@@ -454,37 +567,24 @@ function YourOffersSection({
 }) {
   if (offerIds.length === 0) {
     return (
-      <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
-        <h3 className="text-xl font-bold text-[#daa520] mb-4 font-fredoka">
-          💼 Your Offers
-        </h3>
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">💼</div>
-          <p className="text-lg text-gray-400">You haven&apos;t created any offers yet</p>
-          <p className="text-sm text-gray-500 mt-2">Browse All Offers and make an offer to get started</p>
-        </div>
+      <div className="text-center py-12">
+        <div className="text-6xl mb-4">💼</div>
+        <p className="text-lg text-gray-400">You haven&apos;t created any offers yet</p>
+        <p className="text-sm text-gray-500 mt-2">Browse All Offers and make an offer to get started</p>
       </div>
     )
   }
 
   return (
-    <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
-      <h3 className="text-xl font-bold text-[#daa520] mb-2 font-fredoka">
-        💼 Your Offers
-      </h3>
-      <p className="text-sm text-gray-400 mb-6">
-        Offers you&apos;ve created on other users&apos; vouchers
-      </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {offerIds.map((offerId) => (
-          <YourOfferNFTCard
-            key={offerId.toString()}
-            offerId={offerId}
-            onRefresh={onRefresh}
-            metadataMap={metadataMap}
-          />
-        ))}
-      </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-5">
+      {offerIds.map((offerId) => (
+        <YourOfferNFTCard
+          key={offerId.toString()}
+          offerId={offerId}
+          onRefresh={onRefresh}
+          metadataMap={metadataMap}
+        />
+      ))}
     </div>
   )
 }
@@ -654,37 +754,24 @@ function YourMarketplaceListingsSection({
 }) {
   if (listings.length === 0) {
     return (
-      <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
-        <h3 className="text-xl font-bold text-[#daa520] mb-4 font-fredoka">
-          🏪 Your Marketplace Listings
-        </h3>
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">🏪</div>
-          <p className="text-lg text-gray-400">You don&apos;t have any active listings</p>
-          <p className="text-sm text-gray-500 mt-2">List your vouchers for sale to get started</p>
-        </div>
+      <div className="text-center py-12">
+        <div className="text-6xl mb-4">🏪</div>
+        <p className="text-lg text-gray-400">You don&apos;t have any active listings</p>
+        <p className="text-sm text-gray-500 mt-2">List your vouchers for sale to get started</p>
       </div>
     )
   }
 
   return (
-    <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
-      <h3 className="text-xl font-bold text-[#daa520] mb-2 font-fredoka">
-        🏪 Your Marketplace Listings
-      </h3>
-      <p className="text-sm text-gray-400 mb-6">
-        Vouchers you&apos;ve listed for sale on the marketplace
-      </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {listings.map((listing) => (
-          <MarketplaceListingNFTCard
-            key={`${listing.seller}-${listing.tokenId}`}
-            listing={listing}
-            onRefresh={onRefresh}
-            metadataMap={metadataMap}
-          />
-        ))}
-      </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-5">
+      {listings.map((listing) => (
+        <MarketplaceListingNFTCard
+          key={`${listing.seller}-${listing.tokenId}`}
+          listing={listing}
+          onRefresh={onRefresh}
+          metadataMap={metadataMap}
+        />
+      ))}
     </div>
   )
 }
@@ -796,62 +883,6 @@ function MarketplaceListingNFTCard({
         >
           {isPending || isCancelling ? 'Cancelling...' : '❌ Cancel Listing'}
         </button>
-      </div>
-    </div>
-  )
-}
-
-/**
- * User statistics cards
- */
-function UserStatistics({
-  stats,
-  listings,
-  madeOffersCount,
-  receivedOffersCount,
-}: {
-  stats: ReturnType<typeof useMyStats>['stats']
-  listings: ReturnType<typeof useKektvListings>['listings']
-  madeOffersCount: number
-  receivedOffersCount: number
-}) {
-  const activeListingsCount = listings.length
-  const totalListedValue = listings.reduce((sum, listing) => {
-    return sum + BigInt(listing.totalPrice)
-  }, BigInt(0))
-
-  return (
-    <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
-      <h3 className="text-lg font-bold text-[#daa520] mb-4 font-fredoka">📊 Your Stats</h3>
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {/* Active/Actionable Stats */}
-        <StatCard label="Offers to Accept" value={receivedOffersCount.toString()} icon="✨" highlight={receivedOffersCount > 0} />
-        <StatCard label="Your Active Offers" value={madeOffersCount.toString()} icon="💼" highlight={madeOffersCount > 0} />
-        <StatCard label="Active Listings" value={activeListingsCount.toString()} icon="🏪" highlight={activeListingsCount > 0} />
-
-        {totalListedValue > BigInt(0) && (
-          <StatCard
-            label="Total Listed Value"
-            value={(Number(totalListedValue) / 1e18).toLocaleString() + ' BASED'}
-            icon="💎"
-            highlight={true}
-          />
-        )}
-
-        {/* Historical Stats */}
-        <StatCard label="Total Offers Made" value={stats.offersMade.toString()} icon="💰" />
-        <StatCard label="Offers Accepted" value={stats.offersAccepted.toString()} icon="✅" highlight={stats.offersAccepted > 0} />
-        <StatCard label="Vouchers Sold" value={stats.vouchersSold.toString()} icon="💸" highlight={stats.vouchersSold > 0} />
-
-        {/* Trading Volume Stats */}
-        {stats.totalSpent > BigInt(0) && (
-          <StatCard label="Total Spent" value={formatUnits(stats.totalSpent, 18) + ' BASED'} icon="💸" />
-        )}
-
-        {stats.totalEarned > BigInt(0) && (
-          <StatCard label="Total Earned" value={formatUnits(stats.totalEarned, 18) + ' BASED'} icon="💰" />
-        )}
       </div>
     </div>
   )
@@ -985,37 +1016,6 @@ function ActivityCard({
           View TX →
         </a>
       </div>
-    </div>
-  )
-}
-
-/**
- * Stat card
- */
-function StatCard({
-  label,
-  value,
-  icon,
-  highlight,
-}: {
-  label: string
-  value: string
-  icon: string
-  highlight?: boolean
-}) {
-  return (
-    <div
-      className={`bg-gray-800/50 rounded-lg p-4 border ${
-        highlight ? 'border-[#daa520]/50' : 'border-gray-700/50'
-      }`}
-    >
-      <div className="flex items-center gap-2 mb-2">
-        <span className="text-2xl">{icon}</span>
-        <span className="text-xs text-gray-400">{label}</span>
-      </div>
-      <p className="text-lg font-bold text-white truncate" title={value}>
-        {value}
-      </p>
     </div>
   )
 }
