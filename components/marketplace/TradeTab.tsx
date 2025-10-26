@@ -55,7 +55,7 @@ export function TradeTab() {
               }
             `}
           >
-            🛍️ Browse & Buy
+            Browse & Buy
           </button>
           <button
             onClick={() => setView('list')}
@@ -67,7 +67,7 @@ export function TradeTab() {
               }
             `}
           >
-            🏷️ List for Sale
+            List for Sale
           </button>
           <button
             onClick={() => setView('offers')}
@@ -79,7 +79,7 @@ export function TradeTab() {
               }
             `}
           >
-            💰 Offers
+            Offers
           </button>
           <button
             onClick={() => setView('activity')}
@@ -91,7 +91,7 @@ export function TradeTab() {
               }
             `}
           >
-            📊 My Trading Activity
+            My Trading Activity
           </button>
         </div>
       )}
