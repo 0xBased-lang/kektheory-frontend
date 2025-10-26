@@ -84,6 +84,7 @@ export function MakeOfferForm() {
               {VOUCHER_OPTIONS.map((voucher) => {
                 const metadata = metadataMap[voucher.id]
                 const mediaUrl = metadata?.animation_url || metadata?.image
+                const voucherName = metadata?.name || voucher.name // Use metadata name if available
                 const isSelected = selectedVoucher === voucher.id
 
                 return (
@@ -103,7 +104,7 @@ export function MakeOfferForm() {
                         <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-black/20 flex-shrink-0">
                           <Image
                             src={mediaUrl}
-                            alt={voucher.name}
+                            alt={voucherName}
                             fill
                             className="object-contain"
                             unoptimized
@@ -116,7 +117,7 @@ export function MakeOfferForm() {
                       )}
                       <div className="flex-1">
                         <div className={`font-bold text-${voucher.color} font-fredoka`}>
-                          {voucher.name}
+                          {voucherName}
                         </div>
                         {isSelected && (
                           <div className="text-xs text-[#daa520] mt-1">

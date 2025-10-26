@@ -1,9 +1,18 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { useTokenOffers, useOfferDetails } from '@/lib/hooks/useKektvOffers'
+import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
 import { OfferCard } from './OfferCard'
 import { VOUCHER_IDS } from '@/config/contracts/kektv-offers'
+
+const VOUCHER_OPTIONS = [
+  { id: VOUCHER_IDS.GENESIS, fallbackIcon: '💎', color: 'purple' },
+  { id: VOUCHER_IDS.SILVER, fallbackIcon: '🥈', color: 'gray' },
+  { id: VOUCHER_IDS.GOLD, fallbackIcon: '🥇', color: '[#daa520]' },
+  { id: VOUCHER_IDS.PLATINUM, fallbackIcon: '💠', color: 'cyan' },
+]
 
 /**
  * Browse all active offers on KEKTV vouchers
@@ -11,6 +20,7 @@ import { VOUCHER_IDS } from '@/config/contracts/kektv-offers'
  */
 export function BrowseOffers() {
   const [selectedToken, setSelectedToken] = useState<number | null>(null)
+  const { metadataMap } = useAllVoucherMetadata()
 
   // If a token is selected, fetch its offers
   const { offerIds, isLoading, refetch } = useTokenOffers(selectedToken)
@@ -23,65 +33,43 @@ export function BrowseOffers() {
           Select Voucher Type
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto">
-          <button
-            onClick={() => setSelectedToken(VOUCHER_IDS.GENESIS)}
-            className={`
-              p-4 rounded-lg font-fredoka font-bold transition-all
-              ${selectedToken === VOUCHER_IDS.GENESIS
-                ? 'bg-gradient-to-br from-purple-500/20 to-purple-600/20 border-purple-500 ring-2 ring-purple-500/50'
-                : 'bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/30 hover:border-purple-500/50'
-              }
-              border
-            `}
-          >
-            <div className="text-4xl mb-2">💎</div>
-            <div className="text-purple-400">Genesis</div>
-          </button>
+          {VOUCHER_OPTIONS.map((voucher) => {
+            const metadata = metadataMap[voucher.id]
+            const mediaUrl = metadata?.animation_url || metadata?.image
+            const voucherName = metadata?.name || voucher.fallbackIcon
+            const isSelected = selectedToken === voucher.id
 
-          <button
-            onClick={() => setSelectedToken(VOUCHER_IDS.SILVER)}
-            className={`
-              p-4 rounded-lg font-fredoka font-bold transition-all
-              ${selectedToken === VOUCHER_IDS.SILVER
-                ? 'bg-gradient-to-br from-gray-400/20 to-gray-500/20 border-gray-400 ring-2 ring-gray-400/50'
-                : 'bg-gradient-to-br from-gray-400/10 to-gray-500/10 border-gray-400/30 hover:border-gray-400/50'
-              }
-              border
-            `}
-          >
-            <div className="text-4xl mb-2">🥈</div>
-            <div className="text-gray-300">Silver</div>
-          </button>
-
-          <button
-            onClick={() => setSelectedToken(VOUCHER_IDS.GOLD)}
-            className={`
-              p-4 rounded-lg font-fredoka font-bold transition-all
-              ${selectedToken === VOUCHER_IDS.GOLD
-                ? 'bg-gradient-to-br from-[#daa520]/20 to-yellow-600/20 border-[#daa520] ring-2 ring-[#daa520]/50'
-                : 'bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 border-[#daa520]/30 hover:border-[#daa520]/50'
-              }
-              border
-            `}
-          >
-            <div className="text-4xl mb-2">🥇</div>
-            <div className="text-[#daa520]">Gold</div>
-          </button>
-
-          <button
-            onClick={() => setSelectedToken(VOUCHER_IDS.PLATINUM)}
-            className={`
-              p-4 rounded-lg font-fredoka font-bold transition-all
-              ${selectedToken === VOUCHER_IDS.PLATINUM
-                ? 'bg-gradient-to-br from-cyan-400/20 to-cyan-500/20 border-cyan-400 ring-2 ring-cyan-400/50'
-                : 'bg-gradient-to-br from-cyan-400/10 to-cyan-500/10 border-cyan-400/30 hover:border-cyan-400/50'
-              }
-              border
-            `}
-          >
-            <div className="text-4xl mb-2">💠</div>
-            <div className="text-cyan-300">Platinum</div>
-          </button>
+            return (
+              <button
+                key={voucher.id}
+                onClick={() => setSelectedToken(voucher.id)}
+                className={`
+                  p-4 rounded-lg font-fredoka font-bold transition-all border
+                  ${isSelected
+                    ? `bg-gradient-to-br from-${voucher.color}-500/20 to-${voucher.color}-600/20 border-${voucher.color}-500 ring-2 ring-${voucher.color}-500/50`
+                    : `bg-gradient-to-br from-${voucher.color}-500/10 to-${voucher.color}-600/10 border-${voucher.color}-500/30 hover:border-${voucher.color}-500/50`
+                  }
+                `}
+              >
+                {mediaUrl ? (
+                  <div className="relative w-16 h-16 mx-auto mb-2">
+                    <Image
+                      src={mediaUrl}
+                      alt={voucherName}
+                      fill
+                      className="object-contain"
+                      unoptimized
+                    />
+                  </div>
+                ) : (
+                  <div className="text-4xl mb-2">{voucher.fallbackIcon}</div>
+                )}
+                <div className={`text-${voucher.color}-400`}>
+                  {voucherName}
+                </div>
+              </button>
+            )
+          })}
         </div>
       </div>
 
