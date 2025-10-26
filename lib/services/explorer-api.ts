@@ -121,7 +121,7 @@ export class ExplorerAPIService {
     const data = await response.json()
 
     if (data.status === '1' && Array.isArray(data.result)) {
-      return data.result.map((log: RawLog) => this.parseLog(log)).filter((e): e is OfferEvent => e !== null)
+      return data.result.map((log: RawLog) => this.parseLog(log)).filter((e: OfferEvent | null): e is OfferEvent => e !== null)
     }
 
     return []
@@ -145,7 +145,7 @@ export class ExplorerAPIService {
     const data = await response.json()
 
     if (data.status === '1' && Array.isArray(data.result)) {
-      return data.result.map((log: RawLog) => this.parseLog(log)).filter((e): e is OfferEvent => e !== null)
+      return data.result.map((log: RawLog) => this.parseLog(log)).filter((e: OfferEvent | null): e is OfferEvent => e !== null)
     }
 
     return []
