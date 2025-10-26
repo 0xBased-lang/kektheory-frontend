@@ -130,12 +130,22 @@ export function TradeTab() {
 
 /**
  * Browse and buy voucher listings
+ * Shows ALL vouchers (0-3) even if not listed
  */
 function BrowseListings({ onSelectNFT }: { onSelectNFT: (tokenId: number) => void }) {
   const { address, isConnected } = useAccount()
   const { listings, isLoading } = useKektvListings()
   const marketplace = useKektvMarketplace()
   const { metadataMap, loading: metadataLoading } = useAllVoucherMetadata()
+
+  // All voucher IDs to display (complete collection)
+  const allVoucherIds = [0, 1, 2, 3]
+
+  // Create map of listings by tokenId for easy lookup
+  const listingsByTokenId = listings.reduce((acc, listing) => {
+    acc[listing.tokenId] = listing
+    return acc
+  }, {} as Record<number, typeof listings[number]>)
 
   const handleBuy = async (listing: typeof listings[number]) => {
     if (!address) return
@@ -163,39 +173,29 @@ function BrowseListings({ onSelectNFT }: { onSelectNFT: (tokenId: number) => voi
     )
   }
 
-  if (listings.length === 0) {
-    return (
-      <div className="text-center py-24">
-        <div className="text-8xl mb-6">🛍️</div>
-        <h3 className="text-2xl font-bold text-[#daa520] mb-4 font-fredoka">No Listings Yet</h3>
-        <p className="text-gray-400 max-w-md mx-auto">
-          Be the first to list KEKTV vouchers for sale! Switch to the &quot;List for Sale&quot; tab.
-        </p>
-      </div>
-    )
-  }
-
   return (
     <div>
-      {/* Listings Grid - Responsive layout based on number of items */}
-      <div className={`grid gap-6 ${
-        listings.length === 1 ? 'grid-cols-1 max-w-md mx-auto' :
-        listings.length === 2 ? 'grid-cols-1 sm:grid-cols-2 max-w-4xl mx-auto' :
-        'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
-      }`}>
-        {listings.map((listing, index) => {
-          const metadata = metadataMap[listing.tokenId]
+      {/* Complete Collection Grid - Shows all 4 vouchers */}
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        {allVoucherIds.map((tokenId) => {
+          const listing = listingsByTokenId[tokenId]
+          const metadata = metadataMap[tokenId]
           const mediaUrl = metadata?.animation_url || metadata?.image
+          const isListed = !!listing
 
           return (
           <div
-            key={`${listing.seller}-${listing.tokenId}-${index}`}
-            className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border border-[#daa520]/20 overflow-hidden hover:border-[#daa520]/40 transition-all"
+            key={`voucher-${tokenId}`}
+            className={`bg-gradient-to-br rounded-lg border overflow-hidden transition-all ${
+              isListed
+                ? 'from-[#daa520]/10 to-yellow-600/10 border-[#daa520]/20 hover:border-[#daa520]/40'
+                : 'from-gray-800/30 to-gray-900/30 border-gray-700/50 hover:border-gray-600/50'
+            }`}
           >
             <div className="p-6">
               {/* Clickable NFT Card Upper Section */}
               <div
-                onClick={() => onSelectNFT(listing.tokenId)}
+                onClick={() => onSelectNFT(tokenId)}
                 className="cursor-pointer hover:opacity-80 transition-opacity"
               >
                 {/* Voucher Media */}
@@ -203,7 +203,7 @@ function BrowseListings({ onSelectNFT }: { onSelectNFT: (tokenId: number) => voi
                   <div className="relative w-full h-48 rounded-lg overflow-hidden bg-black/20 mb-4">
                     <Image
                       src={mediaUrl}
-                      alt={metadata?.name || listing.voucherName}
+                      alt={metadata?.name || `Voucher #${tokenId}`}
                       fill
                       className="object-contain"
                       unoptimized
@@ -211,59 +211,75 @@ function BrowseListings({ onSelectNFT }: { onSelectNFT: (tokenId: number) => voi
                   </div>
                 ) : (
                   <div className="text-center mb-4">
-                    <div className="text-6xl mb-2">{listing.voucherIcon}</div>
+                    <div className="text-6xl mb-2">
+                      {tokenId === 0 ? '🎫' : tokenId === 1 ? '🎟️' : tokenId === 2 ? '🏆' : '💎'}
+                    </div>
                   </div>
                 )}
 
                 {/* Voucher Info */}
                 <div className="text-center mb-4">
                   <h3 className="text-xl font-bold text-[#daa520] font-fredoka">
-                    {metadata?.name || listing.voucherName}
+                    {metadata?.name || `Voucher #${tokenId}`}
                   </h3>
                   <p className="text-xs text-gray-500 mt-1">Click to view details</p>
                 </div>
               </div>
 
-              {/* Listing Details */}
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between text-gray-400">
-                  <span>Quantity:</span>
-                  <span className="text-white font-bold">{listing.amount.toString()}</span>
-                </div>
-                <div className="flex justify-between text-gray-400">
-                  <span>Price/Each:</span>
-                  <span className="text-white font-bold">
-                    {(Number(listing.pricePerItem) / 1e18).toLocaleString()} BASED
-                  </span>
-                </div>
-                <div className="flex justify-between text-gray-400 border-t border-gray-800 pt-2 mt-2">
-                  <span className="font-bold">You Pay:</span>
-                  <span className="text-[#daa520] font-bold text-lg">
-                    {(Number(listing.totalPrice) / 1e18).toLocaleString()} BASED
-                  </span>
-                </div>
-                <div className="text-xs text-gray-500 text-center mt-1">
-                  2.5% platform fee deducted from seller
-                </div>
-              </div>
+              {/* Listing Details or Not Listed Status */}
+              {isListed && listing ? (
+                <>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between text-gray-400">
+                      <span>Quantity:</span>
+                      <span className="text-white font-bold">{listing.amount.toString()}</span>
+                    </div>
+                    <div className="flex justify-between text-gray-400">
+                      <span>Price/Each:</span>
+                      <span className="text-white font-bold">
+                        {(Number(listing.pricePerItem) / 1e18).toLocaleString()} BASED
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-gray-400 border-t border-gray-800 pt-2 mt-2">
+                      <span className="font-bold">You Pay:</span>
+                      <span className="text-[#daa520] font-bold text-lg">
+                        {(Number(listing.totalPrice) / 1e18).toLocaleString()} BASED
+                      </span>
+                    </div>
+                    <div className="text-xs text-gray-500 text-center mt-1">
+                      2.5% platform fee deducted from seller
+                    </div>
+                  </div>
 
-              {/* Buy Button */}
-              <button
-                onClick={() => handleBuy(listing)}
-                disabled={!isConnected || marketplace.isPending || listing.seller === address}
-                className={`
-                  w-full mt-4 py-3 rounded-lg font-fredoka font-bold transition-all
-                  ${!isConnected || listing.seller === address
-                    ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-[#daa520] to-yellow-600 text-black hover:scale-105 shadow-lg shadow-[#daa520]/20'
-                  }
-                `}
-              >
-                {!isConnected ? '🔗 Connect Wallet to Buy' :
-                  listing.seller === address ? 'Your Listing' :
-                  marketplace.isPending ? 'Buying...' :
-                  '💰 Buy Now'}
-              </button>
+                  {/* Buy Button */}
+                  <button
+                    onClick={() => handleBuy(listing)}
+                    disabled={!isConnected || marketplace.isPending || listing.seller === address}
+                    className={`
+                      w-full mt-4 py-3 rounded-lg font-fredoka font-bold transition-all
+                      ${!isConnected || listing.seller === address
+                        ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-[#daa520] to-yellow-600 text-black hover:scale-105 shadow-lg shadow-[#daa520]/20'
+                      }
+                    `}
+                  >
+                    {!isConnected ? '🔗 Connect Wallet to Buy' :
+                      listing.seller === address ? 'Your Listing' :
+                      marketplace.isPending ? 'Buying...' :
+                      '💰 Buy Now'}
+                  </button>
+                </>
+              ) : (
+                <div className="mt-4">
+                  <div className="bg-gray-800/50 rounded-lg p-6 text-center">
+                    <div className="text-4xl mb-2">📭</div>
+                    <p className="text-gray-400 font-fredoka font-bold mb-1">Not Listed</p>
+                    <p className="text-xs text-gray-500">
+                      No active listings for this voucher
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )})}
