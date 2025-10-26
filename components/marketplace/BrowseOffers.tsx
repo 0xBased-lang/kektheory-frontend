@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useTokenOffers, useOfferDetails } from '@/lib/hooks/useKektvOffers'
 import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
@@ -106,18 +106,29 @@ export function BrowseOffers() {
  * Display list of offers given their IDs
  */
 function OffersList({ offerIds, onSuccess }: { offerIds: bigint[]; onSuccess: () => void }) {
+  const [activeOfferCount, setActiveOfferCount] = useState(0)
+
   return (
     <div>
-      <h3 className="text-xl font-bold text-[#daa520] mb-6 font-fredoka text-center">
-        Active Offers ({offerIds.length})
-      </h3>
+      {activeOfferCount > 0 && (
+        <h3 className="text-xl font-bold text-[#daa520] mb-6 font-fredoka text-center">
+          Active Offers ({activeOfferCount})
+        </h3>
+      )}
       <div className={`grid gap-6 ${
-        offerIds.length === 1 ? 'grid-cols-1 max-w-md mx-auto' :
-        offerIds.length === 2 ? 'grid-cols-1 sm:grid-cols-2 max-w-4xl mx-auto' :
+        activeOfferCount === 1 ? 'grid-cols-1 max-w-md mx-auto' :
+        activeOfferCount === 2 ? 'grid-cols-1 sm:grid-cols-2 max-w-4xl mx-auto' :
         'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
       }`}>
         {offerIds.map((offerId) => (
-          <OfferItem key={offerId.toString()} offerId={offerId} onSuccess={onSuccess} />
+          <OfferItem
+            key={offerId.toString()}
+            offerId={offerId}
+            onSuccess={onSuccess}
+            onActiveChange={(isActive) => {
+              if (isActive) setActiveOfferCount(prev => prev + 1)
+            }}
+          />
         ))}
       </div>
     </div>
@@ -127,8 +138,23 @@ function OffersList({ offerIds, onSuccess }: { offerIds: bigint[]; onSuccess: ()
 /**
  * Individual offer item that fetches and displays offer details
  */
-function OfferItem({ offerId, onSuccess }: { offerId: bigint; onSuccess: () => void }) {
+function OfferItem({
+  offerId,
+  onSuccess,
+  onActiveChange
+}: {
+  offerId: bigint
+  onSuccess: () => void
+  onActiveChange?: (isActive: boolean) => void
+}) {
   const { offer, isLoading } = useOfferDetails(offerId)
+
+  // Notify parent when we know if this offer is active
+  useEffect(() => {
+    if (!isLoading && offer && offer.active && onActiveChange) {
+      onActiveChange(true)
+    }
+  }, [isLoading, offer, onActiveChange])
 
   if (isLoading || !offer || !offer.active) {
     return null // Don't show inactive or loading offers
