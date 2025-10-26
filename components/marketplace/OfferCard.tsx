@@ -52,11 +52,11 @@ export function OfferCard({ offer, onSuccess }: OfferCardProps) {
   const totalPrice = offer.offerPrice * offer.amount
 
   return (
-    <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border border-[#daa520]/20 overflow-hidden hover:border-[#daa520]/40 transition-all">
-      <div className="p-6">
-        {/* Voucher Media */}
+    <div className="rounded-xl border p-4 transition-all bg-gradient-to-br from-yellow-500/10 to-yellow-600/10 border-yellow-500/30 hover:border-[#daa520]/50">
+      <div className="flex flex-col sm:flex-row gap-4">
+        {/* Voucher Image */}
         {mediaUrl ? (
-          <div className="relative w-full h-48 rounded-lg overflow-hidden bg-black/20 mb-4">
+          <div className="relative w-full sm:w-32 h-32 rounded-lg overflow-hidden bg-black/20 flex-shrink-0">
             <Image
               src={mediaUrl}
               alt={voucherName}
@@ -66,74 +66,73 @@ export function OfferCard({ offer, onSuccess }: OfferCardProps) {
             />
           </div>
         ) : (
-          <div className="w-full h-48 flex items-center justify-center bg-black/20 rounded-lg mb-4">
+          <div className="w-full sm:w-32 h-32 flex items-center justify-center bg-black/20 rounded-lg flex-shrink-0">
             <div className="text-6xl">🎫</div>
           </div>
         )}
 
-        {/* Voucher Info */}
-        <div className="text-center mb-4">
-          <h3 className="text-xl font-bold text-[#daa520] font-fredoka">
-            {voucherName}
-          </h3>
-        </div>
-
         {/* Offer Details */}
-        <div className="space-y-2 text-sm">
-          <div className="flex justify-between text-gray-400">
-            <span>Offerer:</span>
-            <span className="text-white font-mono text-xs">
-              {offer.offerer.slice(0, 6)}...{offer.offerer.slice(-4)}
-            </span>
-          </div>
-          <div className="flex justify-between text-gray-400">
-            <span>Quantity:</span>
-            <span className="text-white font-bold">{offer.amount.toString()}</span>
-          </div>
-          <div className="flex justify-between text-gray-400">
-            <span>Price/Each:</span>
-            <span className="text-white font-bold">
-              {formatOfferPrice(offer.offerPrice)}
-            </span>
-          </div>
-          <div className="flex justify-between text-gray-400 border-t border-gray-800 pt-2 mt-2">
-            <span className="font-bold">Total:</span>
-            <span className="text-[#daa520] font-bold text-lg">
-              {formatOfferPrice(totalPrice)}
-            </span>
-          </div>
-          <div className="text-xs text-gray-500 text-center mt-1">
-            BASED escrowed in contract
-          </div>
-        </div>
+        <div className="flex-1 flex flex-col justify-between">
+          <div>
+            <div className="flex items-start justify-between mb-2">
+              <h4 className="font-bold text-white text-lg font-fredoka">
+                {voucherName}
+              </h4>
+              <div className="px-3 py-1 rounded-lg bg-gradient-to-r from-[#daa520] to-yellow-600 text-black text-sm font-bold flex-shrink-0">
+                ×{offer.amount.toString()}
+              </div>
+            </div>
 
-        {/* Action Buttons */}
-        {isYourOffer ? (
-          <div className="mt-4 py-3 rounded-lg bg-gray-700 text-gray-400 text-center font-fredoka font-bold">
-            Your Offer
+            <div className="space-y-1 text-sm mb-3">
+              <div className="flex justify-between text-gray-400">
+                <span>Offerer:</span>
+                <span className="text-white font-mono text-xs">
+                  {offer.offerer.slice(0, 6)}...{offer.offerer.slice(-4)}
+                </span>
+              </div>
+              <div className="flex justify-between text-gray-400">
+                <span>Price/Each:</span>
+                <span className="text-white font-bold">
+                  {formatOfferPrice(offer.offerPrice)}
+                </span>
+              </div>
+              <div className="flex justify-between text-gray-400 border-t border-gray-800 pt-1 mt-1">
+                <span className="font-bold">Total:</span>
+                <span className="text-[#daa520] font-bold">
+                  {formatOfferPrice(totalPrice)}
+                </span>
+              </div>
+            </div>
           </div>
-        ) : isYourVoucher && address ? (
-          <div className="mt-4 grid grid-cols-2 gap-2">
-            <button
-              onClick={handleAccept}
-              disabled={isPending}
-              className="py-3 rounded-lg font-fredoka font-bold transition-all bg-gradient-to-r from-[#daa520] to-yellow-600 text-black hover:scale-105 shadow-lg shadow-[#daa520]/20 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isPending ? 'Processing...' : '✅ Accept'}
-            </button>
-            <button
-              onClick={handleReject}
-              disabled={isPending}
-              className="py-3 rounded-lg font-fredoka font-bold transition-all bg-red-500/20 text-red-400 hover:bg-red-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isPending ? 'Processing...' : '🚫 Reject'}
-            </button>
-          </div>
-        ) : (
-          <div className="mt-4 py-3 rounded-lg bg-gray-800 text-gray-500 text-center font-fredoka font-bold text-sm">
-            Connect wallet to accept
-          </div>
-        )}
+
+          {/* Action Buttons */}
+          {isYourOffer ? (
+            <div className="py-2 rounded-lg bg-gray-700 text-gray-400 text-center font-fredoka font-bold text-sm">
+              Your Offer
+            </div>
+          ) : isYourVoucher && address ? (
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={handleAccept}
+                disabled={isPending}
+                className="py-2 rounded-lg font-fredoka font-bold transition-all bg-gradient-to-r from-[#daa520] to-yellow-600 text-black hover:scale-105 shadow-lg shadow-[#daa520]/20 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              >
+                {isPending ? 'Processing...' : '✅ Accept'}
+              </button>
+              <button
+                onClick={handleReject}
+                disabled={isPending}
+                className="py-2 rounded-lg font-fredoka font-bold transition-all bg-red-500/20 text-red-400 hover:bg-red-500/30 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              >
+                {isPending ? 'Processing...' : '🚫 Reject'}
+              </button>
+            </div>
+          ) : (
+            <div className="py-2 rounded-lg bg-gray-800 text-gray-500 text-center font-fredoka font-bold text-sm">
+              Connect wallet to accept
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
