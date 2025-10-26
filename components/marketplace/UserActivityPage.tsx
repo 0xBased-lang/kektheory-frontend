@@ -1,33 +1,58 @@
 /**
  * User Activity Page
- * Shows user's complete trading history: offers and marketplace events
+ * Comprehensive trading hub with actionable sections and history
  */
 
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useMyOfferHistory, useMyStats } from '@/lib/hooks/useOfferHistory'
 import { useKektvListings } from '@/lib/hooks/useKektvListings'
 import { useKektvOffers } from '@/lib/hooks/useKektvOffers'
 import { useKektvMarketplace } from '@/lib/hooks/useKektvMarketplace'
-import { useUserOffers, useReceivedOffers } from '@/lib/hooks/useKektvOffers'
+import { useUserOffers, useReceivedOffers, useOfferDetails } from '@/lib/hooks/useKektvOffers'
 import { formatUnits } from 'ethers'
 import type { TradingEvent } from '@/lib/services/explorer-api'
 import { VOUCHER_NAMES } from '@/config/contracts/kektv-offers'
+import type { Offer } from '@/config/contracts/kektv-offers'
+
+// Constants
+const EXPLORER_BASE_URL = 'https://explorer.bf1337.org'
+
+// Helper function to safely get voucher name
+function getVoucherName(tokenId: number | bigint | undefined): string {
+  if (tokenId === undefined) return 'Unknown Voucher'
+  const id = Number(tokenId)
+  if (id in VOUCHER_NAMES) {
+    return VOUCHER_NAMES[id as keyof typeof VOUCHER_NAMES]
+  }
+  return `Voucher #${id}`
+}
+
+// Helper function to safely calculate price per item
+function calculatePricePerItem(offerPrice: bigint, amount: bigint): number {
+  const priceNum = Number(offerPrice)
+  const amountNum = Number(amount)
+  if (amountNum === 0 || !isFinite(amountNum) || amountNum < 0) return 0
+  return priceNum / amountNum / 1e18
+}
+
+// Helper function to safely calculate total price
+function calculateTotalPrice(offerPrice: bigint): number {
+  return Number(offerPrice) / 1e18
+}
 
 export function UserActivityPage() {
   const { address, isConnected } = useAccount()
   const { data: events, isLoading, refetch: refetchHistory } = useMyOfferHistory()
   const { stats, isLoading: statsLoading } = useMyStats()
   const { listings, isLoading: listingsLoading, refetch: refetchListings } = useKektvListings(address)
-  const { offerIds: madeOfferIds } = useUserOffers(address)
-  const { offerIds: receivedOfferIds } = useReceivedOffers(address)
-  const [filter, setFilter] = useState<'all' | 'made' | 'received' | 'listings'>('all')
+  const { offerIds: madeOfferIds, refetch: refetchMade } = useUserOffers(address)
+  const { offerIds: receivedOfferIds, refetch: refetchReceived } = useReceivedOffers(address)
 
   const handleRefresh = async () => {
-    // Refetching events will automatically update stats (stats are derived from events)
-    await Promise.all([refetchHistory(), refetchListings()])
+    await Promise.all([refetchHistory(), refetchListings(), refetchMade(), refetchReceived()])
   }
 
   if (!isConnected) {
@@ -56,7 +81,7 @@ export function UserActivityPage() {
       {/* Header */}
       <div className="text-center space-y-2">
         <div className="flex items-center justify-center gap-4">
-          <h1 className="text-4xl font-bold text-[#daa520] font-fredoka">My Activity</h1>
+          <h1 className="text-4xl font-bold text-[#daa520] font-fredoka">My Trading Activity</h1>
           <button
             onClick={handleRefresh}
             disabled={isLoading || statsLoading}
@@ -65,55 +90,448 @@ export function UserActivityPage() {
             🔄 Refresh
           </button>
         </div>
-        <p className="text-gray-400">Your complete trading history</p>
+        <p className="text-gray-400">Manage your offers, listings, and view trading history</p>
       </div>
 
       {/* Statistics */}
       <UserStatistics
         stats={stats}
         listings={listings}
-        onRefresh={handleRefresh}
-        isRefreshing={isLoading || statsLoading || listingsLoading}
+        madeOffersCount={madeOfferIds.length}
+        receivedOffersCount={receivedOfferIds.length}
       />
 
-      {/* Activity Timeline */}
-      <div className="space-y-4">
-        {/* Filter tabs */}
-        <div className="flex gap-2 border-b border-gray-700 overflow-x-auto">
-          <FilterTab
-            label="All Activity"
-            count={events?.length || 0}
-            active={filter === 'all'}
-            onClick={() => setFilter('all')}
-          />
-          <FilterTab
-            label="Offers Made"
-            count={madeOfferIds.length}
-            active={filter === 'made'}
-            onClick={() => setFilter('made')}
-          />
-          <FilterTab
-            label="Offers Received"
-            count={receivedOfferIds.length}
-            active={filter === 'received'}
-            onClick={() => setFilter('received')}
-          />
-          <FilterTab
-            label="My Listings"
-            count={listings.length}
-            active={filter === 'listings'}
-            onClick={() => setFilter('listings')}
-          />
-        </div>
-
-        {/* Events list */}
-        <ActivityList
-          events={events || []}
-          listings={listings}
-          filter={filter}
+      {/* Actionable Sections */}
+      <div className="space-y-6">
+        {/* 1. Offers You Can Accept */}
+        <OffersYouCanAcceptSection
+          offerIds={receivedOfferIds}
           userAddress={address!}
           onRefresh={handleRefresh}
         />
+
+        {/* 2. Your Offers (offers you made) */}
+        <YourOffersSection
+          offerIds={madeOfferIds}
+          userAddress={address!}
+          onRefresh={handleRefresh}
+        />
+
+        {/* 3. Your Marketplace Listings */}
+        <YourMarketplaceListingsSection
+          listings={listings}
+          onRefresh={handleRefresh}
+        />
+      </div>
+
+      {/* Historical Activity */}
+      <div className="space-y-4 pt-6 border-t border-gray-700">
+        <h2 className="text-2xl font-bold text-[#daa520] font-fredoka">📜 Activity History</h2>
+        <ActivityHistory events={events || []} userAddress={address!} onRefresh={handleRefresh} />
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Offers You Can Accept Section
+ */
+function OffersYouCanAcceptSection({
+  offerIds,
+  userAddress,
+  onRefresh,
+}: {
+  offerIds: bigint[]
+  userAddress: string
+  onRefresh: () => void
+}) {
+  if (offerIds.length === 0) {
+    return (
+      <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
+        <h3 className="text-lg font-bold text-[#daa520] mb-4 font-fredoka">
+          ✨ Offers You Can Accept
+        </h3>
+        <div className="text-center py-8">
+          <div className="text-4xl mb-2">💰</div>
+          <p className="text-gray-400">No offers to accept right now</p>
+          <p className="text-sm text-gray-500 mt-1">Offers on your vouchers will appear here</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
+      <h3 className="text-lg font-bold text-[#daa520] mb-4 font-fredoka">
+        ✨ Offers You Can Accept
+      </h3>
+      <p className="text-sm text-gray-400 mb-4">
+        Found {offerIds.length} offer{offerIds.length !== 1 ? 's' : ''} you can accept
+      </p>
+      <div className="space-y-3">
+        {offerIds.map((offerId) => (
+          <AcceptableOfferCard
+            key={offerId.toString()}
+            offerId={offerId}
+            onRefresh={onRefresh}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Acceptable Offer Card (can be accepted)
+ */
+function AcceptableOfferCard({
+  offerId,
+  onRefresh,
+}: {
+  offerId: bigint
+  onRefresh: () => void
+}) {
+  const { offer, isLoading } = useOfferDetails(offerId)
+  const { acceptOffer, isPending } = useKektvOffers()
+  const [isAccepting, setIsAccepting] = useState(false)
+  const isMountedRef = useRef(true)
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false
+    }
+  }, [])
+
+  const handleAccept = async () => {
+    try {
+      setIsAccepting(true)
+      await acceptOffer(offerId)
+      if (isMountedRef.current) {
+        onRefresh()
+      }
+    } catch (error) {
+      console.error('Failed to accept offer:', error)
+    } finally {
+      if (isMountedRef.current) {
+        setIsAccepting(false)
+      }
+    }
+  }
+
+  if (isLoading || !offer) {
+    return (
+      <div className="bg-gray-800/50 rounded-lg border border-gray-700/50 p-4">
+        <div className="animate-pulse">Loading offer...</div>
+      </div>
+    )
+  }
+
+  const pricePerItem = calculatePricePerItem(offer.offerPrice, offer.amount)
+  const totalPrice = calculateTotalPrice(offer.offerPrice)
+
+  return (
+    <div className="bg-gray-800/50 rounded-lg border border-gray-700/50 p-4 hover:border-[#daa520]/50 transition">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-2xl">💰</span>
+            <div>
+              <p className="text-sm font-medium text-white">
+                𝕂Ǝ𝕂TV #{offer.tokenId} {getVoucherName(offer.tokenId)}
+              </p>
+              <p className="text-xs text-gray-500">
+                Offerer: {offer.offerer.slice(0, 6)}...{offer.offerer.slice(-4)}
+              </p>
+            </div>
+          </div>
+
+          <div className="ml-10 space-y-1">
+            <p className="text-xs text-gray-400">
+              <span className="text-gray-500">Quantity:</span> <span className="text-white">{offer.amount.toString()}</span>
+            </p>
+            <p className="text-xs text-gray-400">
+              <span className="text-gray-500">Price/Each:</span>{' '}
+              <span className="text-[#daa520] font-bold">{pricePerItem.toLocaleString(undefined, { minimumFractionDigits: 4 })} BASED</span>
+            </p>
+            <p className="text-sm font-bold text-[#daa520]">
+              Total: {totalPrice.toLocaleString(undefined, { minimumFractionDigits: 4 })} BASED
+            </p>
+            <p className="text-xs text-gray-500">💰 BASED escrowed • General offer (anyone can accept)</p>
+          </div>
+        </div>
+
+        <button
+          onClick={handleAccept}
+          disabled={isPending || isAccepting}
+          className="flex-shrink-0 px-4 py-2 bg-green-500/20 border border-green-500/50 rounded-lg text-sm text-green-400 hover:bg-green-500/30 transition disabled:opacity-50"
+        >
+          {isPending || isAccepting ? 'Accepting...' : '✅ Accept Offer'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Your Offers Section (offers you made)
+ */
+function YourOffersSection({
+  offerIds,
+  userAddress,
+  onRefresh,
+}: {
+  offerIds: bigint[]
+  userAddress: string
+  onRefresh: () => void
+}) {
+  if (offerIds.length === 0) {
+    return (
+      <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
+        <h3 className="text-lg font-bold text-[#daa520] mb-4 font-fredoka">
+          💼 Your Offers
+        </h3>
+        <div className="text-center py-8">
+          <div className="text-4xl mb-2">💼</div>
+          <p className="text-gray-400">You haven't created any offers yet</p>
+          <p className="text-sm text-gray-500 mt-1">Browse All Offers and make an offer to get started</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
+      <h3 className="text-lg font-bold text-[#daa520] mb-4 font-fredoka">
+        💼 Your Offers
+      </h3>
+      <p className="text-sm text-gray-400 mb-4">
+        Offers you've created on other users' vouchers
+      </p>
+      <div className="space-y-3">
+        {offerIds.map((offerId) => (
+          <YourOfferCard
+            key={offerId.toString()}
+            offerId={offerId}
+            onRefresh={onRefresh}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Your Offer Card (can be cancelled)
+ */
+function YourOfferCard({
+  offerId,
+  onRefresh,
+}: {
+  offerId: bigint
+  onRefresh: () => void
+}) {
+  const { offer, isLoading } = useOfferDetails(offerId)
+  const { cancelOffer, isPending } = useKektvOffers()
+  const [isCancelling, setIsCancelling] = useState(false)
+  const isMountedRef = useRef(true)
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false
+    }
+  }, [])
+
+  const handleCancel = async () => {
+    try {
+      setIsCancelling(true)
+      await cancelOffer(offerId)
+      if (isMountedRef.current) {
+        onRefresh()
+      }
+    } catch (error) {
+      console.error('Failed to cancel offer:', error)
+    } finally {
+      if (isMountedRef.current) {
+        setIsCancelling(false)
+      }
+    }
+  }
+
+  if (isLoading || !offer) {
+    return (
+      <div className="bg-gray-800/50 rounded-lg border border-gray-700/50 p-4">
+        <div className="animate-pulse">Loading offer...</div>
+      </div>
+    )
+  }
+
+  const pricePerItem = calculatePricePerItem(offer.offerPrice, offer.amount)
+  const totalPrice = calculateTotalPrice(offer.offerPrice)
+
+  return (
+    <div className="bg-gray-800/50 rounded-lg border border-gray-700/50 p-4 hover:border-gray-600/50 transition">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-2xl">💼</span>
+            <div>
+              <p className="text-sm font-medium text-white">
+                𝕂Ǝ𝕂TV #{offer.tokenId} {getVoucherName(offer.tokenId)}
+              </p>
+              <p className="text-xs text-gray-500">
+                {offer.voucherOwner === '0x0000000000000000000000000000000000000000'
+                  ? 'General offer (anyone can accept)'
+                  : `To: ${offer.voucherOwner.slice(0, 6)}...${offer.voucherOwner.slice(-4)}`
+                }
+              </p>
+            </div>
+          </div>
+
+          <div className="ml-10 space-y-1">
+            <p className="text-xs text-gray-400">
+              <span className="text-gray-500">Quantity:</span> <span className="text-white">{offer.amount.toString()}</span>
+            </p>
+            <p className="text-xs text-gray-400">
+              <span className="text-gray-500">Price/Each:</span>{' '}
+              <span className="text-[#daa520] font-bold">{pricePerItem.toLocaleString(undefined, { minimumFractionDigits: 4 })} BASED</span>
+            </p>
+            <p className="text-sm font-bold text-[#daa520]">
+              Total: {totalPrice.toLocaleString(undefined, { minimumFractionDigits: 4 })} BASED
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={handleCancel}
+          disabled={isPending || isCancelling}
+          className="flex-shrink-0 px-4 py-2 bg-red-500/20 border border-red-500/50 rounded-lg text-sm text-red-400 hover:bg-red-500/30 transition disabled:opacity-50"
+        >
+          {isPending || isCancelling ? 'Cancelling...' : '❌ Cancel Offer'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Your Marketplace Listings Section
+ */
+function YourMarketplaceListingsSection({
+  listings,
+  onRefresh,
+}: {
+  listings: ReturnType<typeof useKektvListings>['listings']
+  onRefresh: () => void
+}) {
+  if (listings.length === 0) {
+    return (
+      <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
+        <h3 className="text-lg font-bold text-[#daa520] mb-4 font-fredoka">
+          🏪 Your Marketplace Listings
+        </h3>
+        <div className="text-center py-8">
+          <div className="text-4xl mb-2">🏪</div>
+          <p className="text-gray-400">You don't have any active listings</p>
+          <p className="text-sm text-gray-500 mt-1">List your vouchers for sale to get started</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-6">
+      <h3 className="text-lg font-bold text-[#daa520] mb-4 font-fredoka">
+        🏪 Your Marketplace Listings
+      </h3>
+      <p className="text-sm text-gray-400 mb-4">
+        Vouchers you've listed for sale on the marketplace
+      </p>
+      <div className="space-y-3">
+        {listings.map((listing) => (
+          <MarketplaceListingCard
+            key={`${listing.seller}-${listing.tokenId}`}
+            listing={listing}
+            onRefresh={onRefresh}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Marketplace Listing Card
+ */
+function MarketplaceListingCard({
+  listing,
+  onRefresh,
+}: {
+  listing: ReturnType<typeof useKektvListings>['listings'][0]
+  onRefresh: () => void
+}) {
+  const { cancelListing, isPending } = useKektvMarketplace()
+  const [isCancelling, setIsCancelling] = useState(false)
+  const isMountedRef = useRef(true)
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false
+    }
+  }, [])
+
+  const handleCancel = async () => {
+    try {
+      setIsCancelling(true)
+      await cancelListing(BigInt(listing.tokenId))
+      if (isMountedRef.current) {
+        onRefresh()
+      }
+    } catch (error) {
+      console.error('Failed to cancel listing:', error)
+    } finally {
+      if (isMountedRef.current) {
+        setIsCancelling(false)
+      }
+    }
+  }
+
+  const pricePerItem = Number(listing.pricePerItem) / 1e18
+  const totalPrice = Number(listing.totalPrice) / 1e18
+
+  return (
+    <div className="bg-gray-800/50 rounded-lg border border-gray-700/50 p-4 hover:border-gray-600/50 transition">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-2xl">🏪</span>
+            <div>
+              <p className="text-sm font-medium text-white">
+                𝕂Ǝ𝕂TV #{listing.tokenId} {getVoucherName(listing.tokenId)}
+              </p>
+            </div>
+          </div>
+
+          <div className="ml-10 space-y-1">
+            <p className="text-xs text-gray-400">
+              <span className="text-gray-500">Quantity:</span> <span className="text-white">{listing.amount.toString()} vouchers</span>
+            </p>
+            <p className="text-xs text-gray-400">
+              <span className="text-gray-500">Price/Each:</span>{' '}
+              <span className="text-[#daa520] font-bold">{pricePerItem.toLocaleString()} BASED</span>
+            </p>
+            <p className="text-sm font-bold text-[#daa520]">
+              Total: {totalPrice.toLocaleString()} BASED
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={handleCancel}
+          disabled={isPending || isCancelling}
+          className="flex-shrink-0 px-4 py-2 bg-red-500/20 border border-red-500/50 rounded-lg text-sm text-red-400 hover:bg-red-500/30 transition disabled:opacity-50"
+        >
+          {isPending || isCancelling ? 'Cancelling...' : '❌ Cancel Listing'}
+        </button>
       </div>
     </div>
   )
@@ -125,13 +543,14 @@ export function UserActivityPage() {
 function UserStatistics({
   stats,
   listings,
+  madeOffersCount,
+  receivedOffersCount,
 }: {
   stats: ReturnType<typeof useMyStats>['stats']
   listings: ReturnType<typeof useKektvListings>['listings']
-  onRefresh?: () => void
-  isRefreshing?: boolean
+  madeOffersCount: number
+  receivedOffersCount: number
 }) {
-  // Calculate listing statistics
   const activeListingsCount = listings.length
   const totalListedValue = listings.reduce((sum, listing) => {
     return sum + BigInt(listing.totalPrice)
@@ -142,16 +561,10 @@ function UserStatistics({
       <h3 className="text-lg font-bold text-[#daa520] mb-4 font-fredoka">📊 Your Stats</h3>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {/* Offer Stats */}
-        <StatCard label="Offers Made" value={stats.offersMade.toString()} icon="💰" />
-        <StatCard label="Offers Received" value={stats.offersReceived.toString()} icon="📥" />
-        <StatCard label="Accepted" value={stats.offersAccepted.toString()} icon="✅" highlight={stats.offersAccepted > 0} />
-        <StatCard label="Cancelled" value={stats.offersCancelled.toString()} icon="❌" />
-
-        {/* Marketplace Stats */}
-        <StatCard label="Vouchers Sold" value={stats.vouchersSold.toString()} icon="💸" highlight={stats.vouchersSold > 0} />
-        <StatCard label="Vouchers Listed" value={stats.vouchersListed.toString()} icon="🏪" />
-        <StatCard label="Active Listings" value={activeListingsCount.toString()} icon="📋" highlight={activeListingsCount > 0} />
+        {/* Active/Actionable Stats */}
+        <StatCard label="Offers to Accept" value={receivedOffersCount.toString()} icon="✨" highlight={receivedOffersCount > 0} />
+        <StatCard label="Your Active Offers" value={madeOffersCount.toString()} icon="💼" highlight={madeOffersCount > 0} />
+        <StatCard label="Active Listings" value={activeListingsCount.toString()} icon="🏪" highlight={activeListingsCount > 0} />
 
         {totalListedValue > BigInt(0) && (
           <StatCard
@@ -161,6 +574,11 @@ function UserStatistics({
             highlight={true}
           />
         )}
+
+        {/* Historical Stats */}
+        <StatCard label="Total Offers Made" value={stats.offersMade.toString()} icon="💰" />
+        <StatCard label="Offers Accepted" value={stats.offersAccepted.toString()} icon="✅" highlight={stats.offersAccepted > 0} />
+        <StatCard label="Vouchers Sold" value={stats.vouchersSold.toString()} icon="💸" highlight={stats.vouchersSold > 0} />
 
         {/* Trading Volume Stats */}
         {stats.totalSpent > BigInt(0) && (
@@ -176,147 +594,34 @@ function UserStatistics({
 }
 
 /**
- * Filter tab button
+ * Activity History Section
  */
-function FilterTab({
-  label,
-  count,
-  active,
-  onClick,
-}: {
-  label: string
-  count: number
-  active: boolean
-  onClick: () => void
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`px-4 py-2 text-sm font-medium border-b-2 transition whitespace-nowrap ${
-        active
-          ? 'text-[#daa520] border-[#daa520]'
-          : 'text-gray-400 border-transparent hover:text-gray-300'
-      }`}
-    >
-      {label} ({count})
-    </button>
-  )
-}
-
-/**
- * Activity list
- */
-function ActivityList({
+function ActivityHistory({
   events,
-  listings,
-  filter,
   userAddress,
   onRefresh,
 }: {
   events: TradingEvent[]
-  listings: ReturnType<typeof useKektvListings>['listings']
-  filter: 'all' | 'made' | 'received' | 'listings'
   userAddress: string
   onRefresh: () => void
 }) {
-  const normalizedAddress = userAddress.toLowerCase()
-
-  // Filter events
-  let filteredEvents = events.filter((event) => {
-    if (filter === 'all') return true
-
-    if (filter === 'made') {
-      return 'offerer' in event && event.offerer.toLowerCase() === normalizedAddress
-    }
-
-    if (filter === 'received') {
-      // Show OfferMade events where someone ELSE made an offer on YOUR vouchers
-      return (
-        event.eventType === 'OfferMade' &&
-        'voucherOwner' in event &&
-        'offerer' in event &&
-        event.voucherOwner.toLowerCase() === normalizedAddress &&
-        event.offerer.toLowerCase() !== normalizedAddress &&
-        event.voucherOwner !== '0x0000000000000000000000000000000000000000'
-      )
-    }
-
-    return false
-  })
-
-  // Show listings in the "listings" filter
-  if (filter === 'listings') {
-    filteredEvents = events.filter((event) =>
-      (event.eventType === 'VoucherListed' ||
-       event.eventType === 'ListingCancelled' ||
-       event.eventType === 'VoucherSold') &&
-      'seller' in event &&
-      event.seller.toLowerCase() === normalizedAddress
-    )
-  }
-
-  if (filteredEvents.length === 0 && filter !== 'listings') {
+  if (events.length === 0) {
     return (
       <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-8 text-center">
         <div className="text-6xl mb-4">📭</div>
         <p className="text-xl font-fredoka text-gray-400 mb-2">No activity yet</p>
-        <p className="text-sm text-gray-500">Start trading to see your history here!</p>
-      </div>
-    )
-  }
-
-  // Show active listings in listings filter
-  if (filter === 'listings') {
-    return (
-      <div className="space-y-3">
-        {/* Active Listings */}
-        {listings.length > 0 && (
-          <>
-            <div className="text-sm text-gray-400 font-medium px-2">Active Listings ({listings.length})</div>
-            {listings.map((listing) => (
-              <ListingCard
-                key={`${listing.seller}-${listing.tokenId}`}
-                listing={listing}
-                onRefresh={onRefresh}
-              />
-            ))}
-          </>
-        )}
-
-        {/* Historical Events */}
-        {filteredEvents.length > 0 && (
-          <>
-            <div className="text-sm text-gray-400 font-medium px-2 mt-6">Listing History ({filteredEvents.length})</div>
-            {filteredEvents.map((event, i) => (
-              <ActivityCard
-                key={`${event.transactionHash}-${i}`}
-                event={event}
-                userAddress={userAddress}
-                onRefresh={onRefresh}
-              />
-            ))}
-          </>
-        )}
-
-        {listings.length === 0 && filteredEvents.length === 0 && (
-          <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-8 text-center">
-            <div className="text-6xl mb-4">🏪</div>
-            <p className="text-xl font-fredoka text-gray-400 mb-2">No listings yet</p>
-            <p className="text-sm text-gray-500">List your vouchers for sale on the marketplace!</p>
-          </div>
-        )}
+        <p className="text-sm text-gray-500">Your trading history will appear here</p>
       </div>
     )
   }
 
   return (
     <div className="space-y-3">
-      {filteredEvents.map((event, i) => (
+      {events.map((event, i) => (
         <ActivityCard
           key={`${event.transactionHash}-${i}`}
           event={event}
           userAddress={userAddress}
-          onRefresh={onRefresh}
         />
       ))}
     </div>
@@ -324,90 +629,14 @@ function ActivityList({
 }
 
 /**
- * Listing card with cancel button
- */
-function ListingCard({
-  listing,
-  onRefresh
-}: {
-  listing: ReturnType<typeof useKektvListings>['listings'][0]
-  onRefresh: () => void
-}) {
-  const { cancelListing, isPending } = useKektvMarketplace()
-  const [isCancelling, setIsCancelling] = useState(false)
-
-  const handleCancelListing = async () => {
-    try {
-      setIsCancelling(true)
-      await cancelListing(BigInt(listing.tokenId))
-
-      // Wait a bit for blockchain to update, then refresh
-      setTimeout(() => {
-        onRefresh()
-        setIsCancelling(false)
-      }, 3000)
-    } catch (error) {
-      console.error('Failed to cancel listing:', error)
-      setIsCancelling(false)
-    }
-  }
-
-  const pricePerItem = Number(listing.pricePerItem) / 1e18
-  const totalPrice = Number(listing.totalPrice) / 1e18
-
-  return (
-    <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-4 hover:border-gray-600/50 transition">
-      <div className="flex items-start justify-between gap-4">
-        {/* Left: Listing info */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-2xl">🏪</span>
-            <div>
-              <p className="text-sm font-medium text-white">Active Listing</p>
-              <p className="text-xs text-gray-500">
-                𝕂Ǝ𝕂TV #{listing.tokenId} ({VOUCHER_NAMES[listing.tokenId as keyof typeof VOUCHER_NAMES]})
-              </p>
-            </div>
-          </div>
-
-          <div className="space-y-1 ml-10">
-            <p className="text-xs text-gray-400">
-              <span className="text-gray-500">Amount:</span> <span className="text-white">{listing.amount} vouchers</span>
-            </p>
-            <p className="text-xs text-gray-400">
-              <span className="text-gray-500">Price per voucher:</span>{' '}
-              <span className="text-[#daa520] font-bold">{pricePerItem.toLocaleString()} BASED</span>
-            </p>
-            <p className="text-sm font-bold text-[#daa520]">
-              Total: {totalPrice.toLocaleString()} BASED
-            </p>
-          </div>
-        </div>
-
-        {/* Right: Cancel button */}
-        <button
-          onClick={handleCancelListing}
-          disabled={isPending || isCancelling}
-          className="flex-shrink-0 px-4 py-2 bg-red-500/20 border border-red-500/50 rounded-lg text-sm text-red-400 hover:bg-red-500/30 transition disabled:opacity-50"
-        >
-          {isPending || isCancelling ? 'Cancelling...' : '❌ Cancel Listing'}
-        </button>
-      </div>
-    </div>
-  )
-}
-
-/**
- * Activity card (single event) with action buttons
+ * Activity card (historical event)
  */
 function ActivityCard({
   event,
   userAddress,
-  onRefresh,
 }: {
   event: TradingEvent
   userAddress: string
-  onRefresh: () => void
 }) {
   const normalizedAddress = userAddress.toLowerCase()
   const isOfferer = 'offerer' in event && event.offerer.toLowerCase() === normalizedAddress
@@ -436,7 +665,7 @@ function ActivityCard({
               <p className="text-xs text-gray-400">
                 <span className="text-gray-500">NFT:</span>{' '}
                 <span className="text-white">𝕂Ǝ𝕂TV #{event.tokenId}</span>{' '}
-                <span className="text-gray-500">({VOUCHER_NAMES[event.tokenId as keyof typeof VOUCHER_NAMES]})</span>
+                <span className="text-gray-500">({getVoucherName(event.tokenId)})</span>
               </p>
             )}
 
@@ -484,109 +713,18 @@ function ActivityCard({
           </div>
         </div>
 
-        {/* Right: Action buttons or transaction link */}
-        <div className="flex-shrink-0 flex flex-col gap-2">
-          <OfferActionButtons
-            event={event}
-            userAddress={userAddress}
-            onRefresh={onRefresh}
-          />
-          <a
-            href={`https://explorer.bf1337.org/tx/${event.transactionHash}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-[#daa520] hover:underline text-right"
-          >
-            View TX →
-          </a>
-        </div>
+        {/* Right: Transaction link */}
+        <a
+          href={`${EXPLORER_BASE_URL}/tx/${event.transactionHash}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-shrink-0 text-xs text-[#daa520] hover:underline"
+        >
+          View TX →
+        </a>
       </div>
     </div>
   )
-}
-
-/**
- * Offer action buttons (Accept/Cancel/Reject)
- */
-function OfferActionButtons({
-  event,
-  userAddress,
-  onRefresh,
-}: {
-  event: TradingEvent
-  userAddress: string
-  onRefresh: () => void
-}) {
-  const { acceptOffer, cancelOffer, isPending } = useKektvOffers()
-  const [isProcessing, setIsProcessing] = useState(false)
-  const normalizedAddress = userAddress.toLowerCase()
-
-  // Only show buttons for OfferMade events
-  if (event.eventType !== 'OfferMade') return null
-  if (!('offerId' in event)) return null
-
-  const isOfferer = 'offerer' in event && event.offerer.toLowerCase() === normalizedAddress
-  const isOwner = 'voucherOwner' in event && event.voucherOwner.toLowerCase() === normalizedAddress
-
-  const handleAcceptOffer = async () => {
-    try {
-      setIsProcessing(true)
-      await acceptOffer(BigInt(event.offerId))
-
-      // Wait for blockchain to update, then refresh
-      setTimeout(() => {
-        onRefresh()
-        setIsProcessing(false)
-      }, 3000)
-    } catch (error) {
-      console.error('Failed to accept offer:', error)
-      setIsProcessing(false)
-    }
-  }
-
-  const handleCancelOffer = async () => {
-    try {
-      setIsProcessing(true)
-      await cancelOffer(BigInt(event.offerId))
-
-      // Wait for blockchain to update, then refresh
-      setTimeout(() => {
-        onRefresh()
-        setIsProcessing(false)
-      }, 3000)
-    } catch (error) {
-      console.error('Failed to cancel offer:', error)
-      setIsProcessing(false)
-    }
-  }
-
-  // Show Accept button for voucher owners
-  if (isOwner && !isOfferer) {
-    return (
-      <button
-        onClick={handleAcceptOffer}
-        disabled={isPending || isProcessing}
-        className="px-4 py-2 bg-green-500/20 border border-green-500/50 rounded-lg text-sm text-green-400 hover:bg-green-500/30 transition disabled:opacity-50"
-      >
-        {isPending || isProcessing ? 'Processing...' : '✅ Accept Offer'}
-      </button>
-    )
-  }
-
-  // Show Cancel button for offer makers
-  if (isOfferer) {
-    return (
-      <button
-        onClick={handleCancelOffer}
-        disabled={isPending || isProcessing}
-        className="px-4 py-2 bg-red-500/20 border border-red-500/50 rounded-lg text-sm text-red-400 hover:bg-red-500/30 transition disabled:opacity-50"
-      >
-        {isPending || isProcessing ? 'Processing...' : '❌ Cancel Offer'}
-      </button>
-    )
-  }
-
-  return null
 }
 
 /**
