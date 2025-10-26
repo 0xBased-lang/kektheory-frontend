@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { MintTab } from '@/components/marketplace/MintTab'
@@ -86,19 +85,6 @@ export default function MarketplacePage() {
                 </button>
               </div>
             </div>
-
-            {/* My Activity Link - Visible on KEKTV tab */}
-            {activeTab === 'kektv' && (
-              <div className="flex justify-center">
-                <Link
-                  href="/marketplace/activity"
-                  className="inline-flex items-center gap-2 px-6 py-2 rounded-lg bg-gray-800/50 border border-[#daa520]/30 text-[#daa520] hover:bg-gray-800 hover:border-[#daa520] transition-all font-fredoka"
-                >
-                  <span>📊</span>
-                  <span>My Trading Activity</span>
-                </Link>
-              </div>
-            )}
           </div>
 
           {/* Tab Content */}
