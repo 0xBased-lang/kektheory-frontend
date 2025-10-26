@@ -52,8 +52,8 @@ export function OfferCard({ offer, onSuccess }: OfferCardProps) {
   const totalPrice = offer.offerPrice * offer.amount
 
   return (
-    <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border border-[#daa520]/20 overflow-hidden hover:border-[#daa520]/40 transition-all">
-      <div className="p-6">
+    <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border border-[#daa520]/20 hover:border-[#daa520]/40 transition-all">
+      <div className="p-6 space-y-4">
         {/* Voucher Media */}
         {mediaUrl ? (
           <div className="relative w-full h-48 rounded-lg overflow-hidden bg-black/20 mb-4">

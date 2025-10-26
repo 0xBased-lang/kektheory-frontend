@@ -147,7 +147,7 @@ export function meetsMinimumOffer(amount: bigint, pricePerToken: bigint): boolea
  * Format offer price for display
  */
 export function formatOfferPrice(price: bigint): string {
-  return (Number(price) / 1e18).toFixed(4) + ' TECH'
+  return (Number(price) / 1e18).toFixed(4) + ' BASED'
 }
 
 /**

@@ -106,7 +106,7 @@ function ReceivedOfferCard({
   }
 
   return (
-    <div className="bg-gray-900/60 rounded-lg border border-gray-700/50 p-4 hover:border-[#daa520]/50 transition">
+    <div className="bg-gray-900/60 rounded-xl border border-gray-700/50 p-6 hover:border-[#daa520]/50 transition">
       <OfferCard offer={offer} onSuccess={onSuccess} />
     </div>
   )

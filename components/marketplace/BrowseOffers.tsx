@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { useTokenOffers, useOfferDetails } from '@/lib/hooks/useKektvOffers'
 import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
@@ -212,11 +212,13 @@ function OfferItem({
   onActiveChange?: (isActive: boolean) => void
 }) {
   const { offer, isLoading } = useOfferDetails(offerId)
+  const hasNotified = useRef(false)
 
-  // Notify parent when we know if this offer is active
+  // Notify parent when we know if this offer is active (only once)
   useEffect(() => {
-    if (!isLoading && offer && offer.active && onActiveChange) {
+    if (!isLoading && offer && offer.active && onActiveChange && !hasNotified.current) {
       onActiveChange(true)
+      hasNotified.current = true
     }
   }, [isLoading, offer, onActiveChange])
 
