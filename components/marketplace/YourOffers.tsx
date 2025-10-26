@@ -132,8 +132,12 @@ function YourOfferCard({
     try {
       const txHash = await cancelOffer(offerId)
       console.log('Offer cancelled, tx:', txHash)
-      alert('Offer cancelled successfully! BASED refunded to your wallet.')
-      onSuccess()
+
+      // Wait for blockchain to update before refetching
+      setTimeout(() => {
+        onSuccess()
+        alert('Offer cancelled successfully! BASED refunded to your wallet.')
+      }, 3000) // Wait 3 seconds for blockchain confirmation
     } catch (error) {
       alert(`Cancel failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }

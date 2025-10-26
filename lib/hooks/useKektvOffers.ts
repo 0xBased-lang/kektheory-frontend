@@ -198,6 +198,8 @@ export function useTokenOffers(tokenId: number | null) {
     args: tokenId !== null ? [BigInt(tokenId)] : undefined,
     query: {
       enabled: tokenId !== null,
+      refetchInterval: 5000, // Auto-refetch every 5 seconds
+      staleTime: 0, // Always consider data stale
     },
   })
 
@@ -221,6 +223,8 @@ export function useUserOffers(userAddress: `0x${string}` | undefined) {
     args: userAddress ? [userAddress] : undefined,
     query: {
       enabled: !!userAddress,
+      refetchInterval: 5000, // Auto-refetch every 5 seconds
+      staleTime: 0, // Always consider data stale
     },
   })
 
@@ -244,6 +248,8 @@ export function useReceivedOffers(userAddress: `0x${string}` | undefined) {
     args: userAddress ? [userAddress] : undefined,
     query: {
       enabled: !!userAddress,
+      refetchInterval: 5000, // Auto-refetch every 5 seconds
+      staleTime: 0, // Always consider data stale
     },
   })
 
