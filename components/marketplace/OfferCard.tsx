@@ -19,7 +19,7 @@ interface OfferCardProps {
 export function OfferCard({ offer, onSuccess }: OfferCardProps) {
   const { address } = useAccount()
   const { acceptOffer, rejectOffer, isPending } = useKektvOffers()
-  const { metadataMap, loading: metadataLoading } = useAllVoucherMetadata()
+  const { metadataMap } = useAllVoucherMetadata()
 
   const metadata = metadataMap[Number(offer.tokenId)]
   const mediaUrl = metadata?.animation_url || metadata?.image

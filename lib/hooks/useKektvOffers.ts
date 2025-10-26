@@ -263,7 +263,7 @@ export function useOfferDetails(offerId: bigint | null) {
   })
 
   return {
-    offer: data as any, // Will be Offer struct
+    offer: data as Offer | undefined,
     isLoading,
     error,
     refetch,

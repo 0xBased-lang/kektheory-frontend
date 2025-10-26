@@ -6,7 +6,7 @@ import { useAccount } from 'wagmi'
 import { useKektvOffers } from '@/lib/hooks/useKektvOffers'
 import { useTechTokenApproval } from '@/lib/hooks/useTechTokenApproval'
 import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
-import { VOUCHER_IDS, VOUCHER_NAMES, meetsMinimumOffer, calculateTotalPrice } from '@/config/contracts/kektv-offers'
+import { VOUCHER_IDS, VOUCHER_NAMES, meetsMinimumOffer } from '@/config/contracts/kektv-offers'
 
 const VOUCHER_OPTIONS = [
   { id: VOUCHER_IDS.GENESIS, name: VOUCHER_NAMES[VOUCHER_IDS.GENESIS], icon: '💎', color: 'purple' },
@@ -23,7 +23,7 @@ export function MakeOfferForm() {
   const { address } = useAccount()
   const { makeOffer, isPending } = useKektvOffers()
   const approval = useTechTokenApproval()
-  const { metadataMap, loading: metadataLoading } = useAllVoucherMetadata()
+  const { metadataMap } = useAllVoucherMetadata()
 
   const [selectedVoucher, setSelectedVoucher] = useState<number | null>(null)
   const [amount, setAmount] = useState('')

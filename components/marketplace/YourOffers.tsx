@@ -37,7 +37,7 @@ export function YourOffers() {
         </svg>
       </div>
       <p className="text-xl font-fredoka text-gray-400 mb-2">
-        You haven't made any offers yet
+        You haven&apos;t made any offers yet
       </p>
       <p className="text-sm text-gray-500">
         Browse vouchers and make an offer to get started

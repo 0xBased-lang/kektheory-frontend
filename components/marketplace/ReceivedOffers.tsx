@@ -40,7 +40,7 @@ export function ReceivedOffers() {
         No offers received yet
       </p>
       <p className="text-sm text-gray-500">
-        When someone makes an offer on your vouchers, they'll appear here
+        When someone makes an offer on your vouchers, they&apos;ll appear here
       </p>
     </div>
   )
