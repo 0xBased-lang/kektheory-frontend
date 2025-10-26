@@ -16,8 +16,8 @@ interface NFTHistoryPageProps {
 }
 
 export function NFTHistoryPage({ tokenId }: NFTHistoryPageProps) {
-  const { metadata } = useAllVoucherMetadata()
-  const nftMetadata = metadata[tokenId]
+  const { metadataMap } = useAllVoucherMetadata()
+  const nftMetadata = metadataMap[tokenId]
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
