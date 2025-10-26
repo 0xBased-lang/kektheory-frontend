@@ -276,8 +276,26 @@ export function useOfferDetails(offerId: bigint | null) {
     },
   })
 
+  // Transform tuple response to Offer object
+  // Contract returns: [offerId, offerer, voucherOwner, tokenId, amount, offerPrice, createdAt, active]
+  type OfferTuple = readonly [bigint, string, string, bigint, bigint, bigint, bigint, boolean]
+  const offerTuple = data as OfferTuple | undefined
+
+  const offer: Offer | undefined = offerTuple
+    ? {
+        offerId: offerTuple[0],
+        offerer: offerTuple[1],
+        voucherOwner: offerTuple[2],
+        tokenId: offerTuple[3],
+        amount: offerTuple[4],
+        offerPrice: offerTuple[5],
+        createdAt: offerTuple[6],
+        active: offerTuple[7],
+      }
+    : undefined
+
   return {
-    offer: data as Offer | undefined,
+    offer,
     isLoading,
     error,
     refetch,
