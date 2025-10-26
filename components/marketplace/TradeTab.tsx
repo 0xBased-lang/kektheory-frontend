@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useKektvMarketplace } from '@/lib/hooks/useKektvMarketplace'
 import { useMarketplaceListingsAPI as useKektvListings } from '@/lib/hooks/useMarketplaceListingsAPI'
 import { useUserVoucherBalances } from '@/lib/hooks/useKektvListings'
@@ -219,23 +220,34 @@ function BrowseListings() {
                 </div>
               </div>
 
-              {/* Buy Button */}
-              <button
-                onClick={() => handleBuy(listing)}
-                disabled={!isConnected || marketplace.isPending || listing.seller === address}
-                className={`
-                  w-full mt-4 py-3 rounded-lg font-fredoka font-bold transition-all
-                  ${!isConnected || listing.seller === address
-                    ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-[#daa520] to-yellow-600 text-black hover:scale-105 shadow-lg shadow-[#daa520]/20'
-                  }
-                `}
-              >
-                {!isConnected ? '🔗 Connect Wallet to Buy' :
-                  listing.seller === address ? 'Your Listing' :
-                  marketplace.isPending ? 'Buying...' :
-                  '💰 Buy Now'}
-              </button>
+              {/* Action Buttons */}
+              <div className="space-y-2">
+                {/* Buy Button */}
+                <button
+                  onClick={() => handleBuy(listing)}
+                  disabled={!isConnected || marketplace.isPending || listing.seller === address}
+                  className={`
+                    w-full py-3 rounded-lg font-fredoka font-bold transition-all
+                    ${!isConnected || listing.seller === address
+                      ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-[#daa520] to-yellow-600 text-black hover:scale-105 shadow-lg shadow-[#daa520]/20'
+                    }
+                  `}
+                >
+                  {!isConnected ? '🔗 Connect Wallet to Buy' :
+                    listing.seller === address ? 'Your Listing' :
+                    marketplace.isPending ? 'Buying...' :
+                    '💰 Buy Now'}
+                </button>
+
+                {/* View Details Link */}
+                <Link
+                  href={`/marketplace/history/${listing.tokenId}`}
+                  className="block w-full py-2 rounded-lg text-center font-fredoka font-medium text-[#daa520] border border-[#daa520]/30 hover:bg-[#daa520]/10 hover:border-[#daa520] transition-all"
+                >
+                  📊 View Trading History
+                </Link>
+              </div>
             </div>
           </div>
         )})}

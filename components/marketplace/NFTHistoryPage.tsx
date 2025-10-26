@@ -1,11 +1,14 @@
 /**
- * NFT History Page
- * Complete history view for a specific NFT
- * Shows statistics and timeline in an organized layout
+ * NFT Detail Page
+ * Complete detail view for a specific NFT including:
+ * - Trading statistics
+ * - Complete transaction history
+ * - Visual timeline of all events
  */
 
 'use client'
 
+import Link from 'next/link'
 import { NFTStatistics } from './NFTStatistics'
 import { NFTTimeline } from './NFTTimeline'
 import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
@@ -21,15 +24,31 @@ export function NFTHistoryPage({ tokenId }: NFTHistoryPageProps) {
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
+      {/* Back Button */}
+      <div>
+        <Link
+          href="/marketplace"
+          className="inline-flex items-center gap-2 text-[#daa520] hover:text-white transition-colors font-fredoka"
+        >
+          <span>←</span>
+          <span>Back to Marketplace</span>
+        </Link>
+      </div>
+
       {/* Header */}
-      <div className="text-center space-y-2">
-        <h1 className="text-4xl font-bold text-[#daa520] font-fredoka">
-          𝕂Ǝ𝕂TV #{tokenId}
-        </h1>
-        <p className="text-xl text-gray-300">{VOUCHER_NAMES[tokenId as keyof typeof VOUCHER_NAMES]}</p>
-        {nftMetadata?.name && (
-          <p className="text-sm text-gray-500">{nftMetadata.name}</p>
-        )}
+      <div className="text-center space-y-4">
+        <div className="space-y-2">
+          <h1 className="text-5xl font-bold text-[#daa520] font-fredoka">
+            𝕂Ǝ𝕂TV #{tokenId}
+          </h1>
+          <p className="text-2xl text-gray-300">{VOUCHER_NAMES[tokenId as keyof typeof VOUCHER_NAMES]}</p>
+          {nftMetadata?.name && (
+            <p className="text-sm text-gray-500">{nftMetadata.name}</p>
+          )}
+        </div>
+        <p className="text-gray-400 max-w-2xl mx-auto">
+          Complete trading history and statistics for this NFT
+        </p>
       </div>
 
       {/* Statistics Section */}
