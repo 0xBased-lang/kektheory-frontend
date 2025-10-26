@@ -13,8 +13,10 @@ import { useMyOfferHistory, useMyStats } from '@/lib/hooks/useOfferHistory'
 import { useKektvListings } from '@/lib/hooks/useKektvListings'
 import { useKektvOffers } from '@/lib/hooks/useKektvOffers'
 import { useKektvMarketplace } from '@/lib/hooks/useKektvMarketplace'
-import { useUserOffers, useReceivedOffers, useOfferDetails } from '@/lib/hooks/useKektvOffers'
+import { useUserOffers, useOfferDetails } from '@/lib/hooks/useKektvOffers'
 import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
+import { useAllReceivableOffers } from '@/lib/hooks/useAllReceivableOffers'
+import { useVoucherBalance } from '@/lib/hooks/useVoucherBalance'
 import { formatUnits } from 'ethers'
 import type { TradingEvent } from '@/lib/services/explorer-api'
 import { VOUCHER_NAMES } from '@/config/contracts/kektv-offers'
@@ -51,8 +53,9 @@ export function UserActivityPage() {
   const { stats, isLoading: statsLoading } = useMyStats()
   const { listings, refetch: refetchListings } = useKektvListings(address)
   const { offerIds: madeOfferIds, refetch: refetchMade } = useUserOffers(address)
-  const { offerIds: receivedOfferIds, refetch: refetchReceived } = useReceivedOffers(address)
+  const { offerIds: receivedOfferIds, refetch: refetchReceived } = useAllReceivableOffers() // NEW: Comprehensive offer detection
   const { metadataMap } = useAllVoucherMetadata()
+  const { ownedVouchers } = useVoucherBalance() // For filtering offers
 
   const handleRefresh = async () => {
     await Promise.all([refetchHistory(), refetchListings(), refetchMade(), refetchReceived()])
@@ -111,6 +114,8 @@ export function UserActivityPage() {
           offerIds={receivedOfferIds}
           onRefresh={handleRefresh}
           metadataMap={metadataMap}
+          ownedVouchers={ownedVouchers}
+          userAddress={address}
         />
 
         {/* 2. Your Offers (offers you made) */}
@@ -144,10 +149,14 @@ function OffersYouCanAcceptSection({
   offerIds,
   onRefresh,
   metadataMap,
+  ownedVouchers,
+  userAddress,
 }: {
   offerIds: bigint[]
   onRefresh: () => void
   metadataMap: ReturnType<typeof useAllVoucherMetadata>['metadataMap']
+  ownedVouchers: ReturnType<typeof useVoucherBalance>['ownedVouchers']
+  userAddress: `0x${string}` | undefined
 }) {
   if (offerIds.length === 0) {
     return (
@@ -179,6 +188,8 @@ function OffersYouCanAcceptSection({
             offerId={offerId}
             onRefresh={onRefresh}
             metadataMap={metadataMap}
+            ownedVouchers={ownedVouchers}
+            userAddress={userAddress}
           />
         ))}
       </div>
@@ -188,15 +199,23 @@ function OffersYouCanAcceptSection({
 
 /**
  * Acceptable Offer NFT Card - Full voucher card with image
+ * NOW WITH SMART FILTERING:
+ * - Filters out offers you made yourself
+ * - Filters out inactive offers
+ * - Filters out general offers for tokens you don't own
  */
 function AcceptableOfferNFTCard({
   offerId,
   onRefresh,
   metadataMap,
+  ownedVouchers,
+  userAddress,
 }: {
   offerId: bigint
   onRefresh: () => void
   metadataMap: ReturnType<typeof useAllVoucherMetadata>['metadataMap']
+  ownedVouchers: ReturnType<typeof useVoucherBalance>['ownedVouchers']
+  userAddress: `0x${string}` | undefined
 }) {
   const { offer, isLoading } = useOfferDetails(offerId)
   const { acceptOffer, isPending } = useKektvOffers()
@@ -208,6 +227,38 @@ function AcceptableOfferNFTCard({
       isMountedRef.current = false
     }
   }, [])
+
+  // Filter logic: Don't show this card if...
+  if (offer && userAddress) {
+    // 1. This is your own offer
+    if (offer.offerer.toLowerCase() === userAddress.toLowerCase()) {
+      return null
+    }
+
+    // 2. Offer is not active
+    if (!offer.active) {
+      return null
+    }
+
+    // 3. For general offers (voucherOwner = 0x0), check if you own the tokens
+    const isGeneralOffer = offer.voucherOwner === '0x0000000000000000000000000000000000000000'
+    if (isGeneralOffer) {
+      const ownedVoucher = ownedVouchers.find(v => v.id === Number(offer.tokenId))
+      const ownedAmount = ownedVoucher?.balanceNumber || 0
+      const requiredAmount = Number(offer.amount)
+
+      // Don't show if you don't have enough vouchers
+      if (ownedAmount < requiredAmount) {
+        return null
+      }
+    }
+
+    // 4. For targeted offers, check if it's for you
+    const isTargetedOffer = !isGeneralOffer
+    if (isTargetedOffer && offer.voucherOwner.toLowerCase() !== userAddress.toLowerCase()) {
+      return null
+    }
+  }
 
   const handleAccept = async () => {
     try {
