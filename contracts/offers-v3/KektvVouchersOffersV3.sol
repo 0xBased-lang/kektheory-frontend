@@ -292,13 +292,11 @@ contract KektvVouchersOffersV3 is ReentrancyGuard, Pausable, Ownable {
     function pause() external onlyOwner {
         _pause();
     }
-    
+
     function unpause() external onlyOwner {
         _unpause();
     }
-    
-    function updateMinOfferValue(uint256 newMinValue) external onlyOwner {
-        // Note: immutable in V2, but could be made mutable in future versions
-        revert("Use new contract for min value changes");
-    }
+
+    // Note: minOfferValue is immutable and cannot be changed after deployment.
+    // To use a different minimum value, deploy a new contract version.
 }
