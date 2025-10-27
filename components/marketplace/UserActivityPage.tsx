@@ -291,7 +291,7 @@ function AcceptableOfferNFTCard({
   } = useKektvOffersApproval()
 
   // Check if this token is listed on marketplace
-  const { isListed, listing, refetch: refetchListing } = useMarketplaceListing(
+  const { isListed, listing: _listing, refetch: refetchListing } = useMarketplaceListing(
     offer ? Number(offer.tokenId) : null
   )
 
