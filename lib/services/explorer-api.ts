@@ -23,8 +23,15 @@ import { AbiCoder } from 'ethers'
 // BasedAI Explorer API endpoint
 const EXPLORER_API = 'https://explorer.bf1337.org/api'
 
-// KEKTV Offers V2 Contract Address
-const KEKTV_OFFERS_ADDRESS = '0x4E8B375C717a136882071923F17Ea08E75DDBcb2'
+// KEKTV Offers V3 Contract Address (Current - Bug Fix Deployed 2025-10-27)
+// V3 Fix: General offers now work correctly (checks msg.sender balance instead of 0x0)
+const KEKTV_OFFERS_V3_ADDRESS = '0xee8dc29237d46eff1518bb0503d7f782b651a04e'
+
+// KEKTV Offers V2 Contract Address (DEPRECATED - General offers bug)
+const KEKTV_OFFERS_V2_ADDRESS = '0x4E8B375C717a136882071923F17Ea08E75DDBcb2'
+
+// Use V3 as primary, but can query V2 for historical events if needed
+const KEKTV_OFFERS_ADDRESS = KEKTV_OFFERS_V3_ADDRESS
 
 // KEKTV Marketplace V6 Contract Address
 const KEKTV_MARKETPLACE_ADDRESS = '0x2d79106D60f92F3a6b7B17E3cAd3Df0D4bdcE062'

@@ -1,13 +1,22 @@
 /**
- * KEKTV Offers Contract Configuration V2
+ * KEKTV Offers Contract Configuration V3
  * Deployed on BasedAI Mainnet
  *
- * Contract: KektvVouchersOffersV2
- * Address: 0x4E8B375C717a136882071923F17Ea08E75DDBcb2
+ * Contract: KektvVouchersOffersV3
+ * Address: 0xee8dc29237d46eff1518bb0503d7f782b651a04e
  * Network: BasedAI (32323)
- * Deployed: 2025-10-26
+ * Deployed: 2025-10-27
  *
- * V2 Changes:
+ * V3 Changes (CRITICAL BUG FIX):
+ * - 🔥 CRITICAL FIX: General offers now work correctly!
+ * - ✅ Fixed balance checking for general offers (voucherOwner = 0x0)
+ * - ✅ V3 checks msg.sender's balance for general offers
+ * - ✅ V2 incorrectly checked balanceOf(0x0) which always failed
+ * - ✅ Backward compatible with targeted offers
+ * - ✅ All security features preserved
+ * - ✅ Contract tested: 11/11 tests passed
+ *
+ * V2 Changes (Still included in V3):
  * - ✅ Uses BASED (native token) instead of TECH (ERC-20)
  * - ✅ No token approval needed
  * - ✅ Simpler UX for users
@@ -19,7 +28,24 @@ import kektvOffersV2Abi from './kektv-offers-v2-abi.json'
 
 // ============ Contract Addresses ============
 
-export const KEKTV_OFFERS_ADDRESS = '0x4E8B375C717a136882071923F17Ea08E75DDBcb2' as Address
+/**
+ * V3 Offers Contract (CURRENT - Use this!)
+ * Deployment: 2025-10-27
+ * Bug Fix: General offers now work correctly
+ */
+export const KEKTV_OFFERS_V3_ADDRESS = '0xee8dc29237d46eff1518bb0503d7f782b651a04e' as Address
+
+/**
+ * V2 Offers Contract (DEPRECATED - Do not use for new offers)
+ * Bug: General offers always fail
+ * Keep for reference only
+ */
+export const KEKTV_OFFERS_V2_ADDRESS = '0x4E8B375C717a136882071923F17Ea08E75DDBcb2' as Address
+
+/**
+ * Current active contract (points to V3)
+ */
+export const KEKTV_OFFERS_ADDRESS = KEKTV_OFFERS_V3_ADDRESS
 
 export const KEKTV_VOUCHERS_ADDRESS = '0x7FEF981beE047227f848891c6C9F9dad11767a48' as Address
 
