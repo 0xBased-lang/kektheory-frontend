@@ -94,10 +94,9 @@ contract KektvVouchersOffersV3 is ReentrancyGuard, Pausable, Ownable {
     constructor(
         address _vouchersContract,
         uint256 _minOfferValue
-    ) {
+    ) Ownable(msg.sender) {
         vouchersContract = IERC1155(_vouchersContract);
         minOfferValue = _minOfferValue;
-        _transferOwnership(msg.sender);
     }
     
     // ============ Core Functions ============
