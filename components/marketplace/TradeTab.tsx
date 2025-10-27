@@ -141,11 +141,20 @@ function BrowseListings({ onSelectNFT }: { onSelectNFT: (tokenId: number) => voi
   // All voucher IDs to display (excluding 0 - test NFT)
   const allVoucherIds = [1, 2, 3]
 
-  // Create map of listings by tokenId for easy lookup
+  // Create map of listings by tokenId - Now supports MULTIPLE sellers per tokenId!
   const listingsByTokenId = listings.reduce((acc, listing) => {
-    acc[listing.tokenId] = listing
+    if (!acc[listing.tokenId]) {
+      acc[listing.tokenId] = []
+    }
+    acc[listing.tokenId].push(listing)
+    // Sort by price (cheapest first) for better UX
+    acc[listing.tokenId].sort((a, b) => {
+      const priceA = BigInt(a.pricePerItem)
+      const priceB = BigInt(b.pricePerItem)
+      return priceA < priceB ? -1 : priceA > priceB ? 1 : 0
+    })
     return acc
-  }, {} as Record<number, typeof listings[number]>)
+  }, {} as Record<number, typeof listings>)
 
   const handleBuy = async (listing: typeof listings[number]) => {
     if (!address) return
@@ -178,10 +187,12 @@ function BrowseListings({ onSelectNFT }: { onSelectNFT: (tokenId: number) => voi
       {/* Complete Collection Grid - Shows vouchers 1, 2, 3 */}
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {allVoucherIds.map((tokenId) => {
-          const listing = listingsByTokenId[tokenId]
+          const tokenListings = listingsByTokenId[tokenId] || []
           const metadata = metadataMap[tokenId]
           const mediaUrl = metadata?.animation_url || metadata?.image
-          const isListed = !!listing
+          const isListed = tokenListings.length > 0
+          const cheapestListing = tokenListings[0] // Already sorted by price
+          const additionalListings = tokenListings.length - 1
 
           return (
           <div
@@ -227,23 +238,32 @@ function BrowseListings({ onSelectNFT }: { onSelectNFT: (tokenId: number) => voi
               </div>
 
               {/* Listing Details or Not Listed Status */}
-              {isListed && listing ? (
+              {isListed && cheapestListing ? (
                 <>
+                  {/* Multiple Listings Indicator */}
+                  {additionalListings > 0 && (
+                    <div className="mb-3 p-2 bg-green-900/30 border border-green-600/30 rounded-lg">
+                      <p className="text-xs text-green-400 text-center font-bold">
+                        🎯 {tokenListings.length} sellers available! Showing cheapest
+                      </p>
+                    </div>
+                  )}
+
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between text-gray-400">
                       <span>Quantity:</span>
-                      <span className="text-white font-bold">{listing.amount.toString()}</span>
+                      <span className="text-white font-bold">{cheapestListing.amount.toString()}</span>
                     </div>
                     <div className="flex justify-between text-gray-400">
                       <span>Price/Each:</span>
                       <span className="text-white font-bold">
-                        {(Number(listing.pricePerItem) / 1e18).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
+                        {(Number(cheapestListing.pricePerItem) / 1e18).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
                       </span>
                     </div>
                     <div className="flex justify-between text-gray-400 border-t border-gray-800 pt-2 mt-2">
                       <span className="font-bold">You Pay:</span>
                       <span className="text-[#daa520] font-bold text-lg">
-                        {(Number(listing.totalPrice) / 1e18).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
+                        {(Number(cheapestListing.totalPrice) / 1e18).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
                       </span>
                     </div>
                     <div className="text-xs text-gray-500 text-center mt-1">
@@ -253,18 +273,18 @@ function BrowseListings({ onSelectNFT }: { onSelectNFT: (tokenId: number) => voi
 
                   {/* Buy Button */}
                   <button
-                    onClick={() => handleBuy(listing)}
-                    disabled={!isConnected || marketplace.isPending || listing.seller === address}
+                    onClick={() => handleBuy(cheapestListing)}
+                    disabled={!isConnected || marketplace.isPending || cheapestListing.seller === address}
                     className={`
                       w-full mt-4 py-3 rounded-lg font-fredoka font-bold transition-all
-                      ${!isConnected || listing.seller === address
+                      ${!isConnected || cheapestListing.seller === address
                         ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
                         : 'bg-gradient-to-r from-[#daa520] to-yellow-600 text-black hover:scale-105 shadow-lg shadow-[#daa520]/20'
                       }
                     `}
                   >
                     {!isConnected ? '🔗 Connect Wallet to Buy' :
-                      listing.seller === address ? 'Your Listing' :
+                      cheapestListing.seller === address ? 'Your Listing' :
                       marketplace.isPending ? 'Buying...' :
                       '💰 Buy Now'}
                   </button>
@@ -624,6 +644,34 @@ function YourListings() {
  */
 function NFTDetailView({ tokenId, onBack }: { tokenId: number; onBack: () => void }) {
   const { metadata, loading, error } = useVoucherMetadata(tokenId)
+  const { listings: allListings, isLoading: listingsLoading } = useKektvListings()
+  const { address, isConnected } = useAccount()
+  const marketplace = useKektvMarketplace()
+
+  // Filter listings for this specific tokenId and sort by price
+  const tokenListings = allListings
+    .filter(l => l.tokenId === tokenId)
+    .sort((a, b) => {
+      const priceA = BigInt(a.pricePerItem)
+      const priceB = BigInt(b.pricePerItem)
+      return priceA < priceB ? -1 : priceA > priceB ? 1 : 0
+    })
+
+  const handleBuy = async (listing: typeof allListings[number]) => {
+    if (!address) return
+
+    try {
+      await marketplace.buyVoucher(
+        listing.seller,
+        BigInt(listing.tokenId),
+        BigInt(listing.amount),
+        BigInt(listing.totalPrice)
+      )
+      alert('Purchase successful! Vouchers transferred to your wallet.')
+    } catch (error) {
+      alert(`Purchase failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    }
+  }
 
   if (loading) {
     return (
@@ -727,6 +775,88 @@ function NFTDetailView({ tokenId, onBack }: { tokenId: number; onBack: () => voi
             </div>
           )}
         </div>
+      </div>
+
+      {/* Available Listings Section */}
+      <div className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border border-[#daa520]/20 p-6">
+        <h3 className="text-2xl font-bold text-[#daa520] mb-4 font-fredoka">
+          💰 Available Listings {tokenListings.length > 0 && `(${tokenListings.length})`}
+        </h3>
+
+        {listingsLoading ? (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#daa520] mx-auto mb-2"></div>
+            <p className="text-gray-400">Loading listings...</p>
+          </div>
+        ) : tokenListings.length === 0 ? (
+          <p className="text-gray-400 text-center py-8">
+            No active listings for this NFT. Check back later!
+          </p>
+        ) : (
+          <div className="space-y-3">
+            {tokenListings.map((listing, index) => (
+              <div
+                key={`${listing.seller}-${listing.tokenId}-${index}`}
+                className="bg-black/20 rounded-lg p-4 border border-gray-700 hover:border-[#daa520]/40 transition"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Seller Info */}
+                  <div>
+                    <p className="text-xs text-gray-400 mb-1">Seller</p>
+                    <p className="text-sm text-white font-mono">
+                      {listing.seller.slice(0, 6)}...{listing.seller.slice(-4)}
+                      {listing.seller === address && (
+                        <span className="ml-2 text-xs text-[#daa520] font-bold">(You)</span>
+                      )}
+                    </p>
+                  </div>
+
+                  {/* Price Info */}
+                  <div>
+                    <p className="text-xs text-gray-400 mb-1">Price per NFT</p>
+                    <p className="text-sm text-white font-bold">
+                      {(Number(listing.pricePerItem) / 1e18).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Qty: {listing.amount.toString()} | Total: {(Number(listing.totalPrice) / 1e18).toFixed(2)} BASED
+                    </p>
+                  </div>
+
+                  {/* Buy Button */}
+                  <div className="flex items-center">
+                    <button
+                      onClick={() => handleBuy(listing)}
+                      disabled={!isConnected || marketplace.isPending || listing.seller === address}
+                      className={`
+                        w-full py-2 px-4 rounded-lg font-fredoka font-bold text-sm transition-all
+                        ${!isConnected || listing.seller === address
+                          ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                          : index === 0
+                            ? 'bg-gradient-to-r from-green-600 to-green-500 text-white hover:scale-105 shadow-lg shadow-green-600/20'
+                            : 'bg-gradient-to-r from-[#daa520] to-yellow-600 text-black hover:scale-105 shadow-lg shadow-[#daa520]/20'
+                        }
+                      `}
+                    >
+                      {!isConnected ? '🔗 Connect' :
+                        listing.seller === address ? 'Your Listing' :
+                        marketplace.isPending ? 'Buying...' :
+                        index === 0 ? '✅ Best Price' : '💰 Buy Now'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* Cheapest Price Indicator */}
+            {tokenListings.length > 1 && (
+              <div className="mt-3 p-3 bg-green-900/20 border border-green-600/30 rounded-lg">
+                <p className="text-sm text-green-400 text-center">
+                  💡 Tip: Listings are sorted by price. The top listing offers the best deal!
+                </p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Trading History Section (Placeholder) */}
