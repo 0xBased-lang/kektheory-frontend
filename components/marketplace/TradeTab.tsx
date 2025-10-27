@@ -130,7 +130,7 @@ export function TradeTab() {
 
 /**
  * Browse and buy voucher listings
- * Shows ALL vouchers (0-3) even if not listed
+ * Shows ALL listings as individual cards + unlisted NFTs
  */
 function BrowseListings({ onSelectNFT }: { onSelectNFT: (tokenId: number) => void }) {
   const { address, isConnected } = useAccount()
@@ -141,20 +141,23 @@ function BrowseListings({ onSelectNFT }: { onSelectNFT: (tokenId: number) => voi
   // All voucher IDs to display (excluding 0 - test NFT)
   const allVoucherIds = [1, 2, 3]
 
-  // Create map of listings by tokenId - Now supports MULTIPLE sellers per tokenId!
-  const listingsByTokenId = listings.reduce((acc, listing) => {
-    if (!acc[listing.tokenId]) {
-      acc[listing.tokenId] = []
+  // Sort listings by token ID first, then by price
+  const sortedListings = [...listings].sort((a, b) => {
+    // First sort by tokenId
+    if (a.tokenId !== b.tokenId) {
+      return a.tokenId - b.tokenId
     }
-    acc[listing.tokenId].push(listing)
-    // Sort by price (cheapest first) for better UX
-    acc[listing.tokenId].sort((a, b) => {
-      const priceA = BigInt(a.pricePerItem)
-      const priceB = BigInt(b.pricePerItem)
-      return priceA < priceB ? -1 : priceA > priceB ? 1 : 0
-    })
-    return acc
-  }, {} as Record<number, typeof listings>)
+    // Then sort by price (cheapest first)
+    const priceA = BigInt(a.pricePerItem)
+    const priceB = BigInt(b.pricePerItem)
+    return priceA < priceB ? -1 : priceA > priceB ? 1 : 0
+  })
+
+  // Track which token IDs have listings
+  const listedTokenIds = new Set(listings.map(l => l.tokenId))
+
+  // Create array of unlisted NFTs
+  const unlistedNFTs = allVoucherIds.filter(id => !listedTokenIds.has(id))
 
   const handleBuy = async (listing: typeof listings[number]) => {
     if (!address) return
@@ -184,112 +187,171 @@ function BrowseListings({ onSelectNFT }: { onSelectNFT: (tokenId: number) => voi
 
   return (
     <div>
-      {/* Complete Collection Grid - Shows vouchers 1, 2, 3 */}
+      {/* Grid showing ALL individual listings + unlisted NFTs */}
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        {allVoucherIds.map((tokenId) => {
-          const tokenListings = listingsByTokenId[tokenId] || []
-          const metadata = metadataMap[tokenId]
+
+        {/* First: Show all active listings as individual cards */}
+        {sortedListings.map((listing, index) => {
+          const metadata = metadataMap[listing.tokenId]
           const mediaUrl = metadata?.animation_url || metadata?.image
-          const isListed = tokenListings.length > 0
-          const cheapestListing = tokenListings[0] // Already sorted by price
-          const additionalListings = tokenListings.length - 1
+
+          // Find if this is the cheapest listing for this token ID
+          const sameTokenListings = sortedListings.filter(l => l.tokenId === listing.tokenId)
+          const isCheapest = sameTokenListings[0].seller === listing.seller &&
+                            sameTokenListings[0].pricePerItem === listing.pricePerItem
 
           return (
-          <div
-            key={`voucher-${tokenId}`}
-            className={`bg-gradient-to-br rounded-lg border overflow-hidden transition-all ${
-              isListed
-                ? 'from-[#daa520]/10 to-yellow-600/10 border-[#daa520]/20 hover:border-[#daa520]/40'
-                : 'from-gray-800/30 to-gray-900/30 border-gray-700/50 hover:border-gray-600/50'
-            }`}
-          >
-            <div className="p-6">
-              {/* Clickable NFT Card Upper Section */}
-              <div
-                onClick={() => onSelectNFT(tokenId)}
-                className="cursor-pointer hover:opacity-80 transition-opacity"
-              >
-                {/* Voucher Media */}
-                {mediaUrl ? (
-                  <div className="relative w-full h-48 rounded-lg overflow-hidden bg-black/20 mb-4">
-                    <Image
-                      src={mediaUrl}
-                      alt={metadata?.name || `Voucher #${tokenId}`}
-                      fill
-                      className="object-contain"
-                      unoptimized
-                    />
-                  </div>
-                ) : (
-                  <div className="text-center mb-4">
-                    <div className="text-6xl mb-2">
-                      {tokenId === 0 ? '🎫' : tokenId === 1 ? '🎟️' : tokenId === 2 ? '🏆' : '💎'}
+            <div
+              key={`listing-${listing.seller}-${listing.tokenId}-${index}`}
+              className="bg-gradient-to-br from-[#daa520]/10 to-yellow-600/10 rounded-lg border border-[#daa520]/20 hover:border-[#daa520]/40 overflow-hidden transition-all"
+            >
+              <div className="p-6">
+                {/* Clickable NFT Card Upper Section */}
+                <div
+                  onClick={() => onSelectNFT(listing.tokenId)}
+                  className="cursor-pointer hover:opacity-80 transition-opacity"
+                >
+                  {/* Voucher Media */}
+                  {mediaUrl ? (
+                    <div className="relative w-full h-48 rounded-lg overflow-hidden bg-black/20 mb-4">
+                      <Image
+                        src={mediaUrl}
+                        alt={metadata?.name || `Voucher #${listing.tokenId}`}
+                        fill
+                        className="object-contain"
+                        unoptimized
+                      />
                     </div>
-                  </div>
-                )}
-
-                {/* Voucher Info */}
-                <div className="text-center mb-4">
-                  <h3 className="text-xl font-bold text-[#daa520] font-fredoka">
-                    {metadata?.name || `Voucher #${tokenId}`}
-                  </h3>
-                  <p className="text-xs text-gray-500 mt-1">Click to view details</p>
-                </div>
-              </div>
-
-              {/* Listing Details or Not Listed Status */}
-              {isListed && cheapestListing ? (
-                <>
-                  {/* Multiple Listings Indicator */}
-                  {additionalListings > 0 && (
-                    <div className="mb-3 p-2 bg-green-900/30 border border-green-600/30 rounded-lg">
-                      <p className="text-xs text-green-400 text-center font-bold">
-                        🎯 {tokenListings.length} sellers available! Showing cheapest
-                      </p>
+                  ) : (
+                    <div className="text-center mb-4">
+                      <div className="text-6xl mb-2">
+                        {listing.tokenId === 0 ? '🎫' : listing.tokenId === 1 ? '🎟️' : listing.tokenId === 2 ? '🏆' : '💎'}
+                      </div>
                     </div>
                   )}
 
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between text-gray-400">
-                      <span>Quantity:</span>
-                      <span className="text-white font-bold">{cheapestListing.amount.toString()}</span>
-                    </div>
-                    <div className="flex justify-between text-gray-400">
-                      <span>Price/Each:</span>
-                      <span className="text-white font-bold">
-                        {(Number(cheapestListing.pricePerItem) / 1e18).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-gray-400 border-t border-gray-800 pt-2 mt-2">
-                      <span className="font-bold">You Pay:</span>
-                      <span className="text-[#daa520] font-bold text-lg">
-                        {(Number(cheapestListing.totalPrice) / 1e18).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
-                      </span>
-                    </div>
-                    <div className="text-xs text-gray-500 text-center mt-1">
-                      2.5% platform fee deducted from seller
-                    </div>
+                  {/* Voucher Info */}
+                  <div className="text-center mb-4">
+                    <h3 className="text-xl font-bold text-[#daa520] font-fredoka">
+                      {metadata?.name || `Voucher #${listing.tokenId}`}
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-1">Click to view details</p>
                   </div>
+                </div>
 
-                  {/* Buy Button */}
-                  <button
-                    onClick={() => handleBuy(cheapestListing)}
-                    disabled={!isConnected || marketplace.isPending || cheapestListing.seller === address}
-                    className={`
-                      w-full mt-4 py-3 rounded-lg font-fredoka font-bold transition-all
-                      ${!isConnected || cheapestListing.seller === address
-                        ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                {/* Seller Badge */}
+                <div className="mb-3 p-2 bg-black/20 rounded-lg">
+                  <p className="text-xs text-gray-400 text-center">
+                    Seller: <span className="text-white font-mono">
+                      {listing.seller.slice(0, 6)}...{listing.seller.slice(-4)}
+                    </span>
+                    {listing.seller === address && (
+                      <span className="ml-2 text-[#daa520] font-bold">(You)</span>
+                    )}
+                  </p>
+                </div>
+
+                {/* Best Price Indicator */}
+                {isCheapest && sameTokenListings.length > 1 && (
+                  <div className="mb-3 p-2 bg-green-900/30 border border-green-600/30 rounded-lg">
+                    <p className="text-xs text-green-400 text-center font-bold">
+                      ✅ Best Price for this NFT!
+                    </p>
+                  </div>
+                )}
+
+                {/* Listing Details */}
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between text-gray-400">
+                    <span>Quantity:</span>
+                    <span className="text-white font-bold">{listing.amount.toString()}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-400">
+                    <span>Price/Each:</span>
+                    <span className="text-white font-bold">
+                      {(Number(listing.pricePerItem) / 1e18).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-gray-400 border-t border-gray-800 pt-2 mt-2">
+                    <span className="font-bold">You Pay:</span>
+                    <span className="text-[#daa520] font-bold text-lg">
+                      {(Number(listing.totalPrice) / 1e18).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BASED
+                    </span>
+                  </div>
+                  <div className="text-xs text-gray-500 text-center mt-1">
+                    2.5% platform fee deducted from seller
+                  </div>
+                </div>
+
+                {/* Buy Button */}
+                <button
+                  onClick={() => handleBuy(listing)}
+                  disabled={!isConnected || marketplace.isPending || listing.seller === address}
+                  className={`
+                    w-full mt-4 py-3 rounded-lg font-fredoka font-bold transition-all
+                    ${!isConnected || listing.seller === address
+                      ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                      : isCheapest
+                        ? 'bg-gradient-to-r from-green-600 to-green-500 text-white hover:scale-105 shadow-lg shadow-green-600/20'
                         : 'bg-gradient-to-r from-[#daa520] to-yellow-600 text-black hover:scale-105 shadow-lg shadow-[#daa520]/20'
-                      }
-                    `}
-                  >
-                    {!isConnected ? '🔗 Connect Wallet to Buy' :
-                      cheapestListing.seller === address ? 'Your Listing' :
-                      marketplace.isPending ? 'Buying...' :
-                      '💰 Buy Now'}
-                  </button>
-                </>
-              ) : (
+                    }
+                  `}
+                >
+                  {!isConnected ? '🔗 Connect Wallet to Buy' :
+                    listing.seller === address ? 'Your Listing' :
+                    marketplace.isPending ? 'Buying...' :
+                    '💰 Buy Now'}
+                </button>
+              </div>
+            </div>
+          )
+        })}
+
+        {/* Second: Show unlisted NFTs */}
+        {unlistedNFTs.map((tokenId) => {
+          const metadata = metadataMap[tokenId]
+          const mediaUrl = metadata?.animation_url || metadata?.image
+
+          return (
+            <div
+              key={`unlisted-${tokenId}`}
+              className="bg-gradient-to-br from-gray-800/30 to-gray-900/30 rounded-lg border border-gray-700/50 hover:border-gray-600/50 overflow-hidden transition-all"
+            >
+              <div className="p-6">
+                {/* Clickable NFT Card Upper Section */}
+                <div
+                  onClick={() => onSelectNFT(tokenId)}
+                  className="cursor-pointer hover:opacity-80 transition-opacity"
+                >
+                  {/* Voucher Media */}
+                  {mediaUrl ? (
+                    <div className="relative w-full h-48 rounded-lg overflow-hidden bg-black/20 mb-4">
+                      <Image
+                        src={mediaUrl}
+                        alt={metadata?.name || `Voucher #${tokenId}`}
+                        fill
+                        className="object-contain"
+                        unoptimized
+                      />
+                    </div>
+                  ) : (
+                    <div className="text-center mb-4">
+                      <div className="text-6xl mb-2">
+                        {tokenId === 0 ? '🎫' : tokenId === 1 ? '🎟️' : tokenId === 2 ? '🏆' : '💎'}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Voucher Info */}
+                  <div className="text-center mb-4">
+                    <h3 className="text-xl font-bold text-[#daa520] font-fredoka">
+                      {metadata?.name || `Voucher #${tokenId}`}
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-1">Click to view details</p>
+                  </div>
+                </div>
+
+                {/* Not Listed Status */}
                 <div className="mt-4">
                   <div className="bg-gray-800/50 rounded-lg p-6 text-center">
                     <div className="text-4xl mb-2">📭</div>
@@ -299,10 +361,10 @@ function BrowseListings({ onSelectNFT }: { onSelectNFT: (tokenId: number) => voi
                     </p>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
-        )})}
+          )
+        })}
       </div>
     </div>
   )
