@@ -18,6 +18,7 @@ import { useAllVoucherMetadata } from '@/lib/hooks/useVoucherMetadata'
 import { useAllReceivableOffers } from '@/lib/hooks/useAllReceivableOffers'
 import { useVoucherBalance } from '@/lib/hooks/useVoucherBalance'
 import { useKektvOffersApproval } from '@/lib/hooks/useKektvOffersApproval'
+import { useMarketplaceListing } from '@/lib/hooks/useMarketplaceListing'
 import { formatUnits } from 'ethers'
 import type { TradingEvent } from '@/lib/services/explorer-api'
 import { VOUCHER_NAMES } from '@/config/contracts/kektv-offers'
@@ -279,6 +280,7 @@ function AcceptableOfferNFTCard({
 }) {
   const { offer, isLoading } = useOfferDetails(offerId)
   const { acceptOffer, rejectOffer, isPending } = useKektvOffers()
+  const { cancelListing } = useKektvMarketplace()
   const {
     isApproved,
     isLoading: isCheckingApproval,
@@ -287,8 +289,15 @@ function AcceptableOfferNFTCard({
     isConfirming: isApproveConfirming,
     refetch: refetchApproval
   } = useKektvOffersApproval()
+
+  // Check if this token is listed on marketplace
+  const { isListed, listing, refetch: refetchListing } = useMarketplaceListing(
+    offer ? Number(offer.tokenId) : null
+  )
+
   const [isAccepting, setIsAccepting] = useState(false)
   const [isRejecting, setIsRejecting] = useState(false)
+  const [isDelisting, setIsDelisting] = useState(false)
   const isMountedRef = useRef(true)
 
   useEffect(() => {
@@ -311,9 +320,37 @@ function AcceptableOfferNFTCard({
   }
 
   const handleAccept = async () => {
+    if (!offer) return
+
     try {
+      // Step 1: Check if token is listed on marketplace
+      if (isListed) {
+        console.log('🏪 Token is listed on marketplace - auto-delisting first')
+        setIsDelisting(true)
+
+        try {
+          // Delist from marketplace first
+          await cancelListing(offer.tokenId)
+          console.log('✅ Successfully delisted from marketplace')
+
+          // Wait for blockchain confirmation
+          await new Promise(resolve => setTimeout(resolve, 3000))
+
+          // Refetch listing status to confirm
+          await refetchListing()
+        } catch (delistError) {
+          console.error('❌ Failed to delist:', delistError)
+          throw new Error('Failed to delist from marketplace. Please try manually.')
+        } finally {
+          setIsDelisting(false)
+        }
+      }
+
+      // Step 2: Accept the offer
       setIsAccepting(true)
+      console.log('✅ Accepting offer...')
       await acceptOffer(offerId)
+
       if (isMountedRef.current) {
         onRefresh()
       }
@@ -322,6 +359,7 @@ function AcceptableOfferNFTCard({
     } finally {
       if (isMountedRef.current) {
         setIsAccepting(false)
+        setIsDelisting(false)
       }
     }
   }
@@ -544,14 +582,22 @@ function AcceptableOfferNFTCard({
         ) : (
           /* Show accept/reject buttons once approved */
           <div className={isGeneralOffer ? "space-y-3" : "grid grid-cols-2 gap-3"}>
-            {/* Accept Button */}
-            <button
-              onClick={handleAccept}
-              disabled={isPending || isAccepting || isRejecting || isCheckingApproval}
-              className={`py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-105 shadow-lg shadow-green-500/30 ${isGeneralOffer ? 'w-full' : ''}`}
-            >
-              {isAccepting ? 'Accepting...' : '✅ Accept'}
-            </button>
+            {/* Accept Button - with auto-delist support */}
+            <div className={isGeneralOffer ? 'w-full' : ''}>
+              {/* Show marketplace warning if listed */}
+              {isListed && !isDelisting && !isAccepting && (
+                <div className="mb-2 text-xs text-yellow-400 text-center p-2 bg-yellow-500/10 border border-yellow-500/30 rounded">
+                  ⚠️ Listed on marketplace - will auto-delist first
+                </div>
+              )}
+              <button
+                onClick={handleAccept}
+                disabled={isPending || isAccepting || isDelisting || isRejecting || isCheckingApproval}
+                className={`w-full py-3 rounded-lg font-fredoka font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-105 shadow-lg shadow-green-500/30`}
+              >
+                {isDelisting ? '🏪 Delisting...' : isAccepting ? '✅ Accepting...' : isListed ? '🔄 Delist & Accept' : '✅ Accept'}
+              </button>
+            </div>
 
             {/* Reject Button - ONLY for targeted offers */}
             {!isGeneralOffer && (
