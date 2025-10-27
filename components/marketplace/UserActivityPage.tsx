@@ -19,6 +19,7 @@ import { useAllReceivableOffers } from '@/lib/hooks/useAllReceivableOffers'
 import { useVoucherBalance } from '@/lib/hooks/useVoucherBalance'
 import { useKektvOffersApproval } from '@/lib/hooks/useKektvOffersApproval'
 import { useMarketplaceListing } from '@/lib/hooks/useMarketplaceListing'
+import { useActiveOfferCount } from '@/lib/hooks/useActiveOfferCount'
 import { formatUnits } from 'ethers'
 import type { TradingEvent } from '@/lib/services/explorer-api'
 import { VOUCHER_NAMES } from '@/config/contracts/kektv-offers'
@@ -58,6 +59,10 @@ export function UserActivityPage() {
   const { metadataMap } = useAllVoucherMetadata()
   const { ownedVouchers } = useVoucherBalance() // For filtering offers
   const [activeTab, setActiveTab] = useState<'accept' | 'your-offers' | 'listings'>('accept')
+
+  // FIX: Count only ACTIVE offers (fixes "shows 2, displays 1" bug)
+  const { activeCount: activeReceivedCount } = useActiveOfferCount(receivedOfferIds)
+  const { activeCount: activeMadeCount } = useActiveOfferCount(madeOfferIds)
 
   // DEBUG: Log offer IDs to diagnose display issues
   console.log('🎯 UserActivityPage - Offer IDs:', {
@@ -116,16 +121,16 @@ export function UserActivityPage() {
           <StatBarItem
             icon="✨"
             label="Offers to Accept"
-            value={receivedOfferIds.length}
-            highlight={receivedOfferIds.length > 0}
+            value={activeReceivedCount}
+            highlight={activeReceivedCount > 0}
             onClick={() => setActiveTab('accept')}
             isActive={activeTab === 'accept'}
           />
           <StatBarItem
             icon="💼"
             label="Your Active Offers"
-            value={madeOfferIds.length}
-            highlight={madeOfferIds.length > 0}
+            value={activeMadeCount}
+            highlight={activeMadeCount > 0}
             onClick={() => setActiveTab('your-offers')}
             isActive={activeTab === 'your-offers'}
           />

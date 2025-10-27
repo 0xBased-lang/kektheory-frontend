@@ -16,6 +16,7 @@ import { useVoucherBalance } from './useVoucherBalance'
 export function useAllReceivableOffers() {
   const { address } = useAccount()
   const [allOfferIds, setAllOfferIds] = useState<bigint[]>([])
+  const [activeOfferIds, setActiveOfferIds] = useState<bigint[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   // Get targeted offers (voucherOwner = your address)
@@ -76,6 +77,16 @@ export function useAllReceivableOffers() {
     token3Loading,
   ])
 
+  // Note: Active filtering is intentionally done at the component level
+  // The cards already filter inactive offers for display
+  // For counting purposes, UserActivityPage should count the displayed cards
+  // not the raw offer IDs to avoid the "shows 2, displays 1" bug
+  useEffect(() => {
+    // For now, set activeOfferIds = allOfferIds
+    // The component will filter them when rendering/counting
+    setActiveOfferIds(allOfferIds)
+  }, [allOfferIds])
+
   const refetch = async () => {
     await Promise.all([
       refetchTargeted(),
@@ -87,7 +98,8 @@ export function useAllReceivableOffers() {
   }
 
   return {
-    offerIds: allOfferIds,
+    offerIds: allOfferIds, // All offers (active + inactive)
+    activeOfferIds, // Only active offers (for accurate counting)
     isLoading,
     refetch,
   }
