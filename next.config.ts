@@ -92,6 +92,30 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+
+  // URL Redirects for restructured routes
+  async redirects() {
+    return [
+      // Gallery routes -> NFTs
+      {
+        source: '/gallery',
+        destination: '/nfts/gallery',
+        permanent: true,
+      },
+      // Mint route -> NFTs
+      {
+        source: '/mint',
+        destination: '/nfts/mint',
+        permanent: true,
+      },
+      // Terminal demo -> Market (production)
+      {
+        source: '/terminal-demo',
+        destination: '/market',
+        permanent: false,
+      },
+    ]
+  },
 };
 
 export default nextConfig;

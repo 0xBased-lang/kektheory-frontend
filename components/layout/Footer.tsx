@@ -26,14 +26,20 @@ export function Footer() {
             <Link href="/" className="hover:text-[#06b6d4] transition-colors">
               Home
             </Link>
-            <Link href="/mint" className="hover:text-[#06b6d4] transition-colors">
-              Mint
+            <Link href="/market" className="hover:text-[#06b6d4] transition-colors">
+              Market
             </Link>
-            <Link href="/gallery" className="hover:text-[#06b6d4] transition-colors">
-              Gallery
+            <Link href="/nfts" className="hover:text-[#06b6d4] transition-colors">
+              NFTs
             </Link>
-            <Link href="/marketplace" className="hover:text-[#06b6d4] transition-colors">
-              Marketplace
+            <Link href="/staking" className="hover:text-[#06b6d4] transition-colors">
+              Staking
+            </Link>
+            <Link href="/about" className="hover:text-[#06b6d4] transition-colors">
+              About
+            </Link>
+            <Link href="/roadmap" className="hover:text-[#06b6d4] transition-colors">
+              Roadmap
             </Link>
           </div>
 
