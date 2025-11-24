@@ -19,21 +19,21 @@
     "test:contracts": "hardhat test"
   },
   "dependencies": {
-    "@reown/appkit": "^1.8.11",
-    "@reown/appkit-adapter-wagmi": "^1.8.11",
-    "@tanstack/react-query": "^5.90.5",
-    "@upstash/ratelimit": "^2.0.6",
+    "@reown/appkit": "^1.8.14",
+    "@reown/appkit-adapter-wagmi": "^1.8.14",
+    "@tanstack/react-query": "^5.90.10",
+    "@upstash/ratelimit": "^2.0.7",
     "@upstash/redis": "^1.35.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.548.0",
+    "lucide-react": "^0.554.0",
     "next": "15.5.5",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "tailwind-merge": "^3.3.1",
-    "viem": "^2.38.4",
+    "tailwind-merge": "^3.4.0",
+    "viem": "^2.40.0",
     "wagmi": "^2.18.2",
-    "zod": "^4.1.12"
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
