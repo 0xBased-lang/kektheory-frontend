@@ -33,7 +33,7 @@ jobs:
       # STEP 1: Setup Environment
       # ============================================
       - name: Checkout Repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0  # Full history for better git operations
